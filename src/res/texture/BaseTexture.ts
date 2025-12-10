@@ -206,7 +206,7 @@ const getTexelCopyBufferLayout = (width: number, height: number, textureFormat: 
 }
 
 /**
- * 
+ * @class BaseTexture
  */
 abstract class BaseTexture {
     /**
