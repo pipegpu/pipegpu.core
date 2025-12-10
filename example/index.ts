@@ -21,7 +21,9 @@ import {
 // import { initDeferred } from './tech/initDeferred.ts';
 // import { initTextureCube } from './tech/initTextureCube.ts'
 
-import { initDepthBias } from './tech/initDepthBias.ts';
+// import { initDepthBias } from './tech/initDepthBias.ts';
+
+import {initHierarchicalZBuffer} from './tech/initHierarchicalZBuffer.ts'
 
 (async () => {
 
@@ -86,7 +88,9 @@ import { initDepthBias } from './tech/initDepthBias.ts';
     // const reversedZ = await initReversedZ(context, compiler, colorAttachments, ASPECT, NEAR, FAR);
 
     // const deferred = await initDeferred(context, compiler, colorAttachments, depthStencilAttachment, ASPECT, NEAR, FAR);
-    const depthBias = await initDepthBias(context, compiler, colorAttachments, ASPECT, NEAR, FAR)
+    // const depthBias = await initDepthBias(context, compiler, colorAttachments, ASPECT, NEAR, FAR)
+    const hierarchicalZBuffer = await initHierarchicalZBuffer(context, compiler, colorAttachments, ASPECT, NEAR, FAR)
+    
     // const textureCube = await initTextureCube(context, compiler, colorAttachments, ASPECT, NEAR, FAR);
 
     // const graph: OrderedGraph = new OrderedGraph(context);
@@ -115,7 +119,8 @@ import { initDepthBias } from './tech/initDepthBias.ts';
     // holderArray.push(deferred[0]);
     // holderArray.push(deferred[1]);
     // holderArray.push(textureCube);
-    holders.push(depthBias);
+    // holders.push(depthBias);
+    holders.push(...hierarchicalZBuffer);
 
     const renderLoop = async () => {
         context.refreshFrameResource();

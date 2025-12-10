@@ -95,7 +95,7 @@ interface RenderHolderDesc {
     /**
      * depth stencil attachments.
      */
-    depthStencilAttachment: DepthStencilAttachment,
+    depthStencilAttachment?: DepthStencilAttachment,
 
     /**
     * 

@@ -104,7 +104,7 @@ class Texture2D extends BaseTexture {
                 desc.baseArrayLayer = 0;
                 desc.arrayLayerCount = 1;
                 desc.baseMipLevel = k;
-                desc.mipLevelCount = this.mipmapCount - k;             // each view has 1 miplevel count.
+                desc.mipLevelCount = 1; //this.mipmapCount - k;             // each view has 1 miplevel count.
                 switch (this.textureFormat) {
                     case 'depth16unorm':
                     case 'depth24plus':

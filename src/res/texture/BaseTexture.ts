@@ -3,10 +3,8 @@ import type { Context } from "../Context"
 import type { FrameStageFormat, PropertyFormat } from "../Format";
 
 /**
- * 
  * @param propertyFormat 
  * @returns 
- * 
  */
 const getTextureViewDimension = (propertyFormat: PropertyFormat): GPUTextureViewDimension => {
     switch (propertyFormat) {
@@ -31,10 +29,8 @@ const getTextureViewDimension = (propertyFormat: PropertyFormat): GPUTextureView
 }
 
 /**
- * 
  * @param propertyFormat 
  * @returns 
- * 
  */
 const getTextureDimension = (propertyFormat: PropertyFormat): GPUTextureDimension => {
     switch (propertyFormat) {
@@ -59,12 +55,10 @@ const getTextureDimension = (propertyFormat: PropertyFormat): GPUTextureDimensio
 }
 
 /**
- * 
  * @param width 
  * @param height 
  * @param textureFormat 
  * @returns 
- * 
  */
 const getTexelCopyBufferLayout = (width: number, height: number, textureFormat: GPUTextureFormat): GPUTexelCopyBufferLayout => {
     const layout: GPUTexelCopyBufferLayout = {};
@@ -207,6 +201,11 @@ const getTexelCopyBufferLayout = (width: number, height: number, textureFormat: 
 
 /**
  * @class BaseTexture
+ * @todo 
+ * support multi usage:
+ * - texture.UsedAsRenderAttachment(); provide texture render view, set base mip = 0, mip count = 1
+ * - texture.UsedAsStorage(); provide texture storage read/write view, set base mip = 0 . 1 .. N, and mip count =1 in each mip level
+ * - texture.UsedAsBinding(); provide texture bingindg view, set base mip = 0, mip count = maxMipLevel;
  */
 abstract class BaseTexture {
     /**
