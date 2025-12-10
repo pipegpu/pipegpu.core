@@ -18,8 +18,10 @@ import {
 // import { initTexelCopy } from './tech/initTexelCopy.ts'
 // import { initDrawWithArrayBuffer } from './tech/initDrawWithArrayBuffer.ts'
 // import { initReversedZ } from './tech/initReversedZ.ts'
-import { initDeferred } from './tech/initDeferred.ts'
+// import { initDeferred } from './tech/initDeferred.ts';
 // import { initTextureCube } from './tech/initTextureCube.ts'
+
+import { initDepthBias } from './tech/initDepthBias.ts';
 
 (async () => {
 
@@ -62,6 +64,7 @@ import { initDeferred } from './tech/initDeferred.ts'
         height: context.getViewportHeight(),
         textureFormat: context.getPreferredDepthTexuteFormat(),
     });
+
     const depthStencilAttachment = compiler.createDepthStencilAttachment({
         texture: depthTexture,
         depthClearValue: 1.0,
@@ -82,7 +85,8 @@ import { initDeferred } from './tech/initDeferred.ts'
     // const dawWithArrayBuffer = await initDrawWithArrayBuffer(compiler, colorAttachments, depthStencilAttachment);
     // const reversedZ = await initReversedZ(context, compiler, colorAttachments, ASPECT, NEAR, FAR);
 
-    const deferred = await initDeferred(context, compiler, colorAttachments, depthStencilAttachment, ASPECT, NEAR, FAR);
+    // const deferred = await initDeferred(context, compiler, colorAttachments, depthStencilAttachment, ASPECT, NEAR, FAR);
+    const depthBias = await initDepthBias(context, compiler, colorAttachments, ASPECT, NEAR, FAR)
     // const textureCube = await initTextureCube(context, compiler, colorAttachments, ASPECT, NEAR, FAR);
 
     // const graph: OrderedGraph = new OrderedGraph(context);
@@ -93,7 +97,7 @@ import { initDeferred } from './tech/initDeferred.ts'
     // };
     // requestAnimationFrame(renderLoop);
 
-    const holderArray: BaseHolder[] = [];
+    const holders: BaseHolder[] = [];
     // holderArray.push(drawIndexedStorage);
     // holderArray.push(texture2DHolder);
     // holderArray.push(drawCountHolder);
@@ -108,15 +112,16 @@ import { initDeferred } from './tech/initDeferred.ts'
     // holderArray.push(texelCopy[1]);
     // holderArray.push(dawWithArrayBuffer);
     // holderArray.push(reversedZ);
-    holderArray.push(deferred[0]);
-    holderArray.push(deferred[1]);
+    // holderArray.push(deferred[0]);
+    // holderArray.push(deferred[1]);
     // holderArray.push(textureCube);
+    holders.push(depthBias);
 
     const renderLoop = async () => {
         context.refreshFrameResource();
 
         const encoder = context.getCommandEncoder();
-        holderArray.forEach(element => {
+        holders.forEach(element => {
             element.build(encoder);
         });
 

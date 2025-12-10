@@ -71,6 +71,16 @@ class DepthStencilAttachment extends BaseAttachment {
 
     /**
      * 
+     */
+    private depthBias?: number;
+
+    /**
+     * 
+     */
+    private depthBiasSlopeScale?: number;
+
+    /**
+     * 
      * 
      * @param opts 
      */
@@ -79,6 +89,8 @@ class DepthStencilAttachment extends BaseAttachment {
             id: number,
             context: Context,
             texture: Texture2D,
+            depthBias?: number,
+            depthBiasSlopeScale?: number,
             depthLoadStoreFormat?: DepthLoadStoreFormat,
             depthCompareFunction?: GPUCompareFunction,
             stencilFunctionFormat?: StencilStateFormat,
@@ -87,6 +99,7 @@ class DepthStencilAttachment extends BaseAttachment {
             depthClearValue?: number,
             stencilReadOnly?: boolean,
             stencilClearValue?: number,
+
         }
     ) {
         super({
@@ -102,6 +115,8 @@ class DepthStencilAttachment extends BaseAttachment {
         this.depthClearValue = (opts.depthClearValue === undefined) ? 1.0 : opts.depthClearValue;
         this.stencilReadOnly = opts.stencilReadOnly || false;
         this.stencilClearValue = (opts.stencilClearValue === undefined) ? 1.0 : opts.stencilClearValue;
+        this.depthBias = (opts.depthBias === undefined) ? undefined : opts.depthBias;
+        this.depthBiasSlopeScale = (opts.depthBiasSlopeScale === undefined) ? undefined : opts.depthBiasSlopeScale;
     }
 
     /**
@@ -157,6 +172,13 @@ class DepthStencilAttachment extends BaseAttachment {
                     console.log(`[E][DepthStencilAttachment][updateDepthStencilState] unsupported depth stencil state format function, type:${this.stencilStateFormat}`);
                     break;
                 }
+        }
+        // depth bias and depth bias slope scale
+        if (this.depthBias) {
+            this.depthStencilState.depthBias = this.depthBias;
+        }
+        if (this.depthBiasSlopeScale) {
+            this.depthStencilState.depthBiasSlopeScale = this.depthBiasSlopeScale;
         }
     }
 

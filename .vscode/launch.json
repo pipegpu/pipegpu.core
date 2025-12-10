@@ -4,13 +4,12 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "type": "chrome",
             "request": "launch",
             "name": "chrome_debug",
-            "url": "http://localhost:5173/examples/index.html",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://localhost:5173/example/index.html",
+            "webRoot": "${workspaceFolder}/example"
         }
     ]
 }

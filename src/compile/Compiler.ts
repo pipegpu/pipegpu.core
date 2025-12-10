@@ -745,6 +745,8 @@ class Compiler {
         opts: {
             debugLabel?: number,
             texture: Texture2D,
+            depthBias?: number,
+            depthBiasSlopeScale?: number,
             depthLoadStoreFormat?: DepthLoadStoreFormat,
             depthCompareFunction?: GPUCompareFunction,
             stencilFunctionFormat?: StencilStateFormat,
@@ -757,6 +759,8 @@ class Compiler {
     ): DepthStencilAttachment => {
         return this.attachmentState.createDepthStencilAttachment({
             texture: opts.texture,
+            depthBias: opts.depthBias,
+            depthBiasSlopeScale: opts.depthBiasSlopeScale,
             depthLoadStoreFormat: opts.depthLoadStoreFormat,
             depthCompareFunction: opts.depthCompareFunction,
             stencilFunctionFormat: opts.stencilFunctionFormat,

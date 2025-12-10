@@ -80,6 +80,8 @@ class AttachmentState {
     createDepthStencilAttachment = (
         opts: {
             texture: Texture2D,
+            depthBias?: number,
+            depthBiasSlopeScale?: number,
             depthLoadStoreFormat?: DepthLoadStoreFormat,
             depthCompareFunction?: GPUCompareFunction,
             stencilFunctionFormat?: StencilStateFormat,
@@ -96,6 +98,8 @@ class AttachmentState {
                 id: depthStencilAttachmentID,
                 context: this.context,
                 texture: opts.texture,
+                depthBias: opts.depthBias,
+                depthBiasSlopeScale: opts.depthBiasSlopeScale,
                 depthLoadStoreFormat: opts.depthLoadStoreFormat,
                 depthCompareFunction: opts.depthCompareFunction,
                 stencilFunctionFormat: opts.stencilFunctionFormat,
