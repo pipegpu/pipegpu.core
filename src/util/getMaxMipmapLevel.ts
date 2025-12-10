@@ -14,7 +14,7 @@ const min = (...args: number[]) => {
  */
 const getMaxMipmapCount = (...args: number[]): number => {
     const maxRes = max(...args);
-    return Math.floor(Math.log(maxRes));
+    return Math.ceil(Math.log2(maxRes));
 }
 
 export {
