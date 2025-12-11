@@ -1,10 +1,12 @@
 import {
     type BaseHolder,
     type BufferHandleDetail,
+    type ComputeHolderDesc,
     type RenderHolderDesc,
     Attributes,
     ColorAttachment,
     Compiler,
+    ComputeProperty,
     Context,
     RenderHolder,
     RenderProperty,
@@ -28,7 +30,7 @@ const initHZB = async (context: Context, compiler: Compiler, colorAttachments: C
         textureFormat: 'depth32float'
     });
 
-    const holders: RenderHolder[] = [];
+    const holders: BaseHolder[] = [];
 
     // 0. generate depth
     {
@@ -264,6 +266,61 @@ fn fs_main(f: FRAGMENT) -> @location(0) f32
 
     // 2. hzb 构建
     {
+        const workGroupX = 8, workGroupY = 8;
+        const WGSLCode = `
+
+requires readonly_and_readwrite_storage_textures;
+
+@group(0) @binding(0) var input_texture: texture_storage_2d<r32float, read_write>;
+@group(0) @binding(1) var output_texture: texture_storage_2d<r32float, read_write>;
+
+@compute @workgroup_size(${workGroupX}, ${workGroupY}, 1)
+fn cp_main(@builtin(global_invocation_id) global_id: vec3<u32>) 
+{
+    let src_dim = textureDimensions(input_texture);
+    let dst_dim = textureDimensions(output_texture);
+    if(global_id.x > dst_dim.x || global_id.y>dst_dim.y) {
+        return;
+    }
+
+    let src_x = global_id.x * 2u;
+    let src_y = global_id.y * 2u;
+
+    let p0 = textureLoad(input_texture, vec2<u32>(src_x, src_y)).r;
+    let p1 = textureLoad(input_texture, vec2<u32>(src_x + 1u, src_y)).r;
+    let p2 = textureLoad(input_texture, vec2<u32>(src_x, src_y + 1u)).r;
+    let p3 = textureLoad(input_texture, vec2<u32>(src_x + 1u, src_y + 1u)).r;
+    let val = max(max(p0, p1), max(p2, p3));
+
+    // let val = min(min(p0, p1), min(p2, p3));
+    
+    textureStore(output_texture, global_id.xy, vec4<f32>(val, 0.0, 0.0, 0.0));
+}
+
+        `;
+
+        const computeShader = compiler.createComputeShader({
+            code: WGSLCode,
+            entryPoint: `cp_main`
+        });
+
+        for (let k = 0; k < r32float_texture.MaxMipmapCount; k++) {
+            r32float_texture.cursor(k);
+            const dispatch = new ComputeProperty(
+                Math.max(Math.ceil((r32float_texture.Width >> k) / workGroupX), 1),
+                Math.max(Math.ceil((r32float_texture.Height >> k) / workGroupY), 1),
+                1
+            );
+            const desc: ComputeHolderDesc = {
+                label: `download sampling: ${k}`,
+                computeShader: computeShader,
+                uniforms: new Uniforms(),
+                dispatch: dispatch
+            };
+            desc.uniforms.assign('input_texture', r32float_texture);
+            desc.uniforms.assign('output_texture', r32float_texture);
+            holders.push(compiler.compileComputeHolder(desc))
+        }
 
     }
 
@@ -316,7 +373,9 @@ fn vs_main(@builtin(vertex_index) vertexIndex: u32) -> FRAGMENT
 @fragment
 fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32>
 {
-    let v = textureSample(r32float_texture, texture_sampler, f.uv);
+    let level: u32 = 10;
+    let size = vec2<f32>(textureDimensions(r32float_texture, level).xy);
+    let v = textureLoad(r32float_texture, vec2<u32>(f.uv * size), level);
     return v;
 }
 

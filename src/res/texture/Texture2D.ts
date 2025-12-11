@@ -171,7 +171,6 @@ class Texture2D extends BaseTexture {
                 this.storageBindingView[k] = (this.texture as GPUTexture).createView(desc);
             }
         }
-        this.mipCurosr = 0;
     }
 
     /**
