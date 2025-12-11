@@ -117,6 +117,7 @@ fn fs_main(f: FRAGMENT) -> GBUFFER {
             blendFormat: 'opaque',
             colorLoadStoreFormat: 'clearStore',
         });
+
         // normal
         normalTexture = compiler.createTexture2D({
             width: W,

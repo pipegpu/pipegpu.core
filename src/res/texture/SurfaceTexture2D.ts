@@ -54,6 +54,26 @@ class SurfaceTexture2D extends BaseTexture {
 
     }
 
+    /**
+     * @function useAsStorageBinding
+     */
+    override useAsStorageBinding(): void {
+        this.selectedUsage = 'STORAGE_BINDING';
+    }
+
+    /**
+     * @function useAsTextureBinding
+     */
+    override useAsTextureBinding(): void {
+        this.selectedUsage = 'TEXTURE_BINDING';
+    }
+
+    /**
+     * @function useAsRenderAttachment
+     */
+    override useAsRenderAttachment(): void {
+        this.selectedUsage = 'RENDER_ATTACHMENT';
+    }
 }
 
 export {

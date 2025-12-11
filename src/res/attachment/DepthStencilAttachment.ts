@@ -187,7 +187,9 @@ class DepthStencilAttachment extends BaseAttachment {
      * @function updateAttachment
      */
     protected override updateAttachment = () => {
-        // depthStencilAttachment
+        // ensure texture used as renderAttachment.
+        // also texture format helper create texture view correctly.
+        this.texture.useAsRenderAttachment();
         this.depthStencilAttachment = {
             view: this.texture.getGpuTextureView()
         };

@@ -94,9 +94,7 @@ class RenderHolder extends BaseHolder {
     }
 
     /**
-     * 
      * @param encoder 
-     * 
      */
     override build = (encoder: GPUCommandEncoder): void => {
         // support:
@@ -132,6 +130,7 @@ class RenderHolder extends BaseHolder {
         });
 
         // uniform slot
+        // in bind group, texture view settings in compile stage
         this.slotBindGroupMap.forEach((bindGroup, slotID) => {
             encoderRenderPass.setBindGroup(slotID, bindGroup);
         })

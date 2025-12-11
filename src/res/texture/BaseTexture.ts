@@ -3,6 +3,11 @@ import type { Context } from "../Context"
 import type { FrameStageFormat, PropertyFormat } from "../Format";
 
 /**
+ * TEXTURE USAGE
+ */
+type CURRENT_TEXTURE_USAGE = 'NONE' | 'STORAGE_BINDING' | 'RENDER_ATTACHMENT' | 'TEXTURE_BINDING';
+
+/**
  * @param propertyFormat 
  * @returns 
  */
@@ -231,11 +236,6 @@ abstract class BaseTexture {
     /**
      * 
      */
-    protected textureViews: GPUTextureView[] = [];
-
-    /**
-     * 
-     */
     protected mipCurosr: number = 0;
 
     /**
@@ -279,7 +279,26 @@ abstract class BaseTexture {
     protected propertyFormat: PropertyFormat;
 
     /**
-     * 
+     * enable if texture flag contain texture_binding
+     */
+    protected textureBindingView?: GPUTextureView;
+
+    /**
+     * enable if texture flag contain storage_binding
+     */
+    protected storageBindingView?: GPUTextureView[];
+
+    /**
+     * enable if texture flag contain render attachemnt
+     */
+    protected renderAttachmentView?: GPUTextureView;
+
+    /**
+     * default is NONE;
+     */
+    protected selectedUsage: CURRENT_TEXTURE_USAGE = 'NONE';
+
+    /**
      * @param opts 
      */
     constructor(
@@ -428,7 +447,6 @@ abstract class BaseTexture {
     }
 
     /**
-     * 
      * @param absCursor 
      */
     cursor = (absCursor: number): void => {
@@ -436,9 +454,36 @@ abstract class BaseTexture {
     }
 
     /**
-     * 
+     * @abstract
+     * @function createGpuTexture
      */
     protected abstract createGpuTexture(): void;
+
+    /**
+     * @abstract
+     * @function isUsageIncludeRenderAttachment
+     * @returns bool
+     */
+    protected isUsageIncludeRenderAttachment = (): boolean => {
+        return (this.textureUsageFlags & GPUTextureUsage.RENDER_ATTACHMENT) !== 0;
+    }
+
+    /**
+     * @abstract
+     * @function isUsageIncludeStorageBinding
+     * @returns 
+     */
+    protected isUsageIncludeStorageBinding = (): boolean => {
+        return (this.textureUsageFlags & GPUTextureUsage.STORAGE_BINDING) !== 0;
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    protected isUsageIncludeTextureBinding = (): boolean => {
+        return (this.textureUsageFlags & GPUTextureUsage.TEXTURE_BINDING) !== 0;
+    }
 
     /**
      * 
@@ -451,6 +496,21 @@ abstract class BaseTexture {
      * 
      */
     abstract getGpuTextureView(): GPUTextureView;
+
+    /**
+     * 
+     */
+    abstract useAsStorageBinding(): void;
+
+    /**
+     * 
+     */
+    abstract useAsTextureBinding(): void;
+
+    /**
+     * 
+     */
+    abstract useAsRenderAttachment(): void;
 }
 
 export {

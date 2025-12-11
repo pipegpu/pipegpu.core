@@ -98,7 +98,7 @@ class TextureState {
             height: opts.height,
             textureData: opts.textureData,
             mipmapCount: opts.mipmapCount,
-            textureUsageFlags: opts.appendixTextureUsages,
+            appendixTextureUsages: opts.appendixTextureUsages,
             textureFormat: opts.textureFormat,
         });
         TextureState.TEXTURE_SET.set(textureID, texture);

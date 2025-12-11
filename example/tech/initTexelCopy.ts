@@ -12,7 +12,7 @@ let texelCopyDebugBuffer: MapBuffer;
  * console.log(f32DebugBuffer);
  * 
  */
-const initTexelCopy = async (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseHolder | BaseHolder[]> => {
+const initTexelCopy = async (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseHolder[]> => {
 
     const ktxDataPack: KTXDataPack = await fetchKTX2AsBc7RGBA('/example/asset/ktx/1.ktx');
 

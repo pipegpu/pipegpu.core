@@ -41,9 +41,9 @@ fn vs_main(in: VertexInput) -> VertexOutput {
 fn fs_main(in: VertexOutput) -> @location(0) vec4f {
 	// array index sort by uv.z
 	// z as integer
-    var color = textureSample(texture_array, texture_sampler, in.uv, 0) * 0.5;
-    color += textureSample(texture_array, texture_sampler, in.uv, 1) * 0.5;
-    color += textureSample(texture_array, texture_sampler, in.uv, 2) * 0.5;
+    var color = textureSample(texture_array, texture_sampler, in.uv, 0) * 0.3;
+    color += textureSample(texture_array, texture_sampler, in.uv, 1) * 0.3;
+    color += textureSample(texture_array, texture_sampler, in.uv, 2) * 0.3;
 	return color;
 }
 
@@ -131,6 +131,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
                 mipmapCount: 1
             }
         );
+
         desc.uniforms?.assign('texture_array', texture2DArray);
     }
 

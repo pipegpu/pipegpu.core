@@ -104,7 +104,19 @@ const emitUniforms = (
                 case ResourceType.StorageTexture:
                     {
                         const resourcID = record?.resourceID as number;
-                        const textureView = opts.textureState.getTexture(resourcID)?.getGpuTextureView();
+                        const texture = opts.textureState.getTexture(resourcID);
+                        if (!texture) {
+                            throw new Error(`[E][emitUniforms] ${opts.debugLabel} missing texture, id:${resourcID}`);
+                        }
+                        // if resource type is texture storage, used as storage texture
+                        if (t === ResourceType.Texture) {
+                            texture.useAsTextureBinding();
+                        } else if (t === ResourceType.StorageTexture) {
+                            texture.useAsStorageBinding();
+                        } else {
+                            throw new Error(`[E][emitUniforms] ${opts.debugLabel} unsupport resource type: ${t}, id: ${resourcID}`);
+                        }
+                        const textureView = texture?.getGpuTextureView();
                         if (!textureView) {
                             throw new Error(`[E][emitUniforms] ${opts.debugLabel} missing texture view, id:${resourcID}`);
                         }

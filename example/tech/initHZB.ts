@@ -19,7 +19,7 @@ import {
 /**
  * 
  */
-const initHierarchicalZBuffer = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseHolder[]> => {
+const initHZB = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseHolder[]> => {
 
     // depth stencil attachment
     const depthTexture = compiler.createTexture2D({
@@ -43,7 +43,7 @@ const initHierarchicalZBuffer = async (context: Context, compiler: Compiler, col
             depthLoadStoreFormat: 'clearStore',
         });
 
-        const d = 0.00001;   // half distance between two planes
+        const d = 0.01;   // half distance between two planes
         const o = 0.5;      // half x offset to shift planes so they are only partially overlaping
 
         // float4 position, float4 color
@@ -172,24 +172,23 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         holders.push(renderHolder);
     }
 
-
     // 1. copy depth to r32float
-    const linearDepthTexture = compiler.createTexture2D({
+    const r32float_texture = compiler.createTextureStorage2D({
         width: context.getViewportWidth(),
         height: context.getViewportHeight(),
         textureFormat: 'r32float',
-        appendixTextureUsages: GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.RENDER_ATTACHMENT,
+        appendixTextureUsages: GPUTextureUsage.RENDER_ATTACHMENT
     });
 
     {
         const LinearColorAttachment = compiler.createColorAttachment({
-            texture:linearDepthTexture,
-            blendFormat:'disable'
+            texture: r32float_texture,
+            blendFormat: 'disable'
         });
 
         const textureSampler = compiler.createTextureSampler({
             debugLabel: 1,
-            samplerBindingType:'non-filtering'
+            samplerBindingType: 'non-filtering'
         });
 
         const WGSLCode = `
@@ -240,7 +239,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) f32
 
         `;
 
-   const desc: RenderHolderDesc = {
+        const desc: RenderHolderDesc = {
             label: `deferred shading.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -263,10 +262,92 @@ fn fs_main(f: FRAGMENT) -> @location(0) f32
         holders.push(renderHolder);
     }
 
+    // 2. hzb 构建
+    {
+
+    }
+
+    // 3. r32float 深度图可视化
+    {
+        const textureSampler = compiler.createTextureSampler({
+            debugLabel: 2,
+            samplerBindingType: 'non-filtering'
+        });
+
+        const WGSLCode = `
+        
+struct FRAGMENT
+{
+    @builtin(position) position: vec4<f32>,
+    @location(0) uv: vec2<f32>,
+}
+
+@vertex
+fn vs_main(@builtin(vertex_index) vertexIndex: u32) -> FRAGMENT
+{
+    var f: FRAGMENT;
+
+    var positions: array<vec2<f32>, 6> = array<vec2<f32>, 6>(
+        vec2<f32>(-1.0, -1.0),
+        vec2<f32>(1.0, -1.0),
+        vec2<f32>(-1.0, 1.0),
+        vec2<f32>(1.0, -1.0),
+        vec2<f32>(1.0, 1.0),
+        vec2<f32>(-1.0, 1.0),
+    );
+
+    var uvs: array<vec2<f32>, 6> = array<vec2<f32>, 6>(
+        vec2<f32>(0.0, 1.0),
+        vec2<f32>(1.0, 1.0),
+        vec2<f32>(0.0, 0.0),
+        vec2<f32>(1.0, 1.0),
+        vec2<f32>(1.0, 0.0),
+        vec2<f32>(0.0, 0.0)
+    );
+
+    f.position = vec4<f32>(positions[vertexIndex], 0.0, 1.0);
+    f.uv = uvs[vertexIndex];
+    return f;
+}
+
+@group(0) @binding(0) var r32float_texture: texture_2d<f32>;
+@group(0) @binding(1) var texture_sampler: sampler;
+
+@fragment
+fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32>
+{
+    let v = textureSample(r32float_texture, texture_sampler, f.uv);
+    return v;
+}
+
+        `;
+
+        const desc: RenderHolderDesc = {
+            label: `deferred shading.`,
+            vertexShader: compiler.createVertexShader({
+                code: WGSLCode,
+                entryPoint: `vs_main`
+            }),
+            fragmentShader: compiler.createFragmentShader({
+                code: WGSLCode,
+                entryPoint: `fs_main`
+            }),
+            attributes: new Attributes(),
+            uniforms: new Uniforms(),
+            colorAttachments: colorAttachments,
+            dispatch: new RenderProperty(6)
+        };
+
+        desc.uniforms?.assign(`r32float_texture`, r32float_texture);
+        desc.uniforms?.assign(`texture_sampler`, textureSampler);
+
+        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
+        holders.push(renderHolder);
+    }
 
     return holders;
 }
 
 export {
-    initHierarchicalZBuffer,
+    initHZB,
 }

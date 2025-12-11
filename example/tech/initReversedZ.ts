@@ -29,7 +29,6 @@ const initReversedZ = async (context: Context, compiler: Compiler, colorAttachme
         height: context.getViewportHeight(),
         textureFormat: context.getPreferredDepthTexuteFormat(),
     });
-
     // need set depth attachment to 
     // depthClearValue: 0.0,
     // depthCompareFunction: 'greater',
