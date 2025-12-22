@@ -46,7 +46,7 @@ import { initHZB } from './tech/initHZB.ts';
         const canvas: HTMLCanvasElement = document.getElementById(SELECTOR) as HTMLCanvasElement;
         canvas.style.top = `0px`;
         canvas.style.position = `fixed`;
-        canvas.style.pointerEvents = 'none';
+        // canvas.style.pointerEvents = 'none';
     }
 
     // color attachments
