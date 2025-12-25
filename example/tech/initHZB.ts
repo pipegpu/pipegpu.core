@@ -361,8 +361,8 @@ fn cp_main(@builtin(global_invocation_id) global_id: vec3<u32>)
         return;
     }
 
-    let src_x = global_id.x * 2u;
-    let src_y = global_id.y * 2u;
+    let src_x = global_id.x * 2u - 1u;
+    let src_y = global_id.y * 2u - 1u;
 
     let p0 = textureLoad(input_texture, vec2<u32>(src_x, src_y)).r;
     let p1 = textureLoad(input_texture, vec2<u32>(src_x + 1u, src_y)).r;

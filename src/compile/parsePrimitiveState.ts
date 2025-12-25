@@ -60,13 +60,13 @@ const parsePrimitiveState = (
             }
         case 'backCCW':
             {
-                primitiveState.frontFace = 'cw';
+                primitiveState.frontFace = 'ccw';
                 primitiveState.cullMode = 'back';
                 break;
             }
         case 'backCW':
             {
-                primitiveState.frontFace = 'ccw';
+                primitiveState.frontFace = 'cw';
                 primitiveState.cullMode = 'back';
                 break;
             }
