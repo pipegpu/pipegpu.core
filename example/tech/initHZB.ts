@@ -375,6 +375,8 @@ fn cp_main(@builtin(global_invocation_id) global_id: vec3<u32>)
 
                 `;
 
+        // https://github.com/pipegpu/pipegpu.core/issues/16
+        hzbTexture.AutoIncrementMipLevelInStorageBinding(true);
         for (let k = 0; k < hzbTexture.MaxMipmapCount; k++) {
             hzbTexture.cursor(k);
             const dispatch = new ComputeProperty(

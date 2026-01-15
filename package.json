@@ -1,6 +1,6 @@
 {
   "name": "@pipegpu/core",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -14,7 +14,7 @@
     "@vitest/browser": "^3.2.4",
     "@vitest/coverage-istanbul": "^3.2.4",
     "@wdio/cli": "^9.20.0",
-    "@webgpu/types": "^0.1.66",
+    "@webgpu/types": "^0.1.69",
     "typescript": "^5.9.3",
     "vite": "^7.1.11",
     "vitest": "^3.2.4",

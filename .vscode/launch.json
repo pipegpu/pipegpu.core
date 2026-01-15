@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "chrome_debug",
             "url": "http://localhost:5173/example/index.html",
-            "webRoot": "${workspaceFolder}/example"
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }

@@ -13,6 +13,12 @@ class Texture2D extends BaseTexture {
     protected textureData?: TypedArray1DFormat;
 
     /**
+    * https://github.com/pipegpu/pipegpu.core/issues/16
+    * indicator auto increment mip level in storage binding use
+    */
+    private autoIncrementMipLevelInStorageBindingUse: boolean = false;
+
+    /**
      * 
      * @param opts 
      */
@@ -40,6 +46,14 @@ class Texture2D extends BaseTexture {
             propertyFormat: 'texture2D'
         });
         this.textureData = opts.textureData;
+    }
+
+    /**
+     * https://github.com/pipegpu/pipegpu.core/issues/16
+     * @param enable 
+     */
+    public AutoIncrementMipLevelInStorageBinding = (enable: boolean) => {
+        this.autoIncrementMipLevelInStorageBindingUse = enable;
     }
 
     /**
@@ -107,7 +121,10 @@ class Texture2D extends BaseTexture {
             case 'STORAGE_BINDING':
                 {
                     const mipView = this.storageBindingView![this.mipCurosr];
-                    this.nextCursor();
+                    // https://github.com/pipegpu/pipegpu.core/issues/16
+                    if (this.autoIncrementMipLevelInStorageBindingUse) {
+                        this.nextCursor();
+                    }
                     return mipView;
                 }
             case 'NONE':

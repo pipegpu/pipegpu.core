@@ -38,7 +38,7 @@ import { initHZB } from './tech/initHZB.ts';
         width: W,
         height: H,
         devicePixelRatio: devicePixelRatio,
-        requestFeatures: ['texture-compression-bc', 'chromium-experimental-multi-draw-indirect']
+        // requestFeatures: ['texture-compression-bc', 'chromium-experimental-multi-draw-indirect']
     });
     await context.init();
     const compiler: Compiler = new Compiler({ context: context });
