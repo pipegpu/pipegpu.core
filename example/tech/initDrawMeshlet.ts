@@ -1,6 +1,30 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderHolder,
+    RenderProperty,
+    Uniforms,
+    type BaseHolder,
+    type Compiler,
+    type RenderHolderDesc
+} from "../../src";
+import type { HardwareDenseMeshFriendly } from "../plugin/meshlet/spec";
+import { fetchMeshlet } from "../util/fetchMeshlet";
 
-const initDrawMeshlet = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
+const initDrawMeshlet = async (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseHolder> => {
+
+    const damagedhelmet: HardwareDenseMeshFriendly = await fetchMeshlet(`/example/asset/meshlet/damagedhelmet.meshlet`);
+
+    console.log(damagedhelmet.verticesLength());
+    damagedhelmet.meshletsLength();
+    const material_asset = damagedhelmet.materialAsset();
+
+    console.log(material_asset?.pbr()?.baseColor()?.samplerUuid());
+    console.log(material_asset?.pbr()?.baseColor()?.textureUuid());
+    console.log(`${material_asset?.pbr()?.baseColor()?.scaler()?.x()}-${material_asset?.pbr()?.baseColor()?.scaler()?.y()}-${material_asset?.pbr()?.baseColor()?.scaler()?.z()}`);
+
+    console.log(damagedhelmet?.distanceVolumeData()?.localSpaceMeshBounds()?.max()?.x());
 
     let dispatch: RenderProperty;
     {

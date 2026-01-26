@@ -6,23 +6,24 @@ import {
     DepthStencilAttachment,
 } from '../src/index'
 
-import { initDrawCount } from './tech/initDrawCount';
-import { initDrawIndexed } from './tech/initDrawIndexed';
-import { initDrawInstance } from './tech/initDrawInstance';
-import { initKTXTexture2D } from './tech/initKTXTexture2D';
-import { initKTXTexture2DArray } from './tech/initKTXTexture2DArray';
-import { initDrawIndriect } from './tech/initDrawIndirect';
-import { initMultiDrawIndirect } from './tech/initMultiDrawIndirect';
-import { initDrawIndexedIndirect } from './tech/initDrawIndexedIndirect.ts';
-import { initMultiDrawIndexedIndirect } from './tech/initMultiDrawIndexedIndirect.ts';
-import { initMultiDrawIndirectWithStorageVertex } from './tech/initMultiDrawIndirectWithStorageVertex.ts';
-import { initTexelCopy } from './tech/initTexelCopy.ts';
-import { initDrawWithArrayBuffer } from './tech/initDrawWithArrayBuffer.ts';
-import { initReversedZ } from './tech/initReversedZ.ts';
-import { initDeferred } from './tech/initDeferred.ts';
+// import { initDrawCount } from './tech/initDrawCount';
+// import { initDrawIndexed } from './tech/initDrawIndexed';
+// import { initDrawInstance } from './tech/initDrawInstance';
+// import { initKTXTexture2D } from './tech/initKTXTexture2D';
+// import { initKTXTexture2DArray } from './tech/initKTXTexture2DArray';
+// import { initDrawIndriect } from './tech/initDrawIndirect';
+// import { initMultiDrawIndirect } from './tech/initMultiDrawIndirect';
+// import { initDrawIndexedIndirect } from './tech/initDrawIndexedIndirect.ts';
+// import { initMultiDrawIndexedIndirect } from './tech/initMultiDrawIndexedIndirect.ts';
+// import { initMultiDrawIndirectWithStorageVertex } from './tech/initMultiDrawIndirectWithStorageVertex.ts';
+// import { initTexelCopy } from './tech/initTexelCopy.ts';
+// import { initDrawWithArrayBuffer } from './tech/initDrawWithArrayBuffer.ts';
+// import { initReversedZ } from './tech/initReversedZ.ts';
+// import { initDeferred } from './tech/initDeferred.ts';
 // import { initTextureCube } from './tech/initTextureCube.ts';
-import { initDepthBias } from './tech/initDepthBias.ts';
-import { initHZB } from './tech/initHZB.ts';
+// import { initDepthBias } from './tech/initDepthBias.ts';
+// import { initHZB } from './tech/initHZB.ts';
+import { initDrawMeshlet } from './tech/initDrawMeshlet';
 
 (async () => {
 
@@ -93,7 +94,8 @@ import { initHZB } from './tech/initHZB.ts';
     // holders.push(await initReversedZ(context, compiler, colorAttachments, ASPECT, NEAR, FAR));
     // holders.push(...await initDeferred(context, compiler, colorAttachments, depthStencilAttachment, ASPECT, NEAR, FAR));
     // holders.push(await initDepthBias(context, compiler, colorAttachments, ASPECT, NEAR, FAR));
-    holders.push(...await initHZB(context, compiler, colorAttachments, ASPECT, NEAR, FAR));
+    // holders.push(...await initHZB(context, compiler, colorAttachments, ASPECT, NEAR, FAR));
+    holders.push(await initDrawMeshlet(compiler, colorAttachments, depthStencilAttachment));
 
     // const textureCube = await initTextureCube(context, compiler, colorAttachments, ASPECT, NEAR, FAR);
     // const graph: OrderedGraph = new OrderedGraph(context);
