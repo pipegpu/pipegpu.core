@@ -28,7 +28,6 @@ const parseAttribute = (
     }
 ): void => {
     if (opts.attributes?.isEmpty()) {
-        console.log(`[I][parseAttribute][holder][name] ${opts.debugLabel}, input 'attributes' is empty.`);
         return;
     }
     const appendBufferIDWithAttributeRecords = (bufferID: number, record: IAttributeRecord): void => {

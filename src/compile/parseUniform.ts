@@ -45,7 +45,6 @@ const parseUniform = (
     }
 ): UniformHandle => {
     if (opts.uniforms?.isEmpty()) {
-        console.log(`[I][parseUniform][holder][name] ${opts.debugLabel}, input 'uniforms' is empty.`);
         return emptyUniformHandler;
     }
 
