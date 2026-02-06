@@ -10,7 +10,7 @@ interface IContextOpts {
      * selector for the element to be used as a context
      * for example: 'canvas'
      */
-    selector: string;
+    selector: string | HTMLCanvasElement;
 
     /**
      * 
@@ -111,16 +111,16 @@ interface ContextDesc extends IContextOpts {
  * @description
  * @param opts 
  */
-const parseContextDesc = (
-    opts: IContextOpts = {
-        selector: "",
-        width: 0,
-        height: 0,
-        devicePixelRatio: 0
-    }
-): ContextDesc => {
+const parseContextDesc = (opts: IContextOpts): ContextDesc => {
     const container = document.body;
-    let canvas = document.getElementById(opts.selector) as HTMLCanvasElement;
+    let canvas: HTMLCanvasElement;
+    if (opts.selector instanceof HTMLCanvasElement) {
+        canvas = opts.selector;
+    } else if (typeof opts.selector == 'string' && opts.selector.constructor == String) {
+        canvas = document.getElementById(opts.selector) as HTMLCanvasElement;
+    } else {
+        throw new Error(`[E][parseContextDesc] opts.selector invalid.`);
+    }
     const viewportWidth = opts.width * devicePixelRatio;
     const viewportHeight = opts.height * devicePixelRatio;
     if (canvas) {
