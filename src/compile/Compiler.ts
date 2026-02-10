@@ -187,12 +187,8 @@ class Compiler {
      * 
      * @param opts 
      */
-    constructor(
-        opts: {
-            context: Context
-        }
-    ) {
-        this.context = opts.context;
+    constructor(context: Context) {
+        this.context = context;
         this.bufferState = new BufferState(this.context);
         this.shaderState = new ShaderState(this.context);
         this.textureState = new TextureState(this.context);
