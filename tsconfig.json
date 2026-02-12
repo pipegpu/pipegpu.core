@@ -4,27 +4,26 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable",
-    ],
     "declaration": true,
     "outDir": "dist",
     "skipLibCheck": true,
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "sourceMap": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable",
+    ],
     "types": [
       "@webgpu/types"
     ]
