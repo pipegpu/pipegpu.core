@@ -24,7 +24,7 @@
     "vite": "^7.1.11",
     "vitest": "^3.2.4",
     "webdriverio": "^9.20.0",
-    "wgpu-matrix": "^3.4.0"
+    "wgpu-matrix": "^3.4.2"
   },
   "dependencies": {
     "wgsl_reflect": "^1.2.3"
