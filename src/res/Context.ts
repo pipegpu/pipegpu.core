@@ -236,5 +236,6 @@ class Context {
 }
 
 export {
+    type IContextOpts,
     Context
 }
