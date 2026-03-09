@@ -15,7 +15,6 @@ import { StorageBuffer } from "./StorageBuffer";
  * 
  */
 class IndexedIndirectBuffer extends StorageBuffer {
-
     /**
      * 
      * @param opts 
