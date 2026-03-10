@@ -4,16 +4,17 @@ import type { FrameStageFormat, TypedArray1DFormat } from "../Format";
 import type { BufferHandle } from "../Handle";
 
 /**
- * 
+ * @description
+ * @class Buffer1D
  */
 class Buffer1D extends BaseBuffer {
     /**
-     * 
+     * @description
      */
     protected handler?: BufferHandle;
 
     /**
-    * 
+    * @description
     */
     protected typedArrayData1D?: TypedArray1DFormat | ArrayBuffer;
 
@@ -51,11 +52,10 @@ class Buffer1D extends BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      * @param {number}              offset
      * @param {number}              byteLength
      * @param {TypedArray1DFormat}  rawData
-     * 
      */
     protected updateGpuBuffer = (offset: number, byteLength: number, rawData: TypedArray1DFormat | ArrayBuffer) => {
         if (offset + byteLength > this.totalByteLength || rawData.byteLength > this.totalByteLength) {
@@ -63,7 +63,6 @@ class Buffer1D extends BaseBuffer {
         }
         // align 4 byte for input byteLength
         // const algin4 = align4Byte(byteLength);
-        // 
         this.context?.getGpuQueue().writeBuffer(
             this.buffer as GPUBuffer,
             offset,
@@ -74,7 +73,7 @@ class Buffer1D extends BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      */
     protected createGpuBuffer = () => {
         if (!this.buffer) {
@@ -97,12 +96,26 @@ class Buffer1D extends BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      * @param {(GPUCommandEncoder|null)} encoder 
      * @param {FrameStageFormat} frameStage 
-     * 
      */
-    override getGpuBuffer(_encoder: GPUCommandEncoder | null, frameStage: FrameStageFormat): GPUBuffer {
+    override getGpuBuffer(encoder: GPUCommandEncoder | null, frameStage: FrameStageFormat): GPUBuffer {
+        if (this.latestTotalByteLength !== this.totalByteLength) {
+            this.totalByteLength = this.latestTotalByteLength;
+            if (!this.buffer) {
+                this.createGpuBuffer();
+            } else {
+                const desc: GPUBufferDescriptor = {
+                    size: this.totalByteLength,
+                    usage: this.bufferUsageFlags as GPUBufferUsageFlags
+                };
+                const latestBuffer = this.context!.getGpuDevice().createBuffer(desc);
+                encoder?.copyBufferToBuffer(this.buffer, latestBuffer);
+                this.buffer.destroy();
+                this.buffer = latestBuffer;
+            }
+        }
         if (!this.buffer) {
             this.createGpuBuffer();
         } else {

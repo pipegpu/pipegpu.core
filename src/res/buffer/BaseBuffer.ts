@@ -2,34 +2,38 @@ import { Context } from "../Context.ts"
 import type { FrameStageFormat } from "../Format.ts";
 
 /**
- * 
+ * @description
  */
 abstract class BaseBuffer {
-
     /**
-    *
+    * @description
     */
     private id: number;
 
     /**
-     * 
+     * @description
      */
     protected context: Context | undefined;
 
     /**
-     * 
+     * @description
      */
     protected bufferUsageFlags: GPUBufferUsageFlags;
 
     /**
-     * 
+     * @description
      */
     protected buffer!: GPUBuffer;
 
     /**
-    * 
+    * @description
     */
     protected totalByteLength: number = 0;
+
+    /**
+     * @description
+     */
+    protected latestTotalByteLength:number = 0;
 
     /**
      * 
@@ -67,12 +71,28 @@ abstract class BaseBuffer {
     }
 
     /**
+     * @description
+     *  expand buffer to new size.
+     */
+    /**
+     * @description
+     */
+    public expand(byteLength: number): void {
+        if (byteLength < this.totalByteLength) {
+            return;
+        }
+        if (byteLength === this.latestTotalByteLength) {
+            return;
+        }
+        this.latestTotalByteLength = byteLength;
+    }
+
+    /**
      * 
      * @param encoder 
      * @param frameStage 
      */
     abstract getGpuBuffer(encoder: GPUCommandEncoder | null, frameStage: FrameStageFormat): GPUBuffer;
-
 }
 
 export {

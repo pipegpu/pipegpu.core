@@ -4,12 +4,10 @@ import type { BufferArrayHandle } from "../Handle";
 import { BaseBuffer } from "./BaseBuffer";
 
 /**
- * 
+ * @description
  * @class Buffer2D
- * 
  */
 class Buffer2D extends BaseBuffer {
-
     /**
      * 
      */
@@ -51,11 +49,10 @@ class Buffer2D extends BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      * @param {number}              offset
      * @param {number}              byteLength
      * @param {TypedArray1DFormat}  rawData
-     * 
      */
     protected updateGpuBuffer = (offset: number, byteLength: number, rawData: TypedArray1DFormat | ArrayBuffer) => {
         if (offset + byteLength > this.totalByteLength || rawData.byteLength > this.totalByteLength) {
@@ -72,12 +69,11 @@ class Buffer2D extends BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      * create gpu buffer
      * - with maximum byte length.
      * - write data if typedArrayData2D is valid.
      * - wirte data if handler is valid.
-     * 
      */
     protected createGpuBuffer = () => {
         if (!this.buffer) {
@@ -104,13 +100,27 @@ class Buffer2D extends BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      * @param _encoder 
      * @param frameStage 
-     * @returns 
-     * 
+     * @returns
      */
     override getGpuBuffer(_encoder?: GPUCommandEncoder | null, frameStage?: FrameStageFormat): GPUBuffer {
+        if (this.latestTotalByteLength !== this.totalByteLength) {
+            this.totalByteLength = this.latestTotalByteLength;
+            if (!this.buffer) {
+                this.createGpuBuffer();
+            } else {
+                const desc: GPUBufferDescriptor = {
+                    size: this.totalByteLength,
+                    usage: this.bufferUsageFlags as GPUBufferUsageFlags
+                };
+                const latestBuffer = this.context!.getGpuDevice().createBuffer(desc);
+                _encoder?.copyBufferToBuffer(this.buffer, latestBuffer);
+                this.buffer.destroy();
+                this.buffer = latestBuffer;
+            }
+        }
         if (!this.buffer) {
             this.createGpuBuffer();
         } else {
