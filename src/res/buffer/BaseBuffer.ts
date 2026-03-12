@@ -33,7 +33,7 @@ abstract class BaseBuffer {
     /**
      * @description
      */
-    protected latestTotalByteLength:number = 0;
+    protected latestTotalByteLength: number = 0;
 
     /**
      * 
@@ -49,7 +49,7 @@ abstract class BaseBuffer {
         this.id = opts.id;
         this.context = opts.context;
         this.bufferUsageFlags = opts.bufferUsageFlags;
-        this.totalByteLength = opts.totalByteLength;
+        this.totalByteLength = this.latestTotalByteLength = opts.totalByteLength;
         if (!this.totalByteLength) {
             throw new Error(`[E][BaseBuffer][constructor] create buffer error, opts.totalByteLength value invalid.`);
         }
