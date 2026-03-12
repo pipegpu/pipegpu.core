@@ -150,10 +150,11 @@ class Context {
     /**
      * 
      */
-    submitFrameResource = (): void => {
+    submitFrameResource = async (): Promise<void> => {
         const desc: GPUCommandBufferDescriptor = {};
         const frameCommandBuffers: GPUCommandBuffer[] = [this.commandEncoder?.finish(desc) as GPUCommandBuffer];
         this.queue?.submit(frameCommandBuffers);
+        await this.device?.queue.onSubmittedWorkDone()
     }
 
     /**
