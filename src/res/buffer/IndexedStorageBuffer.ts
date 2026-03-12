@@ -4,15 +4,13 @@ import type { BufferArrayHandle } from "../Handle";
 import { StorageBuffer } from "./StorageBuffer";
 
 /**
- * 
+ * @description
  * @class IndexedStorageBuffer
- * 
  */
 class IndexedStorageBuffer extends StorageBuffer {
-
     /**
-    * 
-    */
+     * @description
+     */
     private indexedFormat: GPUIndexFormat = 'uint32';
 
     /**
@@ -57,7 +55,7 @@ class IndexedStorageBuffer extends StorageBuffer {
                 else {
                     throw new Error(`[E][IndexedStorageBuffer][constructor] raw data error. only one type of uint16/uint32 support. and all slice of raw must be the same type.`);
                 }
-            })
+            });
             this.indexedFormat = format as GPUIndexFormat;
         }
     }
@@ -76,8 +74,9 @@ class IndexedStorageBuffer extends StorageBuffer {
      * 
      * @returns 
      */
-    getDrawCount = (): number => {
-        return this.drawCount;
+    getMaxDrawCount = (): number => {
+        const BYTES_PER_ELEMENT = this.indexedFormat === 'uint16' ? Uint16Array.BYTES_PER_ELEMENT : Uint32Array.BYTES_PER_ELEMENT;
+        return this.totalByteLength / BYTES_PER_ELEMENT;
     }
 
     /**

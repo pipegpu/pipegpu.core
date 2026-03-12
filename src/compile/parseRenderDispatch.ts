@@ -38,7 +38,7 @@ const parseRenderDispatch = (
                     const indexBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
                     encoder.setIndexBuffer(indexBuffer.getGpuBuffer(null, 'frameBegin'), indexBuffer.getIndexFormat());
-                    encoder.drawIndexed(indexBuffer.getDrawCount(), instanceCount, 0, 0, 0);
+                    encoder.drawIndexed(indexBuffer.getMaxDrawCount(), instanceCount, 0, 0, 0);
                 };
             }
         case 'drawIndexedStorage':
@@ -47,7 +47,7 @@ const parseRenderDispatch = (
                     const indexedStorageBuffer: IndexedStorageBuffer = opts.dispatch.getIndexStorageBuffer()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
                     encoder.setIndexBuffer(indexedStorageBuffer.getGpuBuffer(null, 'frameBegin'), indexedStorageBuffer.getIndexedFormat());
-                    encoder.drawIndexed(indexedStorageBuffer.getDrawCount(), instanceCount, 0, 0, 0);
+                    encoder.drawIndexed(indexedStorageBuffer.getMaxDrawCount(), instanceCount, 0, 0, 0);
                 };
             };
         case 'drawIndirect':

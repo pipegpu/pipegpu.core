@@ -53,7 +53,7 @@ class IndexedBuffer extends Buffer1D {
      * @returns {number}
      * 
      */
-    getDrawCount = (): number => {
+    getMaxDrawCount = (): number => {
         return this.drawCount;
     }
 
