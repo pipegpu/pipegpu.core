@@ -30,8 +30,10 @@
   },
   "include": [
     "src",
-    "example",
-    "packages",
-    "test",
+    "test"
+  ],
+  "exclude": [
+    "example/**/*",
+    // "test/**/*"
   ]
 }

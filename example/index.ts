@@ -30,9 +30,9 @@ import { initDrawMeshlet } from './tech/initDrawMeshlet';
     const W = window.innerWidth;
     const H = window.innerHeight;
     const SELECTOR = `sketchpad`;
-    const NEAR = 5.0;
-    const FAR = 10000.0;
-    const ASPECT = W / H;
+    // const NEAR = 5.0;
+    // const FAR = 10000.0;
+    // const ASPECT = W / H;
 
     const context: Context = new Context({
         selector: SELECTOR,
@@ -42,7 +42,7 @@ import { initDrawMeshlet } from './tech/initDrawMeshlet';
         // requestFeatures: ['texture-compression-bc', 'chromium-experimental-multi-draw-indirect']
     });
     await context.init();
-    const compiler: Compiler = new Compiler({ context: context });
+    const compiler: Compiler = new Compiler(context);
     {
         const canvas: HTMLCanvasElement = document.getElementById(SELECTOR) as HTMLCanvasElement;
         canvas.style.top = `0px`;

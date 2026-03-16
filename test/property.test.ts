@@ -19,9 +19,7 @@ beforeAll(async () => {
         requestFeatures: []
     });
     await context.init()
-    compiler = new Compiler({
-        context: context
-    });
+    compiler = new Compiler(context);
 });
 
 test('property: attribute.', async () => {
