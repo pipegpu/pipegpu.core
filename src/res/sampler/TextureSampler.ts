@@ -3,10 +3,10 @@ import type { FrameStageFormat } from "../Format";
 import { BaseSampler } from "./BaseSampler";
 
 /**
- * 
+ * @class
+ * @description
  */
 class TextureSampler extends BaseSampler {
-
     /**
      * 
      * @param opts 

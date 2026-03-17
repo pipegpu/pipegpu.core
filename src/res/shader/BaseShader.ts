@@ -111,7 +111,7 @@ abstract class BaseShader {
             this.shader = this.context?.getGpuDevice().createShaderModule(desc);
             this.shader?.getCompilationInfo().then(value => {
                 value.messages.forEach(message => {
-                    throw new Error(`[E][BaseShader][createGpuShader] wgsl: ${message}`);
+                    throw new Error(`[E][BaseShader][createGpuShader] label:${label}, error message: ${message}.`);
                 });
             });
         }
