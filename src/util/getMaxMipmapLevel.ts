@@ -1,8 +1,17 @@
-
+/**
+ * 
+ * @param args 
+ * @returns 
+ */
 const max = (...args: number[]) => {
     return args.reduce((prev, current) => (prev > current ? prev : current));
 }
 
+/**
+ * 
+ * @param args 
+ * @returns 
+ */
 const min = (...args: number[]) => {
     return args.reduce((prev, current) => (prev < current ? prev : current));
 }

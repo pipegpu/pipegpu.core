@@ -1,4 +1,5 @@
 import { type IContextOpts, type ContextDesc, parseContextDesc } from "../compile/parseContextDesc.ts";
+import { getMaxMipmapCount } from "../util/getMaxMipmapLevel.ts";
 import type { FeatureNameFormat } from "./Format.ts";
 
 /**
@@ -192,6 +193,13 @@ class Context {
      */
     getViewportHeight = (): number => {
         return this.contextDesc.viewportHeight;
+    }
+
+    /**
+     * @description
+     */
+    getMax2DMipmapCount = (): number => {
+        return getMaxMipmapCount(this.getViewportWidth(), this.getViewportHeight());
     }
 
     /**
