@@ -85,6 +85,27 @@ type BufferArrayHandle = () => {
 };
 
 /**
+ * @description
+ *  NONE buffer update.
+ */
+const NoBufferArrayUpdateRequired = {
+    rewrite: false,
+    details: [],
+};
+
+/**
+ * @description
+ */
+const NoBufferUpdateRequired = {
+    rewrite: false,
+    detail: {
+        offset: 0,
+        byteLength: 0,
+        rawData: new Uint8Array(0),
+    },
+};
+
+/**
  * e.g for texture 2d array.
  */
 type TextureArrayHandle = () => {
@@ -102,4 +123,6 @@ export {
     type BufferHandleDetail,
     type TextureDetailHandle,
     type TextureArrayHandle,
+    NoBufferArrayUpdateRequired,
+    NoBufferUpdateRequired,
 }
