@@ -203,7 +203,7 @@ class Compiler {
      * @returns 
      */
     compileRenderHolder = (desc: RenderHolderDesc): RenderHolder => {
-        const debugLabel = `[render][holder][${desc.label}]`;
+        const debugLabel = `[RenderHolder][${desc.label}]`;
         const vertexShader = desc.vertexShader, fragmentShader = desc.fragmentShader;
         // vaildation shader
         if (!vertexShader || !fragmentShader) {
@@ -360,7 +360,7 @@ class Compiler {
      * @param desc 
      */
     compileComputeHolder = (desc: ComputeHolderDesc): ComputeHolder => {
-        const debugLabel = `[compute][holder][${desc.label}]`;
+        const debugLabel = `[ComputeHolder][${desc.label}]`;
         const computeShader = desc.computeShader;
         if (!computeShader) {
             throw new Error(`[E][Compiler][compileComputeHolder] ${debugLabel} missing shader, computeShader: ${computeShader}`);
