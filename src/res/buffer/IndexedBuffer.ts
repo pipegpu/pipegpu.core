@@ -25,6 +25,7 @@ class IndexedBuffer extends Buffer1D {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             typedArrayData1D: Uint16Array | Uint32Array,
@@ -32,6 +33,7 @@ class IndexedBuffer extends Buffer1D {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,

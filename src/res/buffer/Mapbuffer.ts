@@ -29,6 +29,7 @@ class MapBuffer extends StorageBuffer {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             appendixBufferUsageFlags?: number,
@@ -38,6 +39,7 @@ class MapBuffer extends StorageBuffer {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             bufferUsageFlags: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC | (opts.appendixBufferUsageFlags || 0),
             totalByteLength: opts.totalByteLength,
@@ -55,7 +57,7 @@ class MapBuffer extends StorageBuffer {
     private createMapReadBuffer = () => {
         let desc: GPUBufferDescriptor = {
             size: this.getByteLength(),
-            label: "[MapBuffer][createMapReadBuffer]",
+            label: `[MapBuffer][createMapReadBuffer][${this.label}]`,
             usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST
         };
         this.mapReadBuffer = this.context?.getGpuDevice().createBuffer(desc) as GPUBuffer;
@@ -71,7 +73,7 @@ class MapBuffer extends StorageBuffer {
     private createMapWriteBuffer = () => {
         let desc: GPUBufferDescriptor = {
             size: this.getByteLength(),
-            label: "[MapBuffer][createMapWriteBuffer]",
+            label: `[MapBuffer][createMapWriteBuffer][${this.label}]`,
             usage: GPUBufferUsage.MAP_WRITE | GPUBufferUsage.COPY_SRC
         };
         this.mapWriteBuffer = this.context?.getGpuDevice().createBuffer(desc) as GPUBuffer;

@@ -115,39 +115,38 @@ interface RenderHolderDesc {
  */
 interface ComputeHolderDesc {
     /**
-     * 
+     * @description
      */
     label: string,
 
     /**
-     * 
+     * @description
      */
     computeShader: ComputeShader,
 
     /**
-     * 
+     * @description
      */
     uniforms: Uniforms,
 
     /**
-     * 
+     * @description
      */
     dispatch: ComputeProperty,
 
     /**
-     * 
-     * compute shader tail handler.
-     * append command buffer at the end.
-     * 
+     * @description
+     *  - compute shader tail handler.
+     *  - append command buffer at the end.
      */
     handler?: HookHandle,
 }
 
 /**
- * 
+ * @description
+ * @class Compiler
  */
 class Compiler {
-
     /**
      * 
      */
@@ -198,7 +197,7 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description
      * @param desc 
      * @returns 
      */
@@ -337,7 +336,6 @@ class Compiler {
         // TODO::   
         // dependeicese, includes input/output
         //
-
         // render holder
         return new RenderHolder({
             debugLabel: debugLabel,
@@ -356,7 +354,7 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description
      * @param desc 
      */
     compileComputeHolder = (desc: ComputeHolderDesc): ComputeHolder => {
@@ -443,7 +441,6 @@ class Compiler {
         // TODO::   
         // dependeicese, includes input/output
         //
-
         return new ComputeHolder({
             debugLabel: debugLabel,
             id: uniqueID(),
@@ -467,16 +464,17 @@ class Compiler {
      */
     createVertexBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             rawData?: TypedArray1DFormat,
             handler?: BufferHandle,
         }
     ): VertexBuffer => {
         return this.bufferState.createVertexBuffer({
+            label: opts.debugLabel || "vertexbuffer",
             totalByteLength: opts.totalByteLength,
             rawData: opts.rawData,
-            handler: opts.handler
+            handler: opts.handler,
         });
     }
 
@@ -488,7 +486,7 @@ class Compiler {
      */
     createIndexBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             rawData: Uint16Array | Uint32Array,
         }
     ): IndexedBuffer => {
@@ -496,7 +494,8 @@ class Compiler {
             throw new Error(`[E][Compiler][createIndexBuffer] buffer bytelength must align with 4. current index buffer byte length: ${opts.rawData.byteLength}`);
         }
         return this.bufferState.createIndexBuffer({
-            rawData: opts.rawData
+            label: opts.debugLabel || "indexbuffer",
+            rawData: opts.rawData,
         });
     }
 
@@ -509,7 +508,7 @@ class Compiler {
      */
     createUniformBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             rawData?: TypedArray1DFormat | ArrayBuffer,
             handler?: BufferHandle
@@ -519,9 +518,10 @@ class Compiler {
             throw new Error(`[E][createUniformBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
         return this.bufferState.createUniformBuffer({
+            label: opts.debugLabel || "uniformbuffer",
             totalByteLength: opts.totalByteLength,
             rawData: opts.rawData,
-            handler: opts.handler
+            handler: opts.handler,
         });
     }
 
@@ -533,21 +533,22 @@ class Compiler {
      */
     createStorageBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             bufferUsageFlags?: GPUBufferUsageFlags,
             rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
-            handler?: BufferArrayHandle
+            handler?: BufferArrayHandle,
         }
     ): StorageBuffer => {
         if (opts.totalByteLength >= this.context.getLimits().maxStorageBufferBindingSize) {
             throw new Error(`[E][createStorageBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
         return this.bufferState.createStorageBuffer({
+            label: opts.debugLabel || "storagebuffer",
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: opts.bufferUsageFlags,
             rawDataArray: opts.rawDataArray,
-            handler: opts.handler
+            handler: opts.handler,
         });
     }
 
@@ -558,19 +559,20 @@ class Compiler {
      */
     createIndexedStorageBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             rawDataArray?: Array<Uint16Array> | Array<Uint32Array>,
-            handler?: BufferArrayHandle
+            handler?: BufferArrayHandle,
         }
     ): IndexedStorageBuffer => {
         if (opts.totalByteLength >= this.context.getLimits().maxStorageBufferBindingSize) {
             throw new Error(`[E][createIndexedStorageBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
         return this.bufferState.createIndexedStorageBuffer({
+            label: opts.debugLabel || "indexedstoragebuffer",
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
-            handler: opts.handler
+            handler: opts.handler,
         });
     }
 
@@ -583,7 +585,7 @@ class Compiler {
      */
     createIndirectBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             rawDataArray?: TypedArray2DFormat,
             handler?: BufferArrayHandle,
@@ -593,9 +595,10 @@ class Compiler {
             throw new Error(`[E][createIndirectBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
         return this.bufferState.createIndirectBuffer({
+            label: opts.debugLabel || "indirectbuffer",
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
-            handler: opts.handler
+            handler: opts.handler,
         });
     }
 
@@ -608,7 +611,7 @@ class Compiler {
      */
     createIndexedIndirectBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             rawDataArray?: TypedArray2DFormat,
             handler?: BufferArrayHandle,
@@ -618,12 +621,12 @@ class Compiler {
             throw new Error(`[E][createIndexedIndirectBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
         return this.bufferState.createIndexedIndirectBuffer({
+            label: opts.debugLabel || "indexedindirectbuffer",
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
             handler: opts.handler,
         });
     }
-
 
     /**
      * 
@@ -633,21 +636,22 @@ class Compiler {
      */
     createMapBuffer = (
         opts: {
-            debugLabel?: number,
+            debugLabel?: string,
             totalByteLength: number,
             appendixBufferUsageFlags?: number,
             rawDataArray?: TypedArray2DFormat,
-            handler?: BufferArrayHandle
+            handler?: BufferArrayHandle,
         }
     ): MapBuffer => {
         if (opts.totalByteLength >= this.context.getLimits().maxStorageBufferBindingSize) {
             throw new Error(`[E][createMapBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
         return this.bufferState.createMapBuffer({
+            label: opts.debugLabel || "mapbuffer",
             totalByteLength: opts.totalByteLength,
             appendixBufferUsageFlags: opts.appendixBufferUsageFlags,
             rawDataArray: opts.rawDataArray,
-            handler: opts.handler
+            handler: opts.handler,
         });
     }
 
@@ -666,7 +670,7 @@ class Compiler {
     ): VertexShader => {
         return this.shaderState.createVertexShader({
             code: opts.code,
-            entryPoint: opts.entryPoint
+            entryPoint: opts.entryPoint,
         });
     }
 
@@ -685,7 +689,7 @@ class Compiler {
     ): FragmentShader => {
         return this.shaderState.createFragmentShader({
             code: opts.code,
-            entryPoint: opts.entryPoint
+            entryPoint: opts.entryPoint,
         });
     }
 
@@ -699,12 +703,12 @@ class Compiler {
         opts: {
             debugLabel?: number,
             code: string,
-            entryPoint: string
+            entryPoint: string,
         }
     ): ComputeShader => {
         return this.shaderState.createComputeShader({
             code: opts.code,
-            entryPoint: opts.entryPoint
+            entryPoint: opts.entryPoint,
         });
     }
 
@@ -720,14 +724,14 @@ class Compiler {
             texture: BaseTexture,
             blendFormat?: BlendFormat,
             colorLoadStoreFormat?: ColorLoadStoreFormat,
-            clearColor?: number[]
+            clearColor?: number[],
         }
     ): ColorAttachment => {
         return this.attachmentState.createColorAttachment({
             texture: opts.texture,
             blendFormat: opts.blendFormat,
             colorLoadStoreFormat: opts.colorLoadStoreFormat,
-            clearColor: opts.clearColor
+            clearColor: opts.clearColor,
         });
     }
 
@@ -950,10 +954,9 @@ class Compiler {
             lodMaxClamp: opts.lodMaxClamp,
             anisotropy: opts.anisotropy,
             compareFunction: opts.compareFunction || 'always',
-            samplerBindingType: opts.samplerBindingType
+            samplerBindingType: opts.samplerBindingType,
         });
     }
-
 }
 
 export {

@@ -31,6 +31,7 @@ class Buffer2D extends BaseBuffer {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             bufferUsageFlags: GPUBufferUsageFlags
@@ -40,6 +41,7 @@ class Buffer2D extends BaseBuffer {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: opts.bufferUsageFlags | GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
@@ -58,14 +60,19 @@ class Buffer2D extends BaseBuffer {
         if (offset + byteLength > this.totalByteLength || rawData.byteLength > this.totalByteLength) {
             throw new Error(`[E][VertexBuffer][updateGpuBuffer] buffer bytelength oversized, maximum bytelength: ${this.totalByteLength}`);
         }
-        // rawdata perphaps typeof ArrayBuffer
-        this.context?.getGpuQueue().writeBuffer(
-            this.buffer as GPUBuffer,
-            offset,
-            rawData as GPUAllowSharedBufferSource,
-            // rawData instanceof ArrayBuffer ? rawData : rawData.buffer,
-            0
-        );
+        try {
+            // rawdata perphaps typeof ArrayBuffer
+            this.context?.getGpuQueue().writeBuffer(
+                this.buffer as GPUBuffer,
+                offset,
+                rawData as GPUAllowSharedBufferSource,
+                // rawData instanceof ArrayBuffer ? rawData : rawData.buffer,
+                0
+            );
+        }
+        catch (err) {
+            console.error(`[updateGpuBuffer] ${this.label} error. message: ${err} `);
+        }
     }
 
     /**
@@ -78,6 +85,7 @@ class Buffer2D extends BaseBuffer {
     protected createGpuBuffer = () => {
         if (!this.buffer) {
             const desc: GPUBufferDescriptor = {
+                label: `[${this.label}]`,
                 size: this.totalByteLength,
                 usage: this.bufferUsageFlags as GPUBufferUsageFlags
             };
@@ -112,6 +120,7 @@ class Buffer2D extends BaseBuffer {
                 this.createGpuBuffer();
             } else {
                 const desc: GPUBufferDescriptor = {
+                    label: `[${this.label}]`,
                     size: this.totalByteLength,
                     usage: this.bufferUsageFlags as GPUBufferUsageFlags
                 };

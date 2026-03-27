@@ -23,6 +23,7 @@ class IndirectBuffer extends StorageBuffer {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
@@ -31,6 +32,7 @@ class IndirectBuffer extends StorageBuffer {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: GPUBufferUsage.INDIRECT | GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC,

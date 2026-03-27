@@ -56,12 +56,14 @@ class BufferState {
      */
     createIndexBuffer(
         opts: {
+            label: string,
             rawData: Uint16Array | Uint32Array,
         }
     ): IndexedBuffer {
         const bufferID: number = uniqueID();
         const buffer: IndexedBuffer = new IndexedBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.rawData.byteLength,
             typedArrayData1D: opts.rawData
@@ -78,6 +80,7 @@ class BufferState {
      */
     createUniformBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             rawData?: TypedArray1DFormat | ArrayBuffer,
             handler?: BufferHandle,
@@ -86,6 +89,7 @@ class BufferState {
         const bufferID = uniqueID();
         const buffer: UniformBuffer = new UniformBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             rawData: opts.rawData,
@@ -103,6 +107,7 @@ class BufferState {
      */
     createMapBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             appendixBufferUsageFlags?: number,
             rawDataArray?: TypedArray2DFormat,
@@ -112,6 +117,7 @@ class BufferState {
         const bufferID: number = uniqueID();
         const buffer: MapBuffer = new MapBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             appendixBufferUsageFlags: opts.appendixBufferUsageFlags,
@@ -130,6 +136,7 @@ class BufferState {
      */
     createStorageBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             bufferUsageFlags?: GPUBufferUsageFlags,
             rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
@@ -139,6 +146,7 @@ class BufferState {
         const bufferID: number = uniqueID();
         const buffer: StorageBuffer = new StorageBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
@@ -156,6 +164,7 @@ class BufferState {
      */
     createIndexedStorageBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             rawDataArray?: Array<Uint16Array> | Array<Uint32Array>,
             handler?: BufferArrayHandle
@@ -164,6 +173,7 @@ class BufferState {
         const bufferID: number = uniqueID();
         const buffer: IndexedStorageBuffer = new IndexedStorageBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
@@ -182,6 +192,7 @@ class BufferState {
      */
     createVertexBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             rawData?: TypedArray1DFormat
             handler?: BufferHandle
@@ -190,6 +201,7 @@ class BufferState {
         const bufferID: number = uniqueID();
         const buffer: VertexBuffer = new VertexBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             rawData: opts.rawData,
@@ -207,6 +219,7 @@ class BufferState {
      */
     createIndirectBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
             handler?: BufferArrayHandle,
@@ -215,6 +228,7 @@ class BufferState {
         const bufferID: number = uniqueID();
         const buffer: IndirectBuffer = new IndirectBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
@@ -232,6 +246,7 @@ class BufferState {
      */
     createIndexedIndirectBuffer = (
         opts: {
+            label: string,
             totalByteLength: number,
             rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
             handler?: BufferArrayHandle,
@@ -240,6 +255,7 @@ class BufferState {
         const bufferID: number = uniqueID();
         const buffer: IndexedIndirectBuffer = new IndexedIndirectBuffer({
             id: bufferID,
+            label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,

@@ -23,6 +23,7 @@ class StorageBuffer extends Buffer2D {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             bufferUsageFlags?: GPUBufferUsageFlags
@@ -32,6 +33,7 @@ class StorageBuffer extends Buffer2D {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: opts.bufferUsageFlags || GPUBufferUsage.STORAGE | GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,

@@ -25,6 +25,7 @@ class IndexedStorageBuffer extends StorageBuffer {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             rawDataArray?: Array<Uint16Array> | Array<Uint32Array>,
@@ -33,6 +34,7 @@ class IndexedStorageBuffer extends StorageBuffer {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: GPUBufferUsage.INDEX | GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,

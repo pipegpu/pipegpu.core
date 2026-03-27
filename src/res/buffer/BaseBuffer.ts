@@ -35,12 +35,15 @@ abstract class BaseBuffer {
      */
     protected latestTotalByteLength: number = 0;
 
+    protected label: string;
+
     /**
      * 
      */
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             bufferUsageFlags: GPUBufferUsageFlags,
             totalByteLength: number,
@@ -48,6 +51,7 @@ abstract class BaseBuffer {
     ) {
         this.id = opts.id;
         this.context = opts.context;
+        this.label = opts.label;
         this.bufferUsageFlags = opts.bufferUsageFlags;
         this.totalByteLength = this.latestTotalByteLength = opts.totalByteLength;
         if (!this.totalByteLength) {

@@ -17,6 +17,7 @@ class VertexBuffer extends Buffer1D {
     constructor(
         opts: {
             id: number,
+            label: string,
             context: Context,
             totalByteLength: number,
             rawData?: TypedArray1DFormat,
@@ -25,6 +26,7 @@ class VertexBuffer extends Buffer1D {
     ) {
         super({
             id: opts.id,
+            label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
