@@ -1,13 +1,21 @@
-import type { UserConfig } from 'vite'
+import type { UserConfig } from 'vite';
 
 export default {
+  base: './',
   build: {
+    outDir: './build/',
+    emptyOutDir: true,
     lib: {
+      entry: './src/index.ts',
       name: 'pipegpu.core',
-      entry: ['src/index.ts'],
-      fileName: (format, _entryName) => `pipegpu.core.${format}.js`,
-      cssFileName: 'pipegpu-lib-style',
-      formats: ['es', 'iife', 'umd', 'cjs', 'system'],
+      fileName: (format) => `index.${format}.js`,
+      formats: ['cjs', 'es', 'iife', 'umd'],
     },
+    rollupOptions: {
+      external: [],
+      output: {
+        assetFileNames: 'assets/[name].[hash].[ext]',
+      },
+    }
   },
-} satisfies UserConfig
+} satisfies UserConfig;

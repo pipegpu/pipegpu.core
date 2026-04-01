@@ -1,12 +1,10 @@
 {
   "name": "@pipegpu/core",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -15,15 +13,15 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@vitest/browser": "^3.2.4",
-    "@vitest/coverage-istanbul": "^3.2.4",
-    "@wdio/cli": "^9.20.0",
+    "@vitest/browser": "^4.1.2",
+    "@vitest/coverage-istanbul": "^4.1.2",
+    "@wdio/cli": "^9.27.0",
     "@webgpu/types": "^0.1.69",
     "flatbuffers": "^25.9.23",
-    "typescript": "^5.9.3",
-    "vite": "^7.1.11",
-    "vitest": "^3.2.4",
-    "webdriverio": "^9.20.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vitest": "^4.1.2",
+    "webdriverio": "^9.27.0",
     "wgpu-matrix": "^3.4.2"
   },
   "dependencies": {

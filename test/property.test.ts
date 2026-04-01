@@ -81,6 +81,7 @@ test('property: dispatch render property.', async () => {
 
     const indexedBuffer: IndexedBuffer = new IndexedBuffer({
         id: 1,
+        label: "",
         context: context,
         totalByteLength: 4 * 3,
         typedArrayData1D: new Uint32Array([1, 2, 3]),
@@ -88,6 +89,7 @@ test('property: dispatch render property.', async () => {
 
     const indexedStorageBuffer: IndexedStorageBuffer = new IndexedStorageBuffer({
         id: 2,
+        label: "",
         context: context,
         totalByteLength: 4 * 3,
         rawDataArray: [new Uint32Array([1, 2, 3])]
@@ -95,18 +97,21 @@ test('property: dispatch render property.', async () => {
 
     const indirectBuffer: IndirectBuffer = new IndirectBuffer({
         id: 3,
+        label: "",
         context: context,
         totalByteLength: 16,
     });
 
     const indexedIndirectBuffer: IndexedIndirectBuffer = new IndexedIndirectBuffer({
         id: 4,
+        label: "",
         context: context,
         totalByteLength: 20,
     });
 
     const indirectDrawCountBuffer: StorageBuffer = new StorageBuffer({
         id: 5,
+        label: "",
         context: context,
         totalByteLength: 4,
         bufferUsageFlags: GPUBufferUsage.INDIRECT,
