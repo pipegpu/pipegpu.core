@@ -48,6 +48,7 @@ import type { IndirectBuffer } from "../res/buffer/IndirectBuffer";
 import type { IndexedIndirectBuffer } from "../res/buffer/IndexedIndirectBuffer";
 import type { ComparisonSampler } from "../res/sampler/ComparisonSampler";
 import type { TextureSampler } from "../res/sampler/TextureSampler";
+import type { Texture3D } from "../res/texture/Texture3D";
 
 /**
  * render holde descriptor
@@ -884,6 +885,36 @@ class Compiler {
             width: opts.width,
             height: opts.height,
             faces: opts.faces,
+            textureFormat: opts.textureFormat,
+            mipmapCount: opts.mipmapCount,
+            appendixTextureUsages: opts.appendixTextureUsages,
+        });
+    }
+
+    /**
+     * @description
+     * @param opts 
+     * @returns 
+     */
+    createTexture3D = (
+        opts: {
+            label?: string,
+            width: number,
+            height: number,
+            depth: number,
+            textureData?: TypedArray2DFormat,
+            handler?: TextureArrayHandle,
+            textureFormat?: GPUTextureFormat,
+            mipmapCount?: number,
+            appendixTextureUsages?: number,
+        }
+    ): Texture3D => {
+        return this.textureState.createTexture3D({
+            width: opts.width,
+            height: opts.height,
+            depth: opts.depth,
+            textureData: opts.textureData,
+            handler: opts.handler,
             textureFormat: opts.textureFormat,
             mipmapCount: opts.mipmapCount,
             appendixTextureUsages: opts.appendixTextureUsages,

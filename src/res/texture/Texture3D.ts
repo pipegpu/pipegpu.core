@@ -1,26 +1,27 @@
 import type { Context } from "../Context";
-import type { FrameStageFormat, TypedArray1DFormat } from "../Format";
+import type { FrameStageFormat, TypedArray2DFormat } from "../Format";
+import type { TextureArrayHandle } from "../Handle";
 import { BaseTexture } from "./BaseTexture";
 
 /**
  * @description
- * @class Texture2D
+ * @class Texture3D
  */
-class Texture2D extends BaseTexture {
+class Texture3D extends BaseTexture {
     /**
-     * 
+     * @description
      */
-    protected textureData?: TypedArray1DFormat;
+    protected textureData?: TypedArray2DFormat;
 
     /**
-    * https://github.com/pipegpu/pipegpu.core/issues/16
-    * indicator auto increment mip level in storage binding use
-    */
-    private autoIncrementMipLevelInStorageBindingUse: boolean = false;
+     * @description
+     */
+    protected handler?: TextureArrayHandle;
 
     /**
-     * 
+     * @description
      * @param opts 
+     * @param {GPUTextureFormat} opts.textureFormat. texture3d only support color texel format.
      */
     constructor(
         opts: {
@@ -28,8 +29,10 @@ class Texture2D extends BaseTexture {
             context: Context,
             width: number,
             height: number,
+            depth: number,
             appendixTextureUsages?: number,
-            textureData?: TypedArray1DFormat,
+            textureData?: TypedArray2DFormat,
+            handler?: TextureArrayHandle,
             textureFormat?: GPUTextureFormat,
             mipmapCount?: number,
         }
@@ -39,40 +42,68 @@ class Texture2D extends BaseTexture {
             context: opts.context,
             width: opts.width,
             height: opts.height,
-            depthOrArrayLayers: 1,
+            depthOrArrayLayers: opts.depth,
             textureUsageFlags: (opts.appendixTextureUsages || 0) | GPUTextureUsage.COPY_DST | GPUTextureUsage.TEXTURE_BINDING,
             textureFormat: opts.textureFormat,
             mipmapCount: opts.mipmapCount,
-            propertyFormat: 'texture2D'
+            propertyFormat: 'texutre3D'
         });
         this.textureData = opts.textureData;
+        this.handler = opts.handler;
     }
 
     /**
-     * https://github.com/pipegpu/pipegpu.core/issues/16
-     * @param enable 
-     */
-    public AutoIncrementMipLevelInStorageBinding = (enable: boolean) => {
-        this.autoIncrementMipLevelInStorageBindingUse = enable;
-    }
-
-    /**
-     * 
+     * @description
      */
     protected refreshTextureDataSource() {
-        // depth texture not allow texture write from cpu.
-        if (this.textureData && !this.isDetphTexture()) {
+        if (this.isDetphTexture()) {
+            console.warn(`[W][refreshTextureDataSource] depth texture not allow texture write from cpu.`);
+            return;
+        }
+        if (this.textureData && this.textureData.length > 0) {
             const destination: GPUTexelCopyTextureInfo = {
                 texture: this.texture!
             };
+            const len = this.textureData.length;
+            const oneLayerExtent3d: GPUExtent3DDict = {
+                width: this.width,
+                height: this.height,
+                depthOrArrayLayers: this.depthOrArrayLayers / len,
+            };
             const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
-            this.context.getGpuQueue().writeTexture(
-                destination,
-                this.textureData as GPUAllowSharedBufferSource,
-                dataLayout,
-                this.extent3d
-            );
+            for (let k: number = 0; k < len; k++) {
+                destination.origin = [0, 0, k];
+                this.context.getGpuQueue().writeTexture(
+                    destination,
+                    (this.textureData[k] as Uint8Array).buffer,
+                    dataLayout,
+                    oneLayerExtent3d
+                );
+            }
+            // clear
+            this.textureData.length = 0;
             this.textureData = undefined;
+        } else if (this.handler) {
+            let handData = this.handler();
+            if (!handData.rewrite || handData.details.length === 0) {
+                return;
+            }
+            const destination: GPUTexelCopyTextureInfo = {
+                texture: this.texture!
+            };
+            const slicedDepth = handData.details[0].rawData.byteLength / this.width / this.height / this.getBytePerTexel();
+            const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
+            const oneLayerExtent3d: GPUExtent3DDict = {
+                width: this.width,
+                height: this.height,
+                depthOrArrayLayers: slicedDepth,
+            };
+            handData.details.forEach(detail => {
+                destination.origin = [0, 0, detail.depthOrArrayLayerIndex];
+                this.context.getGpuQueue().writeTexture(destination, (detail.rawData as Uint8Array).buffer, dataLayout, oneLayerExtent3d);
+            });
+            // clear
+            handData.details.length = 0;
         }
     }
 
@@ -82,7 +113,7 @@ class Texture2D extends BaseTexture {
     protected override createGpuTexture(): void {
         const desc: GPUTextureDescriptor = {
             size: this.extent3d,
-            dimension: '2d',
+            dimension: '3d',
             format: this.textureFormat,
             usage: this.textureUsageFlags,
             mipLevelCount: this.mipmapCount,
@@ -113,7 +144,7 @@ class Texture2D extends BaseTexture {
         switch (this.selectedUsage) {
             case 'RENDER_ATTACHMENT':
                 {
-                    return this.renderAttachmentView!;
+                    throw new Error(`[E][Texture3D][getGpuTextureView] texture3d get render attachment texture view error.`)
                 }
             case 'TEXTURE_BINDING':
                 {
@@ -122,25 +153,21 @@ class Texture2D extends BaseTexture {
             case 'STORAGE_BINDING':
                 {
                     const mipView = this.storageBindingView![this.mipCurosr];
-                    // https://github.com/pipegpu/pipegpu.core/issues/16
-                    if (this.autoIncrementMipLevelInStorageBindingUse) {
-                        this.nextCursor();
-                    }
                     return mipView;
                 }
             case 'NONE':
             default: {
-                throw new Error(`[E][Texture2D][getGpuTextureView] error occurs in get gpu texture view. for no 'useAs..' function called before compiler.`);
+                throw new Error(`[E][Texture3D][getGpuTextureView] error occurs in get gpu texture view. for no 'useAs..' function called before compiler.`);
             }
         }
     }
 
     /**
-    * e.g use texture as storage binding for compute shader
-    */
+     * @description use texture as storage binding for compute shader.
+     */
     override useAsStorageBinding = () => {
         if (!this.isUsageIncludeStorageBinding()) {
-            throw Error(`[E][Texture][useAsStorageBinding] ${typeof (this)} has no usage include 'GPUTextureUsage.STORAGE_BINDING', please check.`);
+            throw Error(`[E][Texture3D][useAsStorageBinding] ${typeof (this)} has no usage include 'GPUTextureUsage.STORAGE_BINDING', please check.`);
         }
         this.selectedUsage = 'STORAGE_BINDING';
         if (!this.texture) {
@@ -158,27 +185,12 @@ class Texture2D extends BaseTexture {
                     case 'depth16unorm':
                     case 'depth24plus':
                     case 'depth32float':
-                        {
-                            desc.aspect = 'depth-only';
-                            desc.mipLevelCount = 1;
-                            break;
-                        }
                     case 'stencil8':
-                        {
-                            desc.aspect = 'stencil-only';
-                            desc.mipLevelCount = 1;
-                            break;
-                        }
                     case 'depth24plus-stencil8':
                     case 'depth32float-stencil8':
                         {
-                            desc.aspect = 'depth-only';
-                            desc.mipLevelCount = 1;
-                            console.warn(`[W][Texture2D][getGpuTextureView] texture depth24plus-stencil8/depth32float-stencil8 are not 
-                                    recommanded because we cannot guess it's aspect, so we use depth-only force. Therefore, we recommend using 
-                                    depth16unorm'/'depth24plus'/'depth32float' for depth-only and 'stencil8' for stencil-only.`)
-                            break;
-                        };
+                            throw new Error(`[E][Texture3D][useAsTextureBinding] not support texture format.`);
+                        }
                     default: {
                         desc.aspect = 'all';
                         break;
@@ -196,7 +208,7 @@ class Texture2D extends BaseTexture {
      */
     override useAsTextureBinding = () => {
         if (!this.isUsageIncludeTextureBinding()) {
-            throw Error(`[E][Texture][useAsTextureBinding] ${typeof (this)} has no usage include 'GPUTextureUsage.TEXTURE_BINDING', please check.`);
+            throw Error(`[E][Texture3D][useAsTextureBinding] ${typeof (this)} has no usage include 'GPUTextureUsage.TEXTURE_BINDING', please check.`);
         }
         this.selectedUsage = 'TEXTURE_BINDING';
         if (!this.texture) {
@@ -206,33 +218,19 @@ class Texture2D extends BaseTexture {
             const desc: GPUTextureViewDescriptor = {};
             desc.baseArrayLayer = 0;
             desc.arrayLayerCount = 1;
+            desc.dimension = '3d';
             desc.baseMipLevel = 0;
             desc.mipLevelCount = this.mipmapCount;
             switch (this.textureFormat) {
                 case 'depth16unorm':
                 case 'depth24plus':
                 case 'depth32float':
-                    {
-                        desc.aspect = 'depth-only';
-                        desc.mipLevelCount = 1;
-                        break;
-                    }
                 case 'stencil8':
-                    {
-                        desc.aspect = 'stencil-only';
-                        desc.mipLevelCount = 1;
-                        break;
-                    }
                 case 'depth24plus-stencil8':
                 case 'depth32float-stencil8':
                     {
-                        desc.aspect = 'depth-only';
-                        desc.mipLevelCount = 1;
-                        console.warn(`[W][Texture2D][getGpuTextureView] texture depth24plus-stencil8/depth32float-stencil8 are not 
-                                recommanded because we cannot guess it's aspect, so we use depth-only force. Therefore, we recommend using 
-                                depth16unorm'/'depth24plus'/'depth32float' for depth-only and 'stencil8' for stencil-only.`)
-                        break;
-                    };
+                        throw new Error(`[E][Texture3D][useAsTextureBinding] not support texture format.`);
+                    }
                 default: {
                     desc.aspect = 'all';
                     break;
@@ -248,26 +246,10 @@ class Texture2D extends BaseTexture {
      * 
      */
     override useAsRenderAttachment = () => {
-        if (!this.isUsageIncludeTextureBinding()) {
-            throw Error(`[E][Texture][useAsRenderAttachment] ${typeof (this)} has no usage include 'GPUTextureUsage.RENDER_ATTACHMENT', please check.`);
-        }
-        this.selectedUsage = 'RENDER_ATTACHMENT';
-        if (!this.texture) {
-            this.createGpuTexture();
-        }
-        if (!this.renderAttachmentView) {
-            const desc: GPUTextureViewDescriptor = {};
-            desc.baseArrayLayer = 0;
-            desc.arrayLayerCount = 1;
-            desc.baseMipLevel = 0;
-            desc.mipLevelCount = 1;
-            desc.dimension = this.getTextureViewDimension();
-            desc.format = this.textureFormat;
-            this.renderAttachmentView = (this.texture as GPUTexture).createView(desc);
-        }
+        throw new Error(`[E][Texture3D][useAsRenderAttachment] texture3d cannot be used as render attachment.`);
     }
 }
 
 export {
-    Texture2D
+    Texture3D
 }

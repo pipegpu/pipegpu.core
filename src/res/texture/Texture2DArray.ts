@@ -12,12 +12,12 @@ import { BaseTexture } from "./BaseTexture";
  */
 class Texture2DArray extends BaseTexture {
     /**
-     * 
+     * @description
      */
     protected textureData2DArray?: TypedArray2DFormat;
 
     /**
-     * 
+     * @description
      */
     protected handler?: TextureArrayHandle;
 
@@ -55,7 +55,7 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * 
+     * @description
      */
     protected refreshTextureDataSource() {
         if (this.textureData2DArray && this.textureData2DArray.length > 0 && !this.isDetphTexture()) {
@@ -77,28 +77,29 @@ class Texture2DArray extends BaseTexture {
             this.textureData2DArray = undefined;
         } else if (this.handler && !this.isDetphTexture()) {
             const handData = this.handler();
-            if (handData.rewrite) {
-                const destination: GPUTexelCopyTextureInfo = {
-                    texture: this.texture!
-                };
-                const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
-                const oneLayerExtent3d: GPUExtent3DDict = {
-                    width: this.width,
-                    height: this.height,
-                    depthOrArrayLayers: 1,
-                };
-                handData.details.forEach(detail => {
-                    destination.origin = [0, 0, detail.depthOrArrayLayerIndex];
-                    this.context.getGpuQueue().writeTexture(destination, (detail.rawData as Uint8Array).buffer, dataLayout, oneLayerExtent3d);
-                });
-                // clear
-                handData.details.length = 0
+            if (!handData.rewrite) {
+                return;
             }
+            const destination: GPUTexelCopyTextureInfo = {
+                texture: this.texture!
+            };
+            const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
+            const oneLayerExtent3d: GPUExtent3DDict = {
+                width: this.width,
+                height: this.height,
+                depthOrArrayLayers: 1,
+            };
+            handData.details.forEach(detail => {
+                destination.origin = [0, 0, detail.depthOrArrayLayerIndex];
+                this.context.getGpuQueue().writeTexture(destination, (detail.rawData as Uint8Array).buffer, dataLayout, oneLayerExtent3d);
+            });
+            // clear
+            handData.details.length = 0
         }
     }
 
     /**
-     * 
+     * @description
      */
     protected override createGpuTexture(): void {
         const desc: GPUTextureDescriptor = {
@@ -114,7 +115,7 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * 
+     * @description
      * @param _encoder 
      * @param frameStage 
      * @returns 
@@ -128,7 +129,7 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * 
+     * @description
      * @returns 
      */
     override getGpuTextureView(): GPUTextureView {
@@ -264,8 +265,9 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * use as render attachment.
-     * only support 'index' texture2D as render attachment, default is 0
+     * @description
+     *  use as render attachment.
+     *  only support 'index' texture2D as render attachment, default is 0
      * @function useAsRenderAttachment
      */
     override useAsRenderAttachment = (index: number = 0) => {

@@ -5,6 +5,7 @@ import type { BaseTexture } from "../res/texture/BaseTexture";
 import { SurfaceTexture2D } from "../res/texture/SurfaceTexture2D";
 import { Texture2D } from "../res/texture/Texture2D";
 import { Texture2DArray } from "../res/texture/Texture2DArray";
+import { Texture3D } from "../res/texture/Texture3D";
 import { TextureCube } from "../res/texture/TextureCube";
 import { TextureStorage2D } from "../res/texture/TextureStorage2D";
 import { uniqueID } from "../util/uniqueID";
@@ -72,6 +73,40 @@ class TextureState {
         });
         TextureState.TEXTURE_SET.set(textureID, texture);
         return TextureState.TEXTURE_SET.get(textureID) as Texture2D;
+    }
+
+    /**
+     * @description
+     * @param opts 
+     * @returns 
+     */
+    createTexture3D = (
+        opts: {
+            width: number,
+            height: number,
+            depth: number,
+            textureData?: TypedArray2DFormat,
+            handler?: TextureArrayHandle,
+            textureFormat?: GPUTextureFormat,
+            mipmapCount?: number,
+            appendixTextureUsages?: number,
+        }
+    ): Texture3D => {
+        const textureID: number = uniqueID();
+        const texture: Texture3D = new Texture3D({
+            id: textureID,
+            context: this.context,
+            width: opts.width,
+            height: opts.height,
+            depth: opts.depth,
+            textureData: opts.textureData,
+            handler: opts.handler,
+            textureFormat: opts.textureFormat,
+            mipmapCount: opts.mipmapCount,
+            appendixTextureUsages: opts.appendixTextureUsages,
+        });
+        TextureState.TEXTURE_SET.set(textureID, texture);
+        return TextureState.TEXTURE_SET.get(textureID) as Texture3D;
     }
 
     /**

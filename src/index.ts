@@ -67,3 +67,4 @@ export * from './res/texture/Texture2D.ts';
 export * from './res/texture/Texture2DArray.ts';
 export * from './res/texture/TextureStorage2D.ts';
 export * from './res/texture/TextureCube.ts';
+export * from './res/texture/Texture3D.ts'

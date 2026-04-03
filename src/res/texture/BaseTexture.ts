@@ -8,7 +8,105 @@ import type { FrameStageFormat, PropertyFormat } from "../Format";
 type CURRENT_TEXTURE_USAGE = 'NONE' | 'STORAGE_BINDING' | 'RENDER_ATTACHMENT' | 'TEXTURE_BINDING';
 
 /**
- * @param propertyFormat 
+ * @description
+ * @param format 
+ * @returns 
+ */
+const getBytePerTexel = (format: GPUTextureFormat): number => {
+    switch (format) {
+        case 'r8unorm':
+        case 'r8snorm':
+        case 'r8uint':
+        case 'r8sint':
+            {
+                return 1;
+            }
+        case 'r16uint':
+        case 'r16sint':
+        case 'r16float':
+        case 'rg8unorm':
+        case 'rg8snorm':
+        case 'rg8uint':
+        case 'rg8sint':
+            {
+                return 2;
+            }
+        case 'r32uint':
+        case 'r32sint':
+        case 'r32float':
+        case 'rg16uint':
+        case 'rg16sint':
+        case 'rg16float':
+        case 'rgba8unorm':
+        case 'rgba8unorm-srgb':
+        case 'rgba8snorm':
+        case 'rgba8uint':
+        case 'rgba8sint':
+        case 'bgra8unorm':
+        case 'bgra8unorm-srgb':
+            {
+                return 4;
+            }
+        case 'rg32uint':
+        case 'rg32sint':
+        case 'rg32float':
+        case 'rgba16uint':
+        case 'rgba16sint':
+        case 'rgba16float':
+            {
+                return 8;
+            }
+        case 'rgba32uint':
+        case 'rgba32sint':
+        case 'rgba32float':
+            {
+                return 16;
+            }
+        case 'depth16unorm':
+            {
+                return 2;
+            }
+        case 'depth24plus':
+            {
+                return 4;
+            }
+        case 'depth32float':
+            {
+                return 4;
+            }
+        case 'depth24plus-stencil8':
+            {
+                return 4;
+            }
+        case 'depth32float-stencil8':
+            {
+                return 8;
+            }
+        case 'bc1-rgba-unorm':
+        case 'bc1-rgba-unorm-srgb':
+            {
+                return 8;
+            }
+        case 'bc2-rgba-unorm':
+        case 'bc2-rgba-unorm-srgb':
+        case 'bc3-rgba-unorm':
+        case 'bc3-rgba-unorm-srgb':
+        case 'bc5-rg-unorm':
+        case 'bc5-rg-snorm':
+        case 'bc6h-rgb-ufloat':
+        case 'bc6h-rgb-float':
+        case 'bc7-rgba-unorm':
+        case 'bc7-rgba-unorm-srgb':
+            {
+                return 16;
+            }
+        default:
+            throw new Error(`Unsupported GPUTextureFormat: ${format}`);
+    }
+};
+
+/**
+ * @param {PropertyFormat} propertyFormat 
  * @returns 
  */
 const getTextureViewDimension = (propertyFormat: PropertyFormat): GPUTextureViewDimension => {
@@ -323,7 +421,7 @@ abstract class BaseTexture {
         }
         this.depthOrArrayLayers = opts.depthOrArrayLayers || 1;
         this.textureUsageFlags = opts.textureUsageFlags;
-        this.extent3d = [opts.width, opts.height, opts.depthOrArrayLayers || 1];
+        this.extent3d = [opts.width, opts.height, this.depthOrArrayLayers];
         this.textureFormat = opts.textureFormat || this.context.getPreferredTextureFormat();
         this.propertyFormat = opts.propertyFormat;
         this.maxMipmapCount = getMaxMipmapCount(...this.extent3d);
@@ -416,7 +514,7 @@ abstract class BaseTexture {
     }
 
     /**
-     *
+     * @description
      * @returns 
      */
     getTextureViewDimension = () => {
@@ -424,7 +522,15 @@ abstract class BaseTexture {
     }
 
     /**
-     * 
+     * @description
+     * @returns 
+     */
+    getBytePerTexel = () => {
+        return getBytePerTexel(this.textureFormat);
+    }
+
+    /**
+     * @description
      * @returns 
      */
     getTextureDimension = () => {
@@ -432,7 +538,7 @@ abstract class BaseTexture {
     }
 
     /**
-     * 
+     * @description
      * @returns 
      */
     getTexelCopyBufferLayout = () => {
@@ -440,7 +546,8 @@ abstract class BaseTexture {
     }
 
     /**
-     * cursor to next view
+     * @description
+     *  cursor to next view
      */
     nextCursor = (): void => {
         this.mipCurosr = (++this.mipCurosr) % this.mipmapCount;
