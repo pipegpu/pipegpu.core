@@ -94,6 +94,7 @@ const parseUniform = (
                 }
             case 'textureCube':
             case 'texture2D':
+            case 'texutre3D':
             case 'texture2DArray':
             case 'textureStorage2D':
                 {

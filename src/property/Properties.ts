@@ -4,6 +4,7 @@ import type { VertexBuffer } from "../res/buffer/VertexBuffer";
 import { TextureSampler } from "../res/sampler/TextureSampler";
 import { Texture2D } from "../res/texture/Texture2D";
 import { Texture2DArray } from "../res/texture/Texture2DArray";
+import { Texture3D } from "../res/texture/Texture3D";
 import { TextureStorage2D } from "../res/texture/TextureStorage2D";
 import { VertexBufferProperty } from "./attribute/VertexBufferProperty";
 import type { BaseProperty } from "./BaseProperty";
@@ -14,24 +15,23 @@ import { UniformBufferProperty } from "./uniform/UniformBufferProperty";
 
 /**
  * 
+ * @description
  * @class Properties
  * 
  */
 class Properties {
     /**
-     * 
+     * @description
      */
     protected propertyMap: Map<string, BaseProperty> = new Map();
 
     /**
-     * 
+     * @description
      */
-    constructor() {
-
-    }
+    constructor() { }
 
     /**
-     * 
+     * @description
      * @returns 
      */
     isEmpty = (): boolean => {
@@ -39,12 +39,11 @@ class Properties {
     }
 
     /**
-     * 
+     * @description
      */
     getPropertyMap = (): Map<string, BaseProperty> => {
         return this.propertyMap;
     }
-
 }
 
 /**
@@ -88,6 +87,7 @@ class Uniforms extends Properties {
     assign(propertyName: string, buffer: StorageBuffer): void
     assign(propertyName: string, textureSampler: TextureSampler): void
     assign(propertyName: string, texture2d: Texture2D): void
+    assign(propertyName: string, texture3d: Texture3D): void
     assign(propertyName: string, texture2dArray: Texture2DArray): void
     assign(propertyName: string, textureStorage2d: TextureStorage2D): void
     assign(a: string, b: any): void {
@@ -114,6 +114,10 @@ class Uniforms extends Properties {
         } else if (b instanceof TextureStorage2D) {
             const textureStorage2DProperty: TextureProperty = new TextureProperty(a, b);
             this.propertyMap.set(a, textureStorage2DProperty);
+            return;
+        } else if (b instanceof Texture3D) {
+            const texture3dProperty: TextureProperty = new TextureProperty(a, b);
+            this.propertyMap.set(a, texture3dProperty);
             return;
         }
         else {

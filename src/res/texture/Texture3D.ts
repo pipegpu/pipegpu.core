@@ -132,6 +132,7 @@ class Texture3D extends BaseTexture {
         if (!this.texture) {
             this.createGpuTexture();
         }
+        this.refreshTextureDataSource();
         return this.texture as GPUTexture;
     }
 
