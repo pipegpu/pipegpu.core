@@ -1,6 +1,6 @@
 import type { Context } from "../res/Context"
 import type { TypedArray1DFormat, TypedArray2DFormat } from "../res/Format";
-import type { TextureArrayHandle } from "../res/Handle";
+import type { Texture3DHandle, TextureArrayHandle } from "../res/Handle";
 import type { BaseTexture } from "../res/texture/BaseTexture";
 import { SurfaceTexture2D } from "../res/texture/SurfaceTexture2D";
 import { Texture2D } from "../res/texture/Texture2D";
@@ -86,7 +86,7 @@ class TextureState {
             height: number,
             depth: number,
             textureData?: TypedArray2DFormat,
-            handler?: TextureArrayHandle,
+            handler?: Texture3DHandle,
             textureFormat?: GPUTextureFormat,
             mipmapCount?: number,
             appendixTextureUsages?: number,

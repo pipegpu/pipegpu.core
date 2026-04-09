@@ -1,6 +1,6 @@
 import type { Context } from "../Context";
 import type { FrameStageFormat, TypedArray2DFormat } from "../Format";
-import type { TextureArrayHandle } from "../Handle";
+import type { Texture3DHandle } from "../Handle";
 import { BaseTexture } from "./BaseTexture";
 
 /**
@@ -16,7 +16,7 @@ class Texture3D extends BaseTexture {
     /**
      * @description
      */
-    protected handler?: TextureArrayHandle;
+    protected handler?: Texture3DHandle;
 
     /**
      * @description
@@ -32,7 +32,7 @@ class Texture3D extends BaseTexture {
             depth: number,
             appendixTextureUsages?: number,
             textureData?: TypedArray2DFormat,
-            handler?: TextureArrayHandle,
+            handler?: Texture3DHandle,
             textureFormat?: GPUTextureFormat,
             mipmapCount?: number,
         }
@@ -99,7 +99,7 @@ class Texture3D extends BaseTexture {
                 depthOrArrayLayers: slicedDepth,
             };
             handData.details.forEach(detail => {
-                destination.origin = [0, 0, detail.depthOrArrayLayerIndex];
+                destination.origin = [detail.originXYZ[0], detail.originXYZ[1], detail.originXYZ[2]];
                 this.context.getGpuQueue().writeTexture(destination, (detail.rawData as Uint8Array).buffer, dataLayout, oneLayerExtent3d);
             });
             // clear

@@ -53,7 +53,7 @@ type BufferHandleDetail = {
 };
 
 /**
- * 
+ * @description
  */
 type TextureDetailHandle = {
     /**
@@ -68,8 +68,17 @@ type TextureDetailHandle = {
 };
 
 /**
- * e.g for vertex / index / unfiorm buffer.
- * rewrite buffer
+ * @description
+ */
+type Texture3DDetailHandle = {
+    originXYZ: number[];
+    rawData: TypedArray1DFormat
+};
+
+/**
+ * @description
+ *  e.g for vertex / index / unfiorm buffer.
+ *  rewrite buffer
  */
 type BufferHandle = () => {
     rewrite: boolean,
@@ -106,11 +115,20 @@ const NoBufferUpdateRequired = {
 };
 
 /**
- * e.g for texture 2d array.
+ * @description
+ *  e.g for texture 2d array.
  */
 type TextureArrayHandle = () => {
     rewrite: boolean,
     details: Array<TextureDetailHandle>
+};
+
+/**
+ * @description
+ */
+type Texture3DHandle = () => {
+    rewrite: boolean,
+    details: Array<Texture3DDetailHandle>
 };
 
 export {
@@ -123,6 +141,8 @@ export {
     type BufferHandleDetail,
     type TextureDetailHandle,
     type TextureArrayHandle,
+    type Texture3DDetailHandle,
+    type Texture3DHandle,
     NoBufferArrayUpdateRequired,
     NoBufferUpdateRequired,
 }
