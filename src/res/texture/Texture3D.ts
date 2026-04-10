@@ -91,18 +91,16 @@ class Texture3D extends BaseTexture {
             const destination: GPUTexelCopyTextureInfo = {
                 texture: this.texture!
             };
-            const slicedDepth = handData.details[0].rawData.byteLength / this.width / this.height / this.getBytePerTexel();
-            const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
-            const oneLayerExtent3d: GPUExtent3DDict = {
-                width: this.width,
-                height: this.height,
-                depthOrArrayLayers: slicedDepth,
-            };
             handData.details.forEach(detail => {
+                const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout(detail.blockSize[0], detail.blockSize[1]);
                 destination.origin = [detail.originXYZ[0], detail.originXYZ[1], detail.originXYZ[2]];
-                this.context.getGpuQueue().writeTexture(destination, (detail.rawData as Uint8Array).buffer, dataLayout, oneLayerExtent3d);
+                const blockExtent3d: GPUExtent3DDict = {
+                    width: detail.blockSize[0],
+                    height: detail.blockSize[1],
+                    depthOrArrayLayers: detail.blockSize[2],
+                };
+                this.context.getGpuQueue().writeTexture(destination, (detail.rawData as Uint8Array).buffer, dataLayout, blockExtent3d);
             });
-            // clear
             handData.details.length = 0;
         }
     }

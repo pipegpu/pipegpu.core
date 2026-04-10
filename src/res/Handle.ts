@@ -71,7 +71,21 @@ type TextureDetailHandle = {
  * @description
  */
 type Texture3DDetailHandle = {
+    /**
+     * @description
+     *  write start position, in pixel postion. [start row index, start col index, start depth index].
+     */
     originXYZ: number[];
+
+    /**
+     * @description
+     *  write block size, should set as [write width, write height, write depth].
+     */
+    blockSize: number[];
+
+    /**
+     * @description
+     */
     rawData: TypedArray1DFormat
 };
 

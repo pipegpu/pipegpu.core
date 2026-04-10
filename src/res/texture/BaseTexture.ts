@@ -541,8 +541,8 @@ abstract class BaseTexture {
      * @description
      * @returns 
      */
-    getTexelCopyBufferLayout = () => {
-        return getTexelCopyBufferLayout(this.width, this.height, this.textureFormat);
+    getTexelCopyBufferLayout = (w?: number, h?: number) => {
+        return getTexelCopyBufferLayout(w || this.width, h || this.height, this.textureFormat);
     }
 
     /**
