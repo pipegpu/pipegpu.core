@@ -31,7 +31,7 @@ class TextureStorage2D extends Texture2D {
             mipmapCount: opts.mipmapCount,
             appendixTextureUsages: opts.appendixTextureUsages
         });
-        this.textureData = opts.textureData;
+        this.textureData_ = opts.textureData;
         this.depthOrArrayLayers = 1;
         this.textureUsageFlags = this.textureUsageFlags | GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.COPY_SRC;
         this.propertyFormat = 'textureStorage2D';

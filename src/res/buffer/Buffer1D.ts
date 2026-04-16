@@ -95,9 +95,10 @@ class Buffer1D extends BaseBuffer {
             this.updateGpuBuffer(0, this.typedArrayData1D!.byteLength, this.typedArrayData1D!);
         } else if (this.handler) {
             const handData = this.handler();
-            if (handData.rewrite) {
+            if (handData.rewrite && handData.detail.rawData) {
                 this.updateGpuBuffer(handData.detail.offset, handData.detail.byteLength, handData.detail.rawData);
             }
+            handData.detail.rawData = undefined;
         } else {
             throw new Error(`[E][Buffer1D][createGpuBuffer] create gpu buffer. unsupport source data array.`);
         }
@@ -130,9 +131,10 @@ class Buffer1D extends BaseBuffer {
         } else {
             if (frameStage === "frameBegin" && this.handler) {
                 const handData = this.handler();
-                if (handData.rewrite) {
+                if (handData.rewrite && handData.detail.rawData) {
                     this.updateGpuBuffer(handData.detail.offset, handData.detail.byteLength, handData.detail.rawData);
                 }
+                handData.detail.rawData = undefined;
             }
         }
         return this.buffer as GPUBuffer;

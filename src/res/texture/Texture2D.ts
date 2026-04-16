@@ -1,5 +1,6 @@
 import type { Context } from "../Context";
 import type { FrameStageFormat, TypedArray1DFormat } from "../Format";
+import type { Texture2DHandle } from "../Handle";
 import { BaseTexture } from "./BaseTexture";
 
 /**
@@ -10,7 +11,12 @@ class Texture2D extends BaseTexture {
     /**
      * 
      */
-    protected textureData?: TypedArray1DFormat;
+    protected textureData_?: TypedArray1DFormat;
+
+    /**
+     * @description
+     */
+    protected handler_?: Texture2DHandle;
 
     /**
     * https://github.com/pipegpu/pipegpu.core/issues/16
@@ -30,6 +36,7 @@ class Texture2D extends BaseTexture {
             height: number,
             appendixTextureUsages?: number,
             textureData?: TypedArray1DFormat,
+            handler?: Texture2DHandle,
             textureFormat?: GPUTextureFormat,
             mipmapCount?: number,
         }
@@ -45,7 +52,8 @@ class Texture2D extends BaseTexture {
             mipmapCount: opts.mipmapCount,
             propertyFormat: 'texture2D'
         });
-        this.textureData = opts.textureData;
+        this.textureData_ = opts.textureData;
+        this.handler_ = opts.handler;
     }
 
     /**
@@ -61,18 +69,35 @@ class Texture2D extends BaseTexture {
      */
     protected refreshTextureDataSource() {
         // depth texture not allow texture write from cpu.
-        if (this.textureData && !this.isDetphTexture()) {
+        if (this.textureData_ && !this.isDetphTexture()) {
             const destination: GPUTexelCopyTextureInfo = {
                 texture: this.texture!
             };
             const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
             this.context.getGpuQueue().writeTexture(
                 destination,
-                this.textureData as GPUAllowSharedBufferSource,
+                this.textureData_ as GPUAllowSharedBufferSource,
                 dataLayout,
                 this.extent3d
             );
-            this.textureData = undefined;
+            this.textureData_ = undefined;
+        } else if (this.handler_ && this.isDetphTexture()) {
+            const handData = this.handler_();
+            if (!handData.rewrite || !handData.detail.rawData) {
+                return;
+            }
+            const destination: GPUTexelCopyTextureInfo = {
+                texture: this.texture!,
+                origin: [0, 0, 0]
+            };
+            const dataLayout: GPUTexelCopyBufferLayout = this.getTexelCopyBufferLayout();
+            const oneLayerExtent3d: GPUExtent3DDict = {
+                width: this.width,
+                height: this.height,
+                depthOrArrayLayers: 1,
+            };
+            this.context.getGpuQueue().writeTexture(destination, (handData.detail.rawData as Uint8Array).buffer, dataLayout, oneLayerExtent3d);
+            handData.detail.rawData = undefined;
         }
     }
 

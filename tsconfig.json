@@ -30,7 +30,8 @@
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "index.ts"
   ],
   "exclude": [
     "example/**/*",

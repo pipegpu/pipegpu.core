@@ -22,7 +22,7 @@ class Texture2DArray extends BaseTexture {
     protected handler?: TextureArrayHandle;
 
     /**
-     * 
+     * @description
      * @param opts 
      */
     constructor(

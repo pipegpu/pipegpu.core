@@ -9,79 +9,77 @@ import { BaseAttachment } from "./BaseAttachment"
  */
 class DepthStencilAttachment extends BaseAttachment {
     /**
-     * 
+     * @description Get the depth stencil state.
      */
     private depthStencilState: GPUDepthStencilState | undefined;
 
     /**
-     * 
+     * @description Get the depth stencil attachment.
      */
     private depthStencilAttachment: GPURenderPassDepthStencilAttachment | undefined;
 
     /**
-     * 
+     * @description Get the texture.
      */
     private texture: Texture2D;
 
     /**
-     * 
+     * @description Get the depth load/store format.
      */
     private depthLoadStoreFormat: DepthLoadStoreFormat;
 
     /**
-     * 
+     * @description Get the depth compare function.
      */
     private depthCompareFunction: GPUCompareFunction;
 
     /**
-     * 
+     * @description Get the stencil state format.
      */
     private stencilStateFormat: StencilStateFormat;
 
     /**
-     * 
+     * @description Get the stencil load/store format.
      */
     private stencilLoadStoreFormat: StencilLoadStoreFormat;
 
     /**
-     * 
+     * @description Get the stencil compare function.
      */
     private depthReadOnly: boolean;
 
     /**
-     * 
-     * support depth clear value.
-     * default as 1.0.
-     * 
+     * @description Get the depth clear value.
+     * @returns {number}
      */
     private depthClearValue: number;
 
     /**
-     * 
+     * @description Get the stencil read-only state.
+     * @returns {boolean}
      */
     private stencilReadOnly: boolean;
 
     /**
-     * 
-     * support stencil clear value.
-     * default as 1.0.
-     * 
+     * @description Get the stencil clear value.
+     * @returns {number}
      */
     private stencilClearValue: number;
 
     /**
-     * 
+     * @description Get the depth bias.
+     * @returns {number | undefined}
      */
     private depthBias?: number;
 
     /**
-     * 
+     * @description Get the depth bias slope scale.
+     * @returns {number | undefined}
      */
     private depthBiasSlopeScale?: number;
 
     /**
-     * 
-     * 
+     * @description Create a new DepthStencilAttachment.
      * @param opts 
      */
     constructor(
@@ -120,7 +118,7 @@ class DepthStencilAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @overload
      */
     protected override updateState = (): void => {
         // depthStencilState
@@ -247,7 +245,8 @@ class DepthStencilAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @description Get the GPU render pass depth stencil attachment.
+     * @returns {GPURenderPassDepthStencilAttachment}
      */
     getGpuRenderPassDepthStencilAttachment = (): GPURenderPassDepthStencilAttachment => {
         this.updateAttachment();
@@ -255,7 +254,8 @@ class DepthStencilAttachment extends BaseAttachment {
     };
 
     /**
-     * 
+     * @description Get the depth stencil state.
+     * @returns {GPUDepthStencilState}
      */
     getDepthStencilState = (): GPUDepthStencilState => {
         this.updateState();
@@ -263,7 +263,7 @@ class DepthStencilAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @description Get the texture.
      * @returns {Texture2D}
      */
     getTexture = (): Texture2D => {

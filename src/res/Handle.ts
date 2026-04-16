@@ -49,7 +49,7 @@ type BufferHandleDetail = {
      * cpu write source data.
      * 
      */
-    rawData: TypedArray1DFormat | ArrayBuffer
+    rawData?: TypedArray1DFormat | ArrayBuffer
 };
 
 /**
@@ -64,7 +64,7 @@ type TextureDetailHandle = {
     /**
      * 
      */
-    rawData: TypedArray1DFormat | ArrayBuffer
+    rawData?: TypedArray1DFormat | ArrayBuffer
 };
 
 /**
@@ -130,6 +130,14 @@ const NoBufferUpdateRequired = {
 
 /**
  * @description
+ */
+type Texture2DHandle = () => {
+    rewrite: boolean,
+    detail: TextureDetailHandle
+};
+
+/**
+ * @description
  *  e.g for texture 2d array.
  */
 type TextureArrayHandle = () => {
@@ -157,6 +165,7 @@ export {
     type TextureArrayHandle,
     type Texture3DDetailHandle,
     type Texture3DHandle,
+    type Texture2DHandle,
     NoBufferArrayUpdateRequired,
     NoBufferUpdateRequired,
 }

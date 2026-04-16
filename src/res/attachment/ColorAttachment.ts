@@ -4,16 +4,16 @@ import type { BaseTexture } from "../texture/BaseTexture"
 import { BaseAttachment } from "./BaseAttachment"
 
 /**
- * 
+ * @description Color attachment for rendering.
  */
 class ColorAttachment extends BaseAttachment {
     /**
-     * 
+     * @description The texture used for the color attachment.
      */
     private texture: BaseTexture;
 
     /**
-     * 
+     * @description The clear color for the attachment.
      */
     private clearColor: GPUColorDict = {
         r: 0,
@@ -23,28 +23,28 @@ class ColorAttachment extends BaseAttachment {
     };
 
     /**
-     * 
+     * @description The load/store format for the color attachment.
      */
     private colorLoadStoreFormat: ColorLoadStoreFormat;
 
     /**
-     * 
+     * @description The blend format for the color attachment.
      */
     private blendFormat: BlendFormat;
 
     /**
-     * 
+     * @description The blend state for the color attachment.
      */
     private blendState?: GPUBlendState;
 
     /**
-     * 
+     * @description The render pass color attachment for the color attachment.
      */
     private renderPassColorAttachment: GPURenderPassColorAttachment | undefined;
 
     /**
-     * 
-     * @param opts 
+     * @description The constructor for the color attachment.
+     * @param opts The options for the color attachment.
      */
     constructor(
         opts: {
@@ -106,7 +106,7 @@ class ColorAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @description
      */
     protected override updateState = (): void => {
         switch (this.blendFormat) {

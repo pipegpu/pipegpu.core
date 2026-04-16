@@ -1,5 +1,5 @@
 import { assert, beforeAll, expect, test } from 'vitest'
-import { Attributes, Compiler, Context, IndexedBuffer, IndexedIndirectBuffer, IndexedStorageBuffer, IndirectBuffer, RenderProperty, StorageBuffer, Uniforms } from '../src/index'
+import { Attributes, Compiler, Context, IndexedBuffer, IndexedIndirectBuffer, IndexedStorageBuffer, IndirectBuffer, RenderProperty, StorageBuffer, Uniforms } from '../index'
 import { VertexBufferProperty } from '../src/property/attribute/VertexBufferProperty';
 import { StorageBufferProperty } from '../src/property/uniform/StorageBufferProperty';
 import { TextureProperty } from '../src/property/uniform/TextureProperty';

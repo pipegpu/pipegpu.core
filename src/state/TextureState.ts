@@ -1,6 +1,6 @@
 import type { Context } from "../res/Context"
 import type { TypedArray1DFormat, TypedArray2DFormat } from "../res/Format";
-import type { Texture3DHandle, TextureArrayHandle } from "../res/Handle";
+import type { Texture2DHandle, Texture3DHandle, TextureArrayHandle } from "../res/Handle";
 import type { BaseTexture } from "../res/texture/BaseTexture";
 import { SurfaceTexture2D } from "../res/texture/SurfaceTexture2D";
 import { Texture2D } from "../res/texture/Texture2D";
@@ -10,23 +10,22 @@ import { TextureCube } from "../res/texture/TextureCube";
 import { TextureStorage2D } from "../res/texture/TextureStorage2D";
 import { uniqueID } from "../util/uniqueID";
 
-
 /**
- * 
+ * @description
  */
 class TextureState {
     /**
-     * 
+     * @description
      */
     private static TEXTURE_SET: Map<number, BaseTexture> = new Map();
 
     /**
-     * 
+     * @description
      */
     private context: Context;
 
     /**
-     * 
+     * @description
      * @param opts 
      */
     constructor(context: Context) {
@@ -34,7 +33,6 @@ class TextureState {
     }
 
     /**
-     * 
      * @param id 
      * @returns 
      */
@@ -46,15 +44,14 @@ class TextureState {
     }
 
     /**
-     * 
      * @param id 
-     * 
      */
     createTexutre2D = (
         opts: {
             width: number,
             height: number,
             textureData?: TypedArray1DFormat,
+            handler?: Texture2DHandle,
             textureFormat?: GPUTextureFormat,
             mipmapCount?: number,
             appendixTextureUsages?: number,
@@ -67,6 +64,7 @@ class TextureState {
             width: opts.width,
             height: opts.height,
             textureData: opts.textureData,
+            handler: opts.handler,
             textureFormat: opts.textureFormat,
             mipmapCount: opts.mipmapCount,
             appendixTextureUsages: opts.appendixTextureUsages,

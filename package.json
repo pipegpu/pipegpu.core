@@ -2,7 +2,7 @@
   "name": "@pipegpu/core",
   "version": "0.5.5",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

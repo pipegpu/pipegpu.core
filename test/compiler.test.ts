@@ -1,5 +1,5 @@
 import { assert, beforeAll, expect, test } from 'vitest'
-import { Compiler, Context } from '../src/index'
+import { Compiler, Context } from '../index'
 
 const width: number = 400, height: number = 400;
 let context: Context;

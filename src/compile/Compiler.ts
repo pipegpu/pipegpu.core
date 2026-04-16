@@ -10,7 +10,7 @@ import type { UniformBuffer } from "../res/buffer/UniformBuffer";
 import type { VertexBuffer } from "../res/buffer/VertexBuffer";
 import { Context } from "../res/Context";
 import type { BlendFormat, ColorLoadStoreFormat, DepthLoadStoreFormat, MultiSampleFormat, StencilLoadStoreFormat, StencilStateFormat, TypedArray1DFormat, TypedArray2DFormat } from "../res/Format";
-import type { ComputeHandle, HookHandle, RenderHandle, BufferHandle, BufferArrayHandle, TextureArrayHandle, Texture3DHandle } from "../res/Handle";
+import type { ComputeHandle, HookHandle, RenderHandle, BufferHandle, BufferArrayHandle, TextureArrayHandle, Texture3DHandle, Texture2DHandle } from "../res/Handle";
 import type { ComputeShader } from "../res/shader/ComputeShader";
 import type { FragmentShader } from "../res/shader/FragmentShader";
 import type { VertexShader } from "../res/shader/VertexShader";
@@ -791,6 +791,7 @@ class Compiler {
             width: number,
             height: number,
             textureData?: TypedArray1DFormat,
+            handler?: Texture2DHandle,
             textureFormat?: GPUTextureFormat,
             mipmapCount?: number,
             appendixTextureUsages?: number,
@@ -800,6 +801,7 @@ class Compiler {
             width: opts.width,
             height: opts.height,
             textureData: opts.textureData,
+            handler: opts.handler,
             textureFormat: opts.textureFormat,
             mipmapCount: opts.mipmapCount,
             appendixTextureUsages: opts.appendixTextureUsages,
