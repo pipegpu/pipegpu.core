@@ -101,7 +101,9 @@ class Buffer2D extends BaseBuffer {
             const handData = this.handler();
             if (handData.rewrite) {
                 handData.details.forEach(detail => {
-                    this.updateGpuBuffer(detail.offset, detail.byteLength, detail.rawData);
+                    if (detail.rawData) {
+                        this.updateGpuBuffer(detail.offset, detail.byteLength, detail.rawData);
+                    }
                 });
             }
         }
@@ -137,7 +139,9 @@ class Buffer2D extends BaseBuffer {
                 const handData = this.handler();
                 if (handData.rewrite) {
                     handData.details.forEach(detail => {
-                        this.updateGpuBuffer(detail.offset, detail.byteLength, detail.rawData);
+                        if (detail.rawData) {
+                            this.updateGpuBuffer(detail.offset, detail.byteLength, detail.rawData);
+                        }
                     });
                 }
             }

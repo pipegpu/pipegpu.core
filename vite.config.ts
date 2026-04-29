@@ -6,7 +6,7 @@ export default {
     outDir: './build/',
     emptyOutDir: true,
     lib: {
-      entry: './src/index.ts',
+      entry: './index.ts',
       name: 'pipegpu.core',
       fileName: (format) => `index.${format}.js`,
       formats: ['cjs', 'es', 'iife', 'umd'],

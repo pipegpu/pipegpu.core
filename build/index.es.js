@@ -215,7 +215,7 @@ var e = 1, t = () => e++, n = (...e) => e.reduce((e, t) => e > t ? e : t), r = (
 		if (this.typedArrayData1D) this.updateGpuBuffer(0, this.typedArrayData1D.byteLength, this.typedArrayData1D);
 		else if (this.handler) {
 			let e = this.handler();
-			e.rewrite && this.updateGpuBuffer(e.detail.offset, e.detail.byteLength, e.detail.rawData);
+			e.rewrite && e.detail.rawData && this.updateGpuBuffer(e.detail.offset, e.detail.byteLength, e.detail.rawData), e.detail.rawData = void 0;
 		} else throw Error("[E][Buffer1D][createGpuBuffer] create gpu buffer. unsupport source data array.");
 	};
 	getGpuBuffer(e, t) {
@@ -231,7 +231,7 @@ var e = 1, t = () => e++, n = (...e) => e.reduce((e, t) => e > t ? e : t), r = (
 		if (!this.buffer) this.createGpuBuffer();
 		else if (t === "frameBegin" && this.handler) {
 			let e = this.handler();
-			e.rewrite && this.updateGpuBuffer(e.detail.offset, e.detail.byteLength, e.detail.rawData);
+			e.rewrite && e.detail.rawData && this.updateGpuBuffer(e.detail.offset, e.detail.byteLength, e.detail.rawData), e.detail.rawData = void 0;
 		}
 		return this.buffer;
 	}
@@ -290,7 +290,7 @@ var e = 1, t = () => e++, n = (...e) => e.reduce((e, t) => e > t ? e : t), r = (
 		} else if (this.handler) {
 			let e = this.handler();
 			e.rewrite && e.details.forEach((e) => {
-				this.updateGpuBuffer(e.offset, e.byteLength, e.rawData);
+				e.rawData && this.updateGpuBuffer(e.offset, e.byteLength, e.rawData);
 			});
 		}
 	};
@@ -308,7 +308,7 @@ var e = 1, t = () => e++, n = (...e) => e.reduce((e, t) => e > t ? e : t), r = (
 		else if (t === "frameBegin" && this.handler) {
 			let e = this.handler();
 			e.rewrite && e.details.forEach((e) => {
-				this.updateGpuBuffer(e.offset, e.byteLength, e.rawData);
+				e.rawData && this.updateGpuBuffer(e.offset, e.byteLength, e.rawData);
 			});
 		}
 		return this.buffer;
@@ -374,7 +374,7 @@ var e = 1, t = () => e++, n = (...e) => e.reduce((e, t) => e > t ? e : t), r = (
 				this.drawCount = 0;
 				let t = this.indexedFormat === "uint16" ? Uint16Array.BYTES_PER_ELEMENT : Uint32Array.BYTES_PER_ELEMENT;
 				e.details.forEach((e) => {
-					this.updateGpuBuffer(e.offset, e.byteLength, e.rawData), this.drawCount += e.rawData.byteLength / t;
+					e.rawData && (this.updateGpuBuffer(e.offset, e.byteLength, e.rawData), this.drawCount += e.rawData.byteLength / t);
 				});
 			}
 		}
@@ -6968,19 +6968,11 @@ var Ut = class {
 		case "texture_storage_3d": return "3d";
 		default: throw Error(`[E][reflectShaderUniforms][getTextureViewDimension] unsupported binding texture type name: ${e.type.name}`);
 	}
-}, Jt = (e) => {
+}, Jt = new Set(/* @__PURE__ */ "r8unorm.r8snorm.r8uint.r8sint.r16unorm.r16snorm.r16uint.r16sint.r16float.rg8unorm.rg8snorm.rg8uint.rg8sint.r32uint.r32sint.r32float.rg16unorm.rg16snorm.rg16uint.rg16sint.rg16float.rgba8unorm.rgba8unorm-srgb.rgba8snorm.rgba8uint.rgba8sint.bgra8unorm.bgra8unorm-srgb.rgb9e5ufloat.rgb10a2uint.rgb10a2unorm.rg11b10ufloat.rg32uint.rg32sint.rg32float.rgba16unorm.rgba16snorm.rgba16uint.rgba16sint.rgba16float.rgba32uint.rgba32sint.rgba32float.stencil8.depth16unorm.depth24plus.depth24plus-stencil8.depth32float.depth32float-stencil8.bc1-rgba-unorm.bc1-rgba-unorm-srgb.bc2-rgba-unorm.bc2-rgba-unorm-srgb.bc3-rgba-unorm.bc3-rgba-unorm-srgb.bc4-r-unorm.bc4-r-snorm.bc5-rg-unorm.bc5-rg-snorm.bc6h-rgb-ufloat.bc6h-rgb-float.bc7-rgba-unorm.bc7-rgba-unorm-srgb.etc2-rgb8unorm.etc2-rgb8unorm-srgb.etc2-rgb8a1unorm.etc2-rgb8a1unorm-srgb.etc2-rgba8unorm.etc2-rgba8unorm-srgb.eac-r11unorm.eac-r11snorm.eac-rg11unorm.eac-rg11snorm.astc-4x4-unorm.astc-4x4-unorm-srgb.astc-5x4-unorm.astc-5x4-unorm-srgb.astc-5x5-unorm.astc-5x5-unorm-srgb.astc-6x5-unorm.astc-6x5-unorm-srgb.astc-6x6-unorm.astc-6x6-unorm-srgb.astc-8x5-unorm.astc-8x5-unorm-srgb.astc-8x6-unorm.astc-8x6-unorm-srgb.astc-8x8-unorm.astc-8x8-unorm-srgb.astc-10x5-unorm.astc-10x5-unorm-srgb.astc-10x6-unorm.astc-10x6-unorm-srgb.astc-10x8-unorm.astc-10x8-unorm-srgb.astc-10x10-unorm.astc-10x10-unorm-srgb.astc-12x10-unorm.astc-12x10-unorm-srgb.astc-12x12-unorm.astc-12x12-unorm-srgb".split(".")), Yt = (e) => {
 	let t = e.type.format.name;
-	switch (t) {
-		case "r32float": return "r32float";
-		case "r32uint": return "r32uint";
-		case "rgba32uint": return "rgba32uint";
-		case "rgba8sint": return "rgba8sint";
-		case "rgba8snorm": return "rgba8snorm";
-		case "rgba8uint": return "rgba8uint";
-		case "rgba8unorm": return "rgba8unorm";
-		default: return console.warn(`[W][getTextureFormatByTexelType] texel type: ${t}`), t;
-	}
-}, Yt = (e) => {
+	if (!Jt.has(t)) throw Error(`[E][getTextureFormatByTexelType] get texture format failed. wgsl given texel format error. type: ${t}`);
+	return t;
+}, Xt = (e) => {
 	let t = e.type.access;
 	switch (t) {
 		case "read": return "read-only";
@@ -6988,7 +6980,7 @@ var Ut = class {
 		case "read_write": return "read-write";
 		default: throw Error(`[E][getStorageTextureAccess] unspported texture acecessor type in valid storage texture access. type: ${t}`);
 	}
-}, Xt = (e) => {
+}, Zt = (e) => {
 	switch (e) {
 		case "depth16unorm":
 		case "depth24plus":
@@ -7090,7 +7082,7 @@ var Ut = class {
 		case "astc-12x12-unorm-srgb": return "float";
 		default: throw Error(`[E][reflectShaderUniforms][getTextureSampleType] unsupported analysis binding texturetype: ${e}`);
 	}
-}, Zt = (e, t, n, r, i) => {
+}, Qt = (e, t, n, r, i) => {
 	let a = new Gt(e), o;
 	switch (n) {
 		case GPUShaderStage.VERTEX:
@@ -7126,11 +7118,11 @@ var Ut = class {
 				if (!r?.getPropertyMap().has(e.name)) throw Error(`[E][reflectShaderUniforms] ${i} input uniforms missing texture property, name: ${e.name}. please check holder descriptor uniforms.`);
 				t.texture = {}, t.texture.viewDimension = qt(e);
 				let n = (r?.getPropertyMap().get(e.name)).getTexture().getTextureFormat();
-				t.texture.sampleType = Xt(n), o.push(t), s.push(e);
+				t.texture.sampleType = Zt(n), o.push(t), s.push(e);
 				break;
 			}
 			case x.StorageTexture:
-				t.storageTexture = { format: Jt(e) }, t.storageTexture.access = Yt(e), t.storageTexture.viewDimension = qt(e), o.push(t), s.push(e);
+				t.storageTexture = { format: Yt(e) }, t.storageTexture.access = Xt(e), t.storageTexture.viewDimension = qt(e), o.push(t), s.push(e);
 				break;
 			case x.Sampler: {
 				if (!r?.getPropertyMap().has(e.name)) throw Error(`[E][reflectShaderUniforms] ${i} input uniforms missing sampler property, name: ${e.name}. please check holder descriptor uniforms.`);
@@ -7145,7 +7137,7 @@ var Ut = class {
 		groupIDwithBindGroupLayoutEntriesMap: s,
 		groupIDwithResourceBindingsMap: c
 	};
-}, Qt = class extends g {
+}, $t = class extends g {
 	constructor(e) {
 		super({
 			context: e.context,
@@ -7155,9 +7147,9 @@ var Ut = class {
 		});
 	}
 	reflect = (e, t) => {
-		this.createGpuShader(`[ComputeShader] ${t} shader id: ${this.getID()}]`), this.reflectedUniforms = Zt(this.code, this.entryPoint, this.shaderStage, e, t);
+		this.createGpuShader(`[ComputeShader] ${t} shader id: ${this.getID()}]`), this.reflectedUniforms = Qt(this.code, this.entryPoint, this.shaderStage, e, t);
 	};
-}, $t = class extends g {
+}, en = class extends g {
 	constructor(e) {
 		super({
 			context: e.context,
@@ -7167,9 +7159,9 @@ var Ut = class {
 		});
 	}
 	reflect = (e, t) => {
-		this.createGpuShader(`[FragmentShader] holder name ${t}, shader id: ${this.getID()}`), this.reflectedUniforms = Zt(this.code, this.entryPoint, this.shaderStage, e, t);
+		this.createGpuShader(`[FragmentShader] holder name ${t}, shader id: ${this.getID()}`), this.reflectedUniforms = Qt(this.code, this.entryPoint, this.shaderStage, e, t);
 	};
-}, en = (e) => {
+}, tn = (e) => {
 	switch (e.getTypeName()) {
 		case "u32": return "uint32";
 		case "vec2u":
@@ -7194,7 +7186,7 @@ var Ut = class {
 		case "vec4<f32>": return "float32x4";
 		default: throw Error(`[E][reflectShaderAttributes][getVertexFormat] unsupported vertex format. type: ${e.getTypeName()}`);
 	}
-}, tn = (e, t, n) => {
+}, nn = (e, t, n) => {
 	let r = new Gt(e), i;
 	if (r.entry.vertex.forEach((e) => {
 		e.name === t && (i = e);
@@ -7202,7 +7194,7 @@ var Ut = class {
 	let a = i, o = /* @__PURE__ */ new Map(), s = /* @__PURE__ */ new Map(), c = [], l = a.inputs.length;
 	for (let e = 0; e < l; e++) {
 		let t = a.inputs[e], n = {
-			format: en(t.type),
+			format: tn(t.type),
 			offset: 0,
 			shaderLocation: t.location
 		};
@@ -7214,7 +7206,7 @@ var Ut = class {
 		attributeOdered: c,
 		locationMap: o
 	};
-}, nn = class extends g {
+}, rn = class extends g {
 	reflectedAttributes;
 	constructor(e) {
 		super({
@@ -7225,13 +7217,13 @@ var Ut = class {
 		});
 	}
 	reflect = (e, t) => {
-		this.createGpuShader(`[VertexShader] holder name:${t}, shader id: ${this.getID()}.`), this.reflectedAttributes = tn(this.code, this.entryPoint, t), this.reflectedUniforms = Zt(this.code, this.entryPoint, this.shaderStage, e, t);
+		this.createGpuShader(`[VertexShader] holder name:${t}, shader id: ${this.getID()}.`), this.reflectedAttributes = nn(this.code, this.entryPoint, t), this.reflectedUniforms = Qt(this.code, this.entryPoint, this.shaderStage, e, t);
 	};
 	getVertexAttributeMap = () => this.reflectedAttributes?.attributeMap;
 	getOrderedAttribute = () => this.reflectedAttributes?.attributeOdered;
 	getAttributeNameByLocation = (e) => this.reflectedAttributes?.locationMap.get(e);
 	getAttributeCount = () => this.reflectedAttributes?.attributeCount;
-}, rn = class e {
+}, an = class e {
 	static CACHE = /* @__PURE__ */ new Map();
 	context;
 	constructor(e) {
@@ -7241,7 +7233,7 @@ var Ut = class {
 	createVertexShader = (t) => {
 		let n = g.hash32aID(t.code, t.entryPoint);
 		if (!e.CACHE.has(n)) {
-			let r = new nn({
+			let r = new rn({
 				context: this.context,
 				code: t.code,
 				entryPoint: t.entryPoint
@@ -7253,7 +7245,7 @@ var Ut = class {
 	createFragmentShader = (t) => {
 		let n = g.hash32aID(t.code, t.entryPoint);
 		if (!e.CACHE.has(n)) {
-			let r = new $t({
+			let r = new en({
 				context: this.context,
 				code: t.code,
 				entryPoint: t.entryPoint
@@ -7265,7 +7257,7 @@ var Ut = class {
 	createComputeShader = (t) => {
 		let n = g.hash32aID(t.code, t.entryPoint);
 		if (!e.CACHE.has(n)) {
-			let r = new Qt({
+			let r = new $t({
 				context: this.context,
 				code: t.code,
 				entryPoint: t.entryPoint
@@ -7274,7 +7266,61 @@ var Ut = class {
 		}
 		return e.CACHE.get(n);
 	};
-}, an = (e) => {
+}, on = (e) => {
+	switch (e) {
+		case "r8unorm":
+		case "r8snorm":
+		case "r8uint":
+		case "r8sint": return 1;
+		case "r16uint":
+		case "r16sint":
+		case "r16float":
+		case "rg8unorm":
+		case "rg8snorm":
+		case "rg8uint":
+		case "rg8sint": return 2;
+		case "r32uint":
+		case "r32sint":
+		case "r32float":
+		case "rg16uint":
+		case "rg16sint":
+		case "rg16float":
+		case "rgba8unorm":
+		case "rgba8unorm-srgb":
+		case "rgba8snorm":
+		case "rgba8uint":
+		case "rgba8sint":
+		case "bgra8unorm":
+		case "bgra8unorm-srgb": return 4;
+		case "rg32uint":
+		case "rg32sint":
+		case "rg32float":
+		case "rgba16uint":
+		case "rgba16sint":
+		case "rgba16float": return 8;
+		case "rgba32uint":
+		case "rgba32sint":
+		case "rgba32float": return 16;
+		case "depth16unorm": return 2;
+		case "depth24plus": return 4;
+		case "depth32float": return 4;
+		case "depth24plus-stencil8": return 4;
+		case "depth32float-stencil8": return 8;
+		case "bc1-rgba-unorm":
+		case "bc1-rgba-unorm-srgb": return 8;
+		case "bc2-rgba-unorm":
+		case "bc2-rgba-unorm-srgb":
+		case "bc3-rgba-unorm":
+		case "bc3-rgba-unorm-srgb":
+		case "bc5-rg-unorm":
+		case "bc5-rg-snorm":
+		case "bc6h-rgb-ufloat":
+		case "bc6h-rgb-float":
+		case "bc7-rgba-unorm":
+		case "bc7-rgba-unorm-srgb": return 16;
+		default: throw Error(`Unsupported GPUTextureFormat: ${e}`);
+	}
+}, sn = (e) => {
 	switch (e) {
 		case "texture1D": return "1d";
 		case "texture2D": return "2d";
@@ -7285,7 +7331,7 @@ var Ut = class {
 		case "textureStorage2D": return "2d";
 		default: return console.warn(`[W][getTextureViewDimension] unspported texture property format: ${e}`), "2d";
 	}
-}, on = (e) => {
+}, cn = (e) => {
 	switch (e) {
 		case "texture1D": return "1d";
 		case "texture2D": return "2d";
@@ -7296,7 +7342,7 @@ var Ut = class {
 		case "textureStorage2D": return "2d";
 		default: return console.warn(`[W][getTextureDimension] unspported texture property format: ${e}`), "2d";
 	}
-}, sn = (e, t, n) => {
+}, ln = (e, t, n) => {
 	let r = {};
 	switch (n) {
 		case "r8uint":
@@ -7403,7 +7449,7 @@ var Ut = class {
 		default: throw Error(`[E][getTexelCopyBufferLayout] unsupport texture format: ${n}`);
 	}
 	return r;
-}, cn = class {
+}, un = class {
 	id;
 	textureUsageFlags;
 	context;
@@ -7426,7 +7472,7 @@ var Ut = class {
 		this.depthOrArrayLayers = e.depthOrArrayLayers || 1, this.textureUsageFlags = e.textureUsageFlags, this.extent3d = [
 			e.width,
 			e.height,
-			e.depthOrArrayLayers || 1
+			this.depthOrArrayLayers
 		], this.textureFormat = e.textureFormat || this.context.getPreferredTextureFormat(), this.propertyFormat = e.propertyFormat, this.maxMipmapCount = i(...this.extent3d), this.isDetphTexture() ? (this.mipmapCount = 1, this.textureUsageFlags |= GPUTextureUsage.RENDER_ATTACHMENT) : this.mipmapCount = e.mipmapCount || this.maxMipmapCount;
 	}
 	get Width() {
@@ -7449,9 +7495,10 @@ var Ut = class {
 	getTextureFormat = () => this.textureFormat;
 	isDetphTexture = () => this.textureFormat === "depth16unorm" || this.textureFormat === "depth24plus" || this.textureFormat === "depth24plus-stencil8" || this.textureFormat == "depth32float" || this.textureFormat == "depth32float-stencil8";
 	isStencilTexture = () => this.textureFormat === "stencil8" || this.textureFormat === "depth24plus-stencil8" || this.textureFormat == "depth32float-stencil8";
-	getTextureViewDimension = () => an(this.propertyFormat);
-	getTextureDimension = () => on(this.propertyFormat);
-	getTexelCopyBufferLayout = () => sn(this.width, this.height, this.textureFormat);
+	getTextureViewDimension = () => sn(this.propertyFormat);
+	getBytePerTexel = () => on(this.textureFormat);
+	getTextureDimension = () => cn(this.propertyFormat);
+	getTexelCopyBufferLayout = (e, t) => ln(e || this.width, t || this.height, this.textureFormat);
 	nextCursor = () => {
 		this.mipCurosr = ++this.mipCurosr % this.mipmapCount;
 	};
@@ -7461,7 +7508,7 @@ var Ut = class {
 	isUsageIncludeRenderAttachment = () => (this.textureUsageFlags & GPUTextureUsage.RENDER_ATTACHMENT) !== 0;
 	isUsageIncludeStorageBinding = () => (this.textureUsageFlags & GPUTextureUsage.STORAGE_BINDING) !== 0;
 	isUsageIncludeTextureBinding = () => (this.textureUsageFlags & GPUTextureUsage.TEXTURE_BINDING) !== 0;
-}, ln = class extends cn {
+}, dn = class extends un {
 	constructor(e) {
 		super({
 			id: e.id,
@@ -7487,8 +7534,9 @@ var Ut = class {
 	useAsRenderAttachment() {
 		this.selectedUsage = "RENDER_ATTACHMENT";
 	}
-}, un = class extends cn {
-	textureData;
+}, fn = class extends un {
+	textureData_;
+	handler_;
 	autoIncrementMipLevelInStorageBindingUse = !1;
 	constructor(e) {
 		super({
@@ -7501,20 +7549,37 @@ var Ut = class {
 			textureFormat: e.textureFormat,
 			mipmapCount: e.mipmapCount,
 			propertyFormat: "texture2D"
-		}), this.textureData = e.textureData;
+		}), this.textureData_ = e.textureData, this.handler_ = e.handler;
 	}
 	AutoIncrementMipLevelInStorageBinding = (e) => {
 		this.autoIncrementMipLevelInStorageBindingUse = e;
 	};
 	refreshTextureDataSource() {
-		if (this.textureData && !this.isDetphTexture()) {
+		if (this.textureData_ && !this.isDetphTexture()) {
 			let e = { texture: this.texture }, t = this.getTexelCopyBufferLayout();
-			this.context.getGpuQueue().writeTexture(e, this.textureData, t, this.extent3d), this.textureData = void 0;
+			this.context.getGpuQueue().writeTexture(e, this.textureData_, t, this.extent3d), this.textureData_ = void 0;
+		} else if (this.handler_ && this.isDetphTexture()) {
+			let e = this.handler_();
+			if (!e.rewrite || !e.detail.rawData) return;
+			let t = {
+				texture: this.texture,
+				origin: [
+					0,
+					0,
+					0
+				]
+			}, n = this.getTexelCopyBufferLayout(), r = {
+				width: this.width,
+				height: this.height,
+				depthOrArrayLayers: 1
+			};
+			this.context.getGpuQueue().writeTexture(t, e.detail.rawData.buffer, n, r), e.detail.rawData = void 0;
 		}
 	}
 	createGpuTexture() {
 		let e = {
 			size: this.extent3d,
+			dimension: "2d",
 			format: this.textureFormat,
 			usage: this.textureUsageFlags,
 			mipLevelCount: this.mipmapCount
@@ -7591,7 +7656,7 @@ var Ut = class {
 			e.baseArrayLayer = 0, e.arrayLayerCount = 1, e.baseMipLevel = 0, e.mipLevelCount = 1, e.dimension = this.getTextureViewDimension(), e.format = this.textureFormat, this.renderAttachmentView = this.texture.createView(e);
 		}
 	};
-}, dn = class extends cn {
+}, pn = class extends un {
 	textureData2DArray;
 	handler;
 	constructor(e) {
@@ -7622,20 +7687,19 @@ var Ut = class {
 			this.textureData2DArray.length = 0, this.textureData2DArray = void 0;
 		} else if (this.handler && !this.isDetphTexture()) {
 			let e = this.handler();
-			if (e.rewrite) {
-				let t = { texture: this.texture }, n = this.getTexelCopyBufferLayout(), r = {
-					width: this.width,
-					height: this.height,
-					depthOrArrayLayers: 1
-				};
-				e.details.forEach((e) => {
-					t.origin = [
-						0,
-						0,
-						e.depthOrArrayLayerIndex
-					], this.context.getGpuQueue().writeTexture(t, e.rawData.buffer, n, r);
-				}), e.details.length = 0;
-			}
+			if (!e.rewrite) return;
+			let t = { texture: this.texture }, n = this.getTexelCopyBufferLayout(), r = {
+				width: this.width,
+				height: this.height,
+				depthOrArrayLayers: 1
+			};
+			e.details.forEach((e) => {
+				t.origin = [
+					0,
+					0,
+					e.depthOrArrayLayerIndex
+				], this.context.getGpuQueue().writeTexture(t, e.rawData.buffer, n, r);
+			}), e.details.length = 0;
 		}
 	}
 	createGpuTexture() {
@@ -7721,7 +7785,121 @@ var Ut = class {
 			t.baseArrayLayer = e, t.arrayLayerCount = 1, t.baseMipLevel = 0, t.mipLevelCount = 1, t.dimension = this.getTextureViewDimension(), t.format = this.textureFormat, this.renderAttachmentView = this.texture.createView(t);
 		}
 	};
-}, fn = class extends dn {
+}, mn = class extends un {
+	textureData;
+	handler;
+	constructor(e) {
+		super({
+			id: e.id,
+			context: e.context,
+			width: e.width,
+			height: e.height,
+			depthOrArrayLayers: e.depth,
+			textureUsageFlags: (e.appendixTextureUsages || 0) | GPUTextureUsage.COPY_DST | GPUTextureUsage.TEXTURE_BINDING,
+			textureFormat: e.textureFormat,
+			mipmapCount: e.mipmapCount,
+			propertyFormat: "texutre3D"
+		}), this.textureData = e.textureData, this.handler = e.handler;
+	}
+	refreshTextureDataSource() {
+		if (this.isDetphTexture()) {
+			console.warn("[W][refreshTextureDataSource] depth texture not allow texture write from cpu.");
+			return;
+		}
+		if (this.textureData && this.textureData.length > 0) {
+			let e = { texture: this.texture }, t = this.textureData.length, n = {
+				width: this.width,
+				height: this.height,
+				depthOrArrayLayers: this.depthOrArrayLayers / t
+			}, r = this.getTexelCopyBufferLayout();
+			for (let i = 0; i < t; i++) e.origin = [
+				0,
+				0,
+				i
+			], this.context.getGpuQueue().writeTexture(e, this.textureData[i].buffer, r, n);
+			this.textureData.length = 0, this.textureData = void 0;
+		} else if (this.handler) {
+			let e = this.handler();
+			if (!e.rewrite || e.details.length === 0) return;
+			let t = { texture: this.texture };
+			e.details.forEach((e) => {
+				let n = this.getTexelCopyBufferLayout(e.blockSize[0], e.blockSize[1]);
+				t.origin = [
+					e.originXYZ[0],
+					e.originXYZ[1],
+					e.originXYZ[2]
+				];
+				let r = {
+					width: e.blockSize[0],
+					height: e.blockSize[1],
+					depthOrArrayLayers: e.blockSize[2]
+				};
+				this.context.getGpuQueue().writeTexture(t, e.rawData.buffer, n, r);
+			}), e.details.length = 0;
+		}
+	}
+	createGpuTexture() {
+		let e = {
+			size: this.extent3d,
+			dimension: "3d",
+			format: this.textureFormat,
+			usage: this.textureUsageFlags,
+			mipLevelCount: this.mipmapCount
+		};
+		this.texture = this.context.getGpuDevice().createTexture(e), this.refreshTextureDataSource();
+	}
+	getGpuTexture = (e, t) => (this.texture || this.createGpuTexture(), this.refreshTextureDataSource(), this.texture);
+	getGpuTextureView = () => {
+		switch (this.selectedUsage) {
+			case "RENDER_ATTACHMENT": throw Error("[E][Texture3D][getGpuTextureView] texture3d get render attachment texture view error.");
+			case "TEXTURE_BINDING": return this.textureBindingView;
+			case "STORAGE_BINDING": return this.storageBindingView[this.mipCurosr];
+			default: throw Error("[E][Texture3D][getGpuTextureView] error occurs in get gpu texture view. for no 'useAs..' function called before compiler.");
+		}
+	};
+	useAsStorageBinding = () => {
+		if (!this.isUsageIncludeStorageBinding()) throw Error(`[E][Texture3D][useAsStorageBinding] ${typeof this} has no usage include 'GPUTextureUsage.STORAGE_BINDING', please check.`);
+		if (this.selectedUsage = "STORAGE_BINDING", this.texture || this.createGpuTexture(), !this.storageBindingView) {
+			this.storageBindingView = [];
+			for (let e = 0; e < this.mipmapCount; e++) {
+				let t = {};
+				switch (t.baseArrayLayer = 0, t.arrayLayerCount = 1, t.baseMipLevel = e, t.mipLevelCount = 1, this.textureFormat) {
+					case "depth16unorm":
+					case "depth24plus":
+					case "depth32float":
+					case "stencil8":
+					case "depth24plus-stencil8":
+					case "depth32float-stencil8": throw Error("[E][Texture3D][useAsTextureBinding] not support texture format.");
+					default:
+						t.aspect = "all";
+						break;
+				}
+				t.dimension = this.getTextureViewDimension(), t.format = this.textureFormat, this.storageBindingView[e] = this.texture.createView(t);
+			}
+		}
+	};
+	useAsTextureBinding = () => {
+		if (!this.isUsageIncludeTextureBinding()) throw Error(`[E][Texture3D][useAsTextureBinding] ${typeof this} has no usage include 'GPUTextureUsage.TEXTURE_BINDING', please check.`);
+		if (this.selectedUsage = "TEXTURE_BINDING", this.texture || this.createGpuTexture(), !this.textureBindingView) {
+			let e = {};
+			switch (e.baseArrayLayer = 0, e.arrayLayerCount = 1, e.dimension = "3d", e.baseMipLevel = 0, e.mipLevelCount = this.mipmapCount, this.textureFormat) {
+				case "depth16unorm":
+				case "depth24plus":
+				case "depth32float":
+				case "stencil8":
+				case "depth24plus-stencil8":
+				case "depth32float-stencil8": throw Error("[E][Texture3D][useAsTextureBinding] not support texture format.");
+				default:
+					e.aspect = "all";
+					break;
+			}
+			e.dimension = this.getTextureViewDimension(), e.format = this.textureFormat, this.textureBindingView = this.texture.createView(e);
+		}
+	};
+	useAsRenderAttachment = () => {
+		throw Error("[E][Texture3D][useAsRenderAttachment] texture3d cannot be used as render attachment.");
+	};
+}, hn = class extends pn {
 	constructor(e) {
 		super({
 			id: e.id,
@@ -7742,7 +7920,7 @@ var Ut = class {
 			mipmapCount: e.mipmapCount
 		}), this.propertyFormat = "textureCube";
 	}
-}, pn = class extends un {
+}, gn = class extends fn {
 	constructor(e) {
 		super({
 			id: e.id,
@@ -7752,9 +7930,9 @@ var Ut = class {
 			textureFormat: e.textureFormat,
 			mipmapCount: e.mipmapCount,
 			appendixTextureUsages: e.appendixTextureUsages
-		}), this.textureData = e.textureData, this.depthOrArrayLayers = 1, this.textureUsageFlags = this.textureUsageFlags | GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.COPY_SRC, this.propertyFormat = "textureStorage2D";
+		}), this.textureData_ = e.textureData, this.depthOrArrayLayers = 1, this.textureUsageFlags = this.textureUsageFlags | GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.COPY_SRC, this.propertyFormat = "textureStorage2D";
 	}
-}, mn = class e {
+}, _n = class e {
 	static TEXTURE_SET = /* @__PURE__ */ new Map();
 	context;
 	constructor(e) {
@@ -7765,12 +7943,28 @@ var Ut = class {
 		return e.TEXTURE_SET.get(t);
 	};
 	createTexutre2D = (n) => {
-		let r = t(), i = new un({
+		let r = t(), i = new fn({
 			id: r,
 			context: this.context,
 			width: n.width,
 			height: n.height,
 			textureData: n.textureData,
+			handler: n.handler,
+			textureFormat: n.textureFormat,
+			mipmapCount: n.mipmapCount,
+			appendixTextureUsages: n.appendixTextureUsages
+		});
+		return e.TEXTURE_SET.set(r, i), e.TEXTURE_SET.get(r);
+	};
+	createTexture3D = (n) => {
+		let r = t(), i = new mn({
+			id: r,
+			context: this.context,
+			width: n.width,
+			height: n.height,
+			depth: n.depth,
+			textureData: n.textureData,
+			handler: n.handler,
 			textureFormat: n.textureFormat,
 			mipmapCount: n.mipmapCount,
 			appendixTextureUsages: n.appendixTextureUsages
@@ -7778,7 +7972,7 @@ var Ut = class {
 		return e.TEXTURE_SET.set(r, i), e.TEXTURE_SET.get(r);
 	};
 	createTextureStorage2D = (n) => {
-		let r = t(), i = new pn({
+		let r = t(), i = new gn({
 			id: r,
 			context: this.context,
 			width: n.width,
@@ -7791,14 +7985,14 @@ var Ut = class {
 		return e.TEXTURE_SET.set(r, i), e.TEXTURE_SET.get(r);
 	};
 	createSurfaceTexture2D = () => {
-		let n = t(), r = new ln({
+		let n = t(), r = new dn({
 			id: n,
 			context: this.context
 		});
 		return e.TEXTURE_SET.set(n, r), r;
 	};
 	createTexture2DArray = (n) => {
-		let r = t(), i = new dn({
+		let r = t(), i = new pn({
 			id: r,
 			context: this.context,
 			width: n.width,
@@ -7813,7 +8007,7 @@ var Ut = class {
 		return e.TEXTURE_SET.set(r, i), e.TEXTURE_SET.get(r);
 	};
 	createTextureCube = (n) => {
-		let r = t(), i = new fn({
+		let r = t(), i = new hn({
 			id: r,
 			context: this.context,
 			width: n.width,
@@ -7825,7 +8019,7 @@ var Ut = class {
 		});
 		return e.TEXTURE_SET.set(r, i), e.TEXTURE_SET.get(r);
 	};
-}, hn = (e, t) => {
+}, vn = (e, t) => {
 	switch (e) {
 		case "float32": return 4;
 		case "sint32": return 4;
@@ -7841,7 +8035,7 @@ var Ut = class {
 		case "sint32x4": return 16;
 		default: return console.log(`[E][getVertexFormatStride] ${t} unsupported vertex format type: ${e}`), 0;
 	}
-}, gn = (e) => {
+}, yn = (e) => {
 	let t = e.vertexShader.getOrderedAttribute(), n = (t, n) => {
 		e.vertexBufferIDAttributesMap.has(t) || e.vertexBufferIDAttributesMap.set(t, []), e.vertexBufferIDAttributesMap.get(t)?.push(n);
 	};
@@ -7852,7 +8046,7 @@ var Ut = class {
 			if (!o) return;
 			let s = r.get(o);
 			if (!s) return;
-			let c = hn(t.format, `[E]][emitAttributes] ${e.debugLabel}`), l = s.type;
+			let c = vn(t.format, `[E]][emitAttributes] ${e.debugLabel}`), l = s.type;
 			switch (l) {
 				case "vertexBuffer":
 					t.offset = a, a += c, n(i, t);
@@ -7881,7 +8075,7 @@ var Ut = class {
 		entryPoint: e.vertexShader.getEntryPoint(),
 		buffers: e.vertexBufferLayouts
 	};
-}, _n = (e) => {
+}, bn = (e) => {
 	if (e.attributes?.isEmpty()) return;
 	let t = (t, n) => {
 		if (!e.bufferAttributeRecordsMap.has(t)) {
@@ -7907,14 +8101,14 @@ var Ut = class {
 			default: throw Error(`[E][ParseAttribute][holder][name] ${e.debugLabel} unsupport property type: ${i}`);
 		}
 	});
-}, vn = class {
+}, xn = class {
 	id;
 	context;
 	constructor(e) {
 		this.context = e.context, this.id = e.id;
 	}
 	getID = () => this.id;
-}, yn = class extends vn {
+}, Sn = class extends xn {
 	texture;
 	clearColor = {
 		r: 0,
@@ -7975,18 +8169,18 @@ var Ut = class {
 	getGpuColorAttachment = () => (this.updateAttachment(), this.renderPassColorAttachment);
 	getGpuBlendState = () => (this.updateState(), this.blendState);
 	getTextureFormat = () => this.texture?.getTextureFormat() || this.context.getPreferredTextureFormat();
-}, bn = (e) => {
+}, Cn = (e) => {
 	let t = [];
 	if (e.colorAttachments.length === 0) throw Error(`[E][parseColorAttachments] ${e.debugLabel} 'RenderHolderDesc' missing color attachments.`);
 	return e.colorAttachments.forEach((e) => {
 		let n = { format: e.getTextureFormat() };
 		n.blend = e.getGpuBlendState(), n.writeMask = GPUColorWrite.ALL, t.push(n);
 	}), t;
-}, xn = (e) => ({
+}, wn = (e) => ({
 	targets: e.colorTargetStates,
 	module: e.fragmentShader.getGpuShader(),
 	entryPoint: e.fragmentShader.getEntryPoint()
-}), Sn = (e) => {
+}), Tn = (e) => {
 	let t = {};
 	switch (t.alphaToCoverageEnabled = !1, e.multiSampleFormat) {
 		case "1x":
@@ -8006,10 +8200,10 @@ var Ut = class {
 			break;
 	}
 	return t;
-}, Cn = (e) => {
+}, En = (e) => {
 	let t = { bindGroupLayouts: e.bindGroupLayouts };
 	return e.context.getGpuDevice().createPipelineLayout(t);
-}, wn = (e) => {
+}, Dn = (e) => {
 	let t = {};
 	t.topology = e.primitiveDesc?.primitiveTopology || "triangle-list", t.topology !== "triangle-strip" && t.topology !== "line-strip" ? t.stripIndexFormat = void 0 : t.stripIndexFormat = e.dispatch.getIndexFormat();
 	let n = e.primitiveDesc?.cullFormat || "none";
@@ -8034,7 +8228,7 @@ var Ut = class {
 			break;
 	}
 	return t;
-}, Tn = (e) => {
+}, On = (e) => {
 	let t = e.context.getLimits().maxBindGroups;
 	for (let n = 0; n < t; n++) if (e.collectedBindgroupLayoutEntriesMap.has(n)) {
 		let t = e.collectedBindgroupLayoutEntriesMap.get(n), r = {
@@ -8043,7 +8237,7 @@ var Ut = class {
 		}, i = e.context.getGpuDevice().createBindGroupLayout(r);
 		e.bindGroupLayouts.push(i), e.gourpIDWithBindGroupLayoutMap.set(n, i), e.gourpIDWithBindGroupLayoutDescriptorMap.set(n, r);
 	}
-}, En = (e) => {
+}, kn = (e) => {
 	let t = /* @__PURE__ */ new Map(), n = e.context.getLimits().maxBindGroups, r = e.vertexShader.getBindGroupWithGroupLayoutEntriesMap(), i = e.fragmentShader.getBindGroupWithGroupLayoutEntriesMap();
 	if (r?.size + i?.size >= n * 2) throw Error(`[E][parseRenderBindGroupLayout] ${e.debugLabel} bindgroup over size.`);
 	let a = (e, t) => {
@@ -8058,7 +8252,7 @@ var Ut = class {
 			return;
 		}
 	}
-	Tn({
+	On({
 		debugLabel: e.debugLabel,
 		context: e.context,
 		collectedBindgroupLayoutEntriesMap: t,
@@ -8066,7 +8260,7 @@ var Ut = class {
 		gourpIDWithBindGroupLayoutMap: e.gourpIDWithBindGroupLayoutMap,
 		gourpIDWithBindGroupLayoutDescriptorMap: e.gourpIDWithBindGroupLayoutDescriptorMap
 	});
-}, Dn = (e) => {
+}, An = (e) => {
 	if (!e.dispatch) throw Error(`[E][parseRenderDispatch] ${e.debugLabel} missing render 'dispatch' in 'RenderHolderDesc'`);
 	let t = e.dispatch.getPropertyFormat();
 	switch (t) {
@@ -8108,14 +8302,14 @@ var Ut = class {
 	}
 	getPropertyFormat = () => this.propertyFormat;
 	getPropertyName = () => this.propertyName;
-}, On = class extends $ {
+}, jn = class extends $ {
 	buffer;
 	constructor(e, t) {
 		super(e, "uniformBuffer"), this.buffer = t;
 	}
 	getUniformBufferID = () => this.buffer.getID();
-}, kn = (e, t, n, r) => {}, An = (e) => {
-	if (e.uniforms?.isEmpty()) return kn;
+}, Mn = (e, t, n, r) => {}, Nn = (e) => {
+	if (e.uniforms?.isEmpty()) return Mn;
 	let t = (t, n) => {
 		if (!e.bufferUniformRecordsMap.has(t)) {
 			let n = /* @__PURE__ */ new Map();
@@ -8146,6 +8340,7 @@ var Ut = class {
 			}
 			case "textureCube":
 			case "texture2D":
+			case "texutre3D":
 			case "texture2DArray":
 			case "textureStorage2D": {
 				let n = i.getTextureID(), s = {
@@ -8173,8 +8368,8 @@ var Ut = class {
 		}), r.forEach((n) => {
 			a.getTexture(n)?.getGpuTexture(t, e);
 		});
-	} : kn;
-}, jn = (e, t, n) => {
+	} : Mn;
+}, Pn = (e, t, n) => {
 	(() => {
 		let t = e.context.getLimits().maxBindGroups, r = e.vertexShader?.getBindGroupWithResourceBindingsMap() || /* @__PURE__ */ new Map(), i = e.fragmentShader?.getBindGroupWithResourceBindingsMap() || /* @__PURE__ */ new Map(), a = e.computeShader?.getBindGroupWithResourceBindingsMap() || /* @__PURE__ */ new Map();
 		if (r.size >= t || i.size >= t || a.size >= t) throw Error(`[E][emitUniforms][mergeBindGroupWithResourceBindingsMap] ${e.debugLabel} over limits: ${t}`);
@@ -8256,7 +8451,7 @@ var Ut = class {
 		}, o = e.context.getGpuDevice().createBindGroup(a);
 		t.set(r, o);
 	});
-}, Mn = class {
+}, Fn = class {
 	id;
 	context;
 	sampler;
@@ -8280,17 +8475,17 @@ var Ut = class {
 		return this.samplerBindingType;
 	}
 	createGpuSampler = () => (this.sampler ||= (this.samplerDesc = {}, this.samplerDesc.addressModeU = this.addressModeU, this.samplerDesc.addressModeV = this.addressModeV, this.samplerDesc.addressModeW = this.addressModeW, this.samplerDesc.magFilter = this.magFilter, this.samplerDesc.minFilter = this.minFilter, this.samplerDesc.mipmapFilter = this.mipmapFilter, this.samplerDesc.lodMinClamp = this.lodMinClamp, this.samplerDesc.lodMaxClamp = this.lodMaxClamp, this.samplerDesc.maxAnisotropy = this.anisotropy, this.compareFunction && (this.samplerDesc.compare = this.compareFunction), this.context?.getGpuDevice().createSampler(this.samplerDesc)), this.sampler);
-}, Nn = class extends Mn {
+}, In = class extends Fn {
 	constructor(e) {
 		super(e);
 	}
 	getGpuSampler = (e, t) => (this.sampler || this.createGpuSampler(), this.sampler);
-}, Pn = class extends Mn {
+}, Ln = class extends Fn {
 	constructor(e) {
 		super(e);
 	}
 	getGpuSampler = (e, t) => (this.sampler || this.createGpuSampler(), this.sampler);
-}, Fn = class e {
+}, Rn = class e {
 	static SAMPLER_SET = /* @__PURE__ */ new Map();
 	context;
 	constructor(e) {
@@ -8301,7 +8496,7 @@ var Ut = class {
 		return e.SAMPLER_SET.get(t);
 	};
 	createTextureSampler = (n) => {
-		let r = t(), i = new Pn({
+		let r = t(), i = new Ln({
 			id: r,
 			context: this.context,
 			addressModeU: n.addressModeU,
@@ -8318,7 +8513,7 @@ var Ut = class {
 		return e.SAMPLER_SET.set(r, i), e.SAMPLER_SET.get(r);
 	};
 	createComparisonSampler = (n) => {
-		let r = t(), i = new Nn({
+		let r = t(), i = new In({
 			id: r,
 			context: this.context,
 			compareFunction: n.compareFunction,
@@ -8335,13 +8530,13 @@ var Ut = class {
 		});
 		return e.SAMPLER_SET.set(r, i), e.SAMPLER_SET.get(r);
 	};
-}, In = (e) => {
+}, zn = (e) => {
 	let t = {
 		vertex: e.vertexState,
 		layout: e.pipelineLayout
 	};
 	return t.multisample = e.multisampleState, t.primitive = e.primitiveState, t.fragment = e.fragmentState, e.depthStencilAttachment && (t.depthStencil = e.depthStencilAttachment.getDepthStencilState()), e.pipelineState.createRenderPipeline(t);
-}, Ln = class {
+}, Bn = class {
 	id;
 	context;
 	propertyFormat;
@@ -8350,7 +8545,7 @@ var Ut = class {
 	}
 	getID = () => this.id;
 	getPropertyFormat = () => this.propertyFormat;
-}, Rn = class extends Ln {
+}, Vn = class extends Bn {
 	computePipelineDescriptor;
 	computePipeline;
 	constructor(e) {
@@ -8364,7 +8559,7 @@ var Ut = class {
 		this.computePipeline = this.context.getGpuDevice().createComputePipeline(this.computePipelineDescriptor);
 	};
 	getGpuComputePipeline = () => (this.computePipeline || this.createGpuComputePipeline(), this.computePipeline);
-}, zn = class extends Ln {
+}, Hn = class extends Bn {
 	renderPipelineDescriptor;
 	renderPipeline;
 	constructor(e) {
@@ -8378,7 +8573,7 @@ var Ut = class {
 		this.renderPipeline = this.context.getGpuDevice().createRenderPipeline(this.renderPipelineDescriptor);
 	};
 	getGpuRenderPipeline = () => (this.renderPipeline || this.createGpuRenderPipeline(), this.renderPipeline);
-}, Bn = class e {
+}, Un = class e {
 	static PIPELINE_SET = /* @__PURE__ */ new Map();
 	context;
 	constructor(e) {
@@ -8389,7 +8584,7 @@ var Ut = class {
 		throw Error(`[E][PipelineState][getPipeline] find pipeline failed, id: ${t}`);
 	};
 	createRenderPipeline = (n) => {
-		let r = t(), i = new zn({
+		let r = t(), i = new Hn({
 			id: r,
 			context: this.context,
 			renderPipelineDescriptor: n
@@ -8397,14 +8592,14 @@ var Ut = class {
 		return e.PIPELINE_SET.set(r, i), this.getPipeline(r);
 	};
 	createComputePipeline = (n) => {
-		let r = t(), i = new Rn({
+		let r = t(), i = new Vn({
 			id: r,
 			context: this.context,
 			computePipelineDescriptor: n
 		});
 		return e.PIPELINE_SET.set(r, i), this.getPipeline(r);
 	};
-}, Vn = class extends vn {
+}, Wn = class extends xn {
 	depthStencilState;
 	depthStencilAttachment;
 	texture;
@@ -8477,7 +8672,7 @@ var Ut = class {
 	getGpuRenderPassDepthStencilAttachment = () => (this.updateAttachment(), this.depthStencilAttachment);
 	getDepthStencilState = () => (this.updateState(), this.depthStencilState);
 	getTexture = () => this.texture;
-}, Hn = class e {
+}, Gn = class e {
 	static ATTACHMENT_SET = /* @__PURE__ */ new Map();
 	context;
 	constructor(e) {
@@ -8490,7 +8685,7 @@ var Ut = class {
 	createColorAttachment = (n) => {
 		let r = t();
 		if (!e.ATTACHMENT_SET.has(r)) {
-			let t = new yn({
+			let t = new Sn({
 				id: r,
 				context: this.context,
 				texture: n.texture,
@@ -8505,7 +8700,7 @@ var Ut = class {
 	createDepthStencilAttachment = (n) => {
 		let r = t();
 		if (!e.ATTACHMENT_SET.has(r)) {
-			let t = new Vn({
+			let t = new Wn({
 				id: r,
 				context: this.context,
 				texture: n.texture,
@@ -8524,7 +8719,7 @@ var Ut = class {
 		}
 		return e.ATTACHMENT_SET.get(r);
 	};
-}, Un = (e) => {
+}, Kn = (e) => {
 	let t = /* @__PURE__ */ new Map(), n = e.context.getLimits().maxBindGroups, r = e.computeShader.getBindGroupWithGroupLayoutEntriesMap();
 	if (r?.size >= n) throw Error(`[E][parseComputeBindGroupLayout] ${e.debugLabel} bindgroup over size. maxBindGroup :${n}`);
 	for (let i = 0; i < e.context.getLimits().maxBindGroups; i++) {
@@ -8535,7 +8730,7 @@ var Ut = class {
 		}
 		if (a.length && (t.set(i, a), t.size != i + 1)) throw Error(`[E][parseRenderBindGroupLayout] ${e.debugLabel} binding group should use in order from start [0 to ${n}], please check shader binding group index.`);
 	}
-	Tn({
+	On({
 		debugLabel: e.debugLabel,
 		context: e.context,
 		collectedBindgroupLayoutEntriesMap: t,
@@ -8543,7 +8738,7 @@ var Ut = class {
 		gourpIDWithBindGroupLayoutMap: e.gourpIDWithBindGroupLayoutMap,
 		gourpIDWithBindGroupLayoutDescriptorMap: e.gourpIDWithBindGroupLayoutDescriptorMap
 	});
-}, Wn = (e) => {
+}, qn = (e) => {
 	if (!e.dispatch) throw Error("[E][parseComputeDispatch] missing compute 'dispatch' in 'ComputeHolderDesc'");
 	let t = e.dispatch.getPropertyFormat();
 	switch (t) {
@@ -8552,16 +8747,16 @@ var Ut = class {
 		};
 		default: throw Error(`[E][parseComputeDispatch] ${e.debugLabel} unsupport render dispatch type:${t} in 'ComputeHolderDesc'`);
 	}
-}, Gn = (e) => ({
+}, Jn = (e) => ({
 	module: e.computeShader.getGpuShader(),
 	entryPoint: e.computeShader.getEntryPoint()
-}), Kn = (e) => {
+}), Yn = (e) => {
 	let t = {
 		compute: e.computeProgrammableStage,
 		layout: e.pipelineLayout
 	};
 	return e.pipelineState.createComputePipeline(t);
-}, qn = class {
+}, Xn = class {
 	context;
 	bufferState;
 	shaderState;
@@ -8570,26 +8765,26 @@ var Ut = class {
 	pipelineState;
 	attachmentState;
 	constructor(e) {
-		this.context = e, this.bufferState = new ue(this.context), this.shaderState = new rn(this.context), this.textureState = new mn(this.context), this.samplerState = new Fn(this.context), this.pipelineState = new Bn(this.context), this.attachmentState = new Hn(this.context);
+		this.context = e, this.bufferState = new ue(this.context), this.shaderState = new an(this.context), this.textureState = new _n(this.context), this.samplerState = new Rn(this.context), this.pipelineState = new Un(this.context), this.attachmentState = new Gn(this.context);
 	}
 	compileRenderHolder = (e) => {
 		let n = `[RenderHolder][${e.label}]`, r = e.vertexShader, i = e.fragmentShader;
 		if (!r || !i) throw Error(`[E][Compiler][compileRenderHolder] ${n} missing shader, vertexShader: ${r}; fragmentShader:${i}`);
 		r.reflect(e.uniforms, n), i.reflect(e.uniforms, n);
 		let a = /* @__PURE__ */ new Map(), o = /* @__PURE__ */ new Map();
-		_n({
+		bn({
 			debugLabel: n,
 			attributes: e.attributes,
 			attributeRecordMap: a,
 			bufferAttributeRecordsMap: o
 		});
-		let s = /* @__PURE__ */ new Map(), c = /* @__PURE__ */ new Map(), l = An({
+		let s = /* @__PURE__ */ new Map(), c = /* @__PURE__ */ new Map(), l = Nn({
 			debugLabel: n,
 			uniforms: e.uniforms,
 			uniformRecordMap: s,
 			bufferUniformRecordsMap: c
 		}), u = [], ee = /* @__PURE__ */ new Map(), d = /* @__PURE__ */ new Map();
-		En({
+		kn({
 			debugLabel: n,
 			context: this.context,
 			vertexShader: r,
@@ -8598,28 +8793,28 @@ var Ut = class {
 			gourpIDWithBindGroupLayoutMap: ee,
 			gourpIDWithBindGroupLayoutDescriptorMap: d
 		});
-		let te = Dn({
+		let te = An({
 			debugLabel: n,
 			dispatch: e.dispatch
-		}), re = Sn({
+		}), re = Tn({
 			debugLabel: n,
 			multiSampleFormat: e.multiSampleFormat || "1x"
-		}), ie = bn({
+		}), ie = Cn({
 			debugLabel: n,
 			colorAttachments: e.colorAttachments
-		}), ae = wn({
+		}), ae = Dn({
 			debugLabel: n,
 			primitiveDesc: e.primitiveDesc,
 			dispatch: e.dispatch
-		}), oe = xn({
+		}), oe = wn({
 			debugLabel: n,
 			fragmentShader: i,
 			colorTargetStates: ie
-		}), f = Cn({
+		}), f = En({
 			debugLabel: n,
 			context: this.context,
 			bindGroupLayouts: u
-		}), p = [], m = /* @__PURE__ */ new Map(), h = /* @__PURE__ */ new Map(), se = gn({
+		}), p = [], m = /* @__PURE__ */ new Map(), h = /* @__PURE__ */ new Map(), se = yn({
 			debugLabel: n,
 			vertexShader: r,
 			bufferAttributeRecordsMap: o,
@@ -8627,7 +8822,7 @@ var Ut = class {
 			vertexBufferIDAttributesMap: m,
 			slotBufferIDMap: h
 		}), ce = /* @__PURE__ */ new Map(), le = /* @__PURE__ */ new Map();
-		jn({
+		Pn({
 			debugLabel: n,
 			context: this.context,
 			vertexShader: r,
@@ -8640,7 +8835,7 @@ var Ut = class {
 			gourpIDWithBindGroupLayoutMap: ee,
 			gourpIDWithBindGroupLayoutDescriptorMap: d
 		}, ce, le);
-		let ue = In({
+		let ue = zn({
 			debugLabel: n,
 			pipelineState: this.pipelineState,
 			depthStencilAttachment: e.depthStencilAttachment,
@@ -8669,13 +8864,13 @@ var Ut = class {
 		let n = `[ComputeHolder][${e.label}]`, r = e.computeShader;
 		if (!r) throw Error(`[E][Compiler][compileComputeHolder] ${n} missing shader, computeShader: ${r}`);
 		r.reflect(e.uniforms, n);
-		let i = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Map(), o = An({
+		let i = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Map(), o = Nn({
 			debugLabel: n,
 			uniforms: e.uniforms,
 			uniformRecordMap: i,
 			bufferUniformRecordsMap: a
 		}), s = [], c = /* @__PURE__ */ new Map(), l = /* @__PURE__ */ new Map();
-		Un({
+		Kn({
 			debugLabel: n,
 			context: this.context,
 			computeShader: r,
@@ -8683,18 +8878,18 @@ var Ut = class {
 			gourpIDWithBindGroupLayoutMap: c,
 			gourpIDWithBindGroupLayoutDescriptorMap: l
 		});
-		let u = Wn({
+		let u = qn({
 			debugLabel: n,
 			dispatch: e.dispatch
-		}), ee = Gn({
+		}), ee = Jn({
 			debugLabel: n,
 			computeShader: r
-		}), d = Cn({
+		}), d = En({
 			debugLabel: n,
 			context: this.context,
 			bindGroupLayouts: s
 		}), ne = /* @__PURE__ */ new Map(), re = /* @__PURE__ */ new Map();
-		jn({
+		Pn({
 			debugLabel: n,
 			context: this.context,
 			computeShader: r,
@@ -8706,7 +8901,7 @@ var Ut = class {
 			gourpIDWithBindGroupLayoutMap: c,
 			gourpIDWithBindGroupLayoutDescriptorMap: l
 		}, ne, re);
-		let ie = Kn({
+		let ie = Yn({
 			debugLabel: n,
 			computeProgrammableStage: ee,
 			pipelineLayout: d,
@@ -8830,6 +9025,7 @@ var Ut = class {
 		width: e.width,
 		height: e.height,
 		textureData: e.textureData,
+		handler: e.handler,
 		textureFormat: e.textureFormat,
 		mipmapCount: e.mipmapCount,
 		appendixTextureUsages: e.appendixTextureUsages
@@ -8860,6 +9056,16 @@ var Ut = class {
 		mipmapCount: e.mipmapCount,
 		appendixTextureUsages: e.appendixTextureUsages
 	});
+	createTexture3D = (e) => this.textureState.createTexture3D({
+		width: e.width,
+		height: e.height,
+		depth: e.depth,
+		textureData: e.textureData,
+		handler: e.handler,
+		textureFormat: e.textureFormat,
+		mipmapCount: e.mipmapCount,
+		appendixTextureUsages: e.appendixTextureUsages
+	});
 	createTextureSampler = (e) => this.samplerState.createTextureSampler({
 		addressModeU: e.addressModeU,
 		addressModeV: e.addressModeV,
@@ -8885,38 +9091,38 @@ var Ut = class {
 		compareFunction: e.compareFunction || "always",
 		samplerBindingType: e.samplerBindingType
 	});
-}, Jn = class extends $ {
+}, Zn = class extends $ {
 	vertexBuffer;
 	constructor(e, t) {
 		super(e, "vertexBuffer"), this.vertexBuffer = t;
 	}
 	getVertexBufferID = () => this.vertexBuffer.getID();
-}, Yn = class extends $ {
+}, Qn = class extends $ {
 	buffer;
 	constructor(e, t) {
 		super(e, "storageBuffer"), this.buffer = t;
 	}
 	getStorageBufferID = () => this.buffer.getID();
-}, Xn = class extends $ {
+}, $n = class extends $ {
 	texture;
 	constructor(e, t) {
 		super(e, t.getPropertyFormat()), this.texture = t;
 	}
 	getTextureID = () => this.texture.getID();
 	getTexture = () => this.texture;
-}, Zn = class extends $ {
+}, er = class extends $ {
 	textureSampler;
 	constructor(e, t) {
 		super(e, "textureSampler"), this.textureSampler = t;
 	}
 	getTextureSamplerID = () => this.textureSampler.getID();
 	getTextureSampler = () => this.textureSampler;
-}, Qn = class {
+}, tr = class {
 	propertyMap = /* @__PURE__ */ new Map();
 	constructor() {}
 	isEmpty = () => this.propertyMap.size === 0;
 	getPropertyMap = () => this.propertyMap;
-}, $n = class extends Qn {
+}, nr = class extends tr {
 	constructor() {
 		super();
 	}
@@ -8925,41 +9131,45 @@ var Ut = class {
 			console.log(`[I][Properties][Attributes] duplicated key :${e}`);
 			return;
 		}
-		let n = new Jn(e, t);
+		let n = new Zn(e, t);
 		this.propertyMap.set(e, n);
 	};
-}, er = class extends Qn {
+}, rr = class extends tr {
 	constructor() {
 		super();
 	}
 	assign(e, t) {
 		if (t instanceof ce) {
-			let n = new On(e, t);
+			let n = new jn(e, t);
 			this.propertyMap.set(e, n);
 			return;
 		} else if (t instanceof f) {
-			let n = new Yn(e, t);
+			let n = new Qn(e, t);
 			this.propertyMap.set(e, n);
 			return;
-		} else if (t instanceof Pn) {
-			let n = new Zn(e, t);
+		} else if (t instanceof Ln) {
+			let n = new er(e, t);
 			this.propertyMap.set(e, n);
 			return;
-		} else if (t instanceof un) {
-			let n = new Xn(e, t);
-			this.propertyMap.set(e, n);
-			return;
-		} else if (t instanceof dn) {
-			let n = new Xn(e, t);
+		} else if (t instanceof fn) {
+			let n = new $n(e, t);
 			this.propertyMap.set(e, n);
 			return;
 		} else if (t instanceof pn) {
-			let n = new Xn(e, t);
+			let n = new $n(e, t);
+			this.propertyMap.set(e, n);
+			return;
+		} else if (t instanceof gn) {
+			let n = new $n(e, t);
+			this.propertyMap.set(e, n);
+			return;
+		} else if (t instanceof mn) {
+			let n = new $n(e, t);
 			this.propertyMap.set(e, n);
 			return;
 		} else throw Error(`[E][Properties][Uniforms][assign] unsupported buffer type, buffer: ${t}`);
 	}
-}, tr = class extends $ {
+}, ir = class extends $ {
 	groupX;
 	groupY;
 	groupZ;
@@ -8972,7 +9182,7 @@ var Ut = class {
 	getGroupX = () => this.hanlderX ? this.hanlderX() : this.groupX;
 	getGroupY = () => this.hanlderY ? this.hanlderY() : this.groupY;
 	getGroupZ = () => this.hanlderZ ? this.hanlderZ() : this.groupZ;
-}, nr = class extends $ {
+}, ar = class extends $ {
 	maxDrawCount = 0;
 	maxDrawCountHandler;
 	instanceCount = 1;
@@ -9026,4 +9236,4 @@ var Ut = class {
 	};
 };
 //#endregion
-export { $n as Attributes, re as BaseBuffer, d as BaseHolder, yn as ColorAttachment, qn as Compiler, te as ComputeHolder, Rn as ComputePipeline, tr as ComputeProperty, Qt as ComputeShader, l as Context, Vn as DepthStencilAttachment, $t as FragmentShader, ae as IndexedBuffer, p as IndexedIndirectBuffer, m as IndexedStorageBuffer, h as IndirectBuffer, se as MapBuffer, u as NoBufferArrayUpdateRequired, ee as NoBufferUpdateRequired, Qn as Properties, ne as RenderHolder, zn as RenderPipeline, nr as RenderProperty, f as StorageBuffer, ln as SurfaceTexture2D, un as Texture2D, dn as Texture2DArray, fn as TextureCube, Pn as TextureSampler, pn as TextureStorage2D, ce as UniformBuffer, er as Uniforms, le as VertexBuffer, nn as VertexShader, o as align4Byte, i as getMaxMipmapCount, a as hash32a, n as max, r as min, t as uniqueID };
+export { nr as Attributes, re as BaseBuffer, d as BaseHolder, Sn as ColorAttachment, Xn as Compiler, te as ComputeHolder, Vn as ComputePipeline, ir as ComputeProperty, $t as ComputeShader, l as Context, Wn as DepthStencilAttachment, en as FragmentShader, ae as IndexedBuffer, p as IndexedIndirectBuffer, m as IndexedStorageBuffer, h as IndirectBuffer, se as MapBuffer, u as NoBufferArrayUpdateRequired, ee as NoBufferUpdateRequired, tr as Properties, ne as RenderHolder, Hn as RenderPipeline, ar as RenderProperty, f as StorageBuffer, dn as SurfaceTexture2D, fn as Texture2D, pn as Texture2DArray, mn as Texture3D, hn as TextureCube, Ln as TextureSampler, gn as TextureStorage2D, ce as UniformBuffer, rr as Uniforms, le as VertexBuffer, rn as VertexShader, o as align4Byte, i as getMaxMipmapCount, a as hash32a, n as max, r as min, t as uniqueID };

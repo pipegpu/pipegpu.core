@@ -97,8 +97,10 @@ class IndexedStorageBuffer extends StorageBuffer {
                     this.drawCount = 0;
                     const BYTES_PER_ELEMENT = this.indexedFormat === 'uint16' ? Uint16Array.BYTES_PER_ELEMENT : Uint32Array.BYTES_PER_ELEMENT;
                     handData.details.forEach(detail => {
-                        this.updateGpuBuffer(detail.offset, detail.byteLength, detail.rawData);
-                        this.drawCount += detail.rawData.byteLength / BYTES_PER_ELEMENT;
+                        if (detail.rawData) {
+                            this.updateGpuBuffer(detail.offset, detail.byteLength, detail.rawData);
+                            this.drawCount += detail.rawData.byteLength / BYTES_PER_ELEMENT;
+                        }
                     });
                 }
             }
