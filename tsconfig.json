@@ -29,6 +29,7 @@
     ]
   },
   "include": [
+    "build",
     "src",
     "index.ts"
   ],

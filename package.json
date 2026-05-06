@@ -2,8 +2,7 @@
   "name": "@pipegpu/core",
   "version": "0.6.0",
   "type": "module",
-  "main": "build/index.es.js",
-  "types": "build/index.es.d.ts",
+  "main": "index.ts",
   "files": [
     "build/**/*"
   ],
