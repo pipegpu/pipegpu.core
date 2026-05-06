@@ -1,4 +1,5 @@
 import type { UserConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default {
   base: './',
@@ -18,4 +19,7 @@ export default {
       },
     }
   },
+  plugins: [
+    dts({ insertTypesEntry: true, bundleTypes: true })
+  ]
 } satisfies UserConfig;

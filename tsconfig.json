@@ -5,7 +5,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "build",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -30,7 +30,6 @@
   },
   "include": [
     "src",
-    "test",
     "index.ts"
   ],
   "exclude": [

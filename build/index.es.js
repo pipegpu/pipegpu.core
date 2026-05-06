@@ -2379,7 +2379,7 @@ var U = class extends H {
 		if (r) return void console.error("SetDataValue: Scalar data does not support postfix", r);
 		if (!(n instanceof e)) return void console.error("SetDataValue: Invalid value", n);
 		let a = n.data[0];
-		this.typeInfo.name === "i32" || this.typeInfo.name === "u32" ? a = Math.floor(a) : this.typeInfo.name === "bool" && (a = a ? 1 : 0), this.data[0] = a;
+		this.typeInfo.name === "i32" || this.typeInfo.name === "u32" ? a = Math.floor(a) : this.typeInfo.name === "bool" && (a = +!!a), this.data[0] = a;
 	}
 	getSubData(e, t, n) {
 		return t ? (console.error("getSubData: Scalar data does not support postfix", t), null) : this;
@@ -3961,12 +3961,12 @@ var Ft = 0, It = class e {
 		let n = this.exec.evalExpression(e.args[0], t), r = !0;
 		if (n instanceof G) return n.data.forEach((e) => {
 			e || (r = !1);
-		}), new W(r ? 1 : 0, this.getTypeInfo("bool"));
+		}), new W(+!!r, this.getTypeInfo("bool"));
 		throw Error(`All() expects a vector argument. Line ${e.line}`);
 	}
 	Any(e, t) {
 		let n = this.exec.evalExpression(e.args[0], t);
-		if (n instanceof G) return new W(n.data.some((e) => e) ? 1 : 0, this.getTypeInfo("bool"));
+		if (n instanceof G) return new W(+!!n.data.some((e) => e), this.getTypeInfo("bool"));
 		throw Error(`Any() expects a vector argument. Line ${e.line}`);
 	}
 	Select(e, t) {
@@ -5102,7 +5102,7 @@ var Ft = 0, It = class e {
 	_setOverrides(e, t) {
 		for (let n in e) {
 			let r = e[n], i = this.reflection.getOverrideInfo(n);
-			i === null ? console.error(`Override ${n} does not exist in the shader.`) : (i.type === null && (i.type = this.getTypeInfo("u32")), i.type.name === "u32" || i.type.name === "i32" || i.type.name === "f32" || i.type.name === "f16" ? t.setVariable(n, new W(r, i.type)) : i.type.name === "bool" ? t.setVariable(n, new W(r ? 1 : 0, i.type)) : i.type.name === "vec2" || i.type.name === "vec3" || i.type.name === "vec4" || i.type.name === "vec2f" || i.type.name === "vec3f" || i.type.name === "vec4f" || i.type.name === "vec2i" || i.type.name === "vec3i" || i.type.name === "vec4i" || i.type.name === "vec2u" || i.type.name === "vec3u" || i.type.name === "vec4u" || i.type.name === "vec2h" || i.type.name === "vec3h" || i.type.name === "vec4h" ? t.setVariable(n, new G(r, i.type)) : console.error(`Invalid constant type for ${n}`));
+			i === null ? console.error(`Override ${n} does not exist in the shader.`) : (i.type === null && (i.type = this.getTypeInfo("u32")), i.type.name === "u32" || i.type.name === "i32" || i.type.name === "f32" || i.type.name === "f16" ? t.setVariable(n, new W(r, i.type)) : i.type.name === "bool" ? t.setVariable(n, new W(+!!r, i.type)) : i.type.name === "vec2" || i.type.name === "vec3" || i.type.name === "vec4" || i.type.name === "vec2f" || i.type.name === "vec3f" || i.type.name === "vec4f" || i.type.name === "vec2i" || i.type.name === "vec3i" || i.type.name === "vec4i" || i.type.name === "vec2u" || i.type.name === "vec3u" || i.type.name === "vec4u" || i.type.name === "vec2h" || i.type.name === "vec3h" || i.type.name === "vec4h" ? t.setVariable(n, new G(r, i.type)) : console.error(`Invalid constant type for ${n}`));
 		}
 	}
 	_dispatchWorkgroup(e, t, n) {
@@ -5592,9 +5592,9 @@ var Ft = 0, It = class e {
 				return new W(-e, t);
 			}
 			case "!": {
-				if (Z(r)) return new G(r.map((e, t) => e ? 0 : 1), n.typeInfo);
+				if (Z(r)) return new G(r.map((e, t) => +!e), n.typeInfo);
 				let e = r, t = this._maxFormatTypeInfo([n.typeInfo, n.typeInfo]);
-				return new W(e ? 0 : 1, t);
+				return new W(+!e, t);
 			}
 			case "~": {
 				if (Z(r)) return new G(r.map((e, t) => ~e), n.typeInfo);
@@ -5817,45 +5817,45 @@ var Ft = 0, It = class e {
 			case ">":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
-					return t.length === r.length ? new G(t.map((e, t) => e > r[t] ? 1 : 0), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
+					return t.length === r.length ? new G(t.map((e, t) => +(e > r[t])), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
 				}
 				if (Z(i)) {
 					let e = a;
-					return new G(i.map((t, n) => t > e ? 1 : 0), n.typeInfo);
+					return new G(i.map((t, n) => +(t > e)), n.typeInfo);
 				}
 				if (Z(a)) {
 					let e = i;
-					return new G(a.map((t, n) => e > t ? 1 : 0), r.typeInfo);
+					return new G(a.map((t, n) => +(e > t)), r.typeInfo);
 				}
-				return new W(i > a ? 1 : 0, this.getTypeInfo("bool"));
+				return new W(+(i > a), this.getTypeInfo("bool"));
 			case "<":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
-					return t.length === r.length ? new G(t.map((e, t) => e < r[t] ? 1 : 0), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
+					return t.length === r.length ? new G(t.map((e, t) => +(e < r[t])), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
 				}
 				if (Z(i)) {
 					let e = a;
-					return new G(i.map((t, n) => t < e ? 1 : 0), n.typeInfo);
+					return new G(i.map((t, n) => +(t < e)), n.typeInfo);
 				}
 				if (Z(a)) {
 					let e = i;
-					return new G(a.map((t, n) => e < t ? 1 : 0), r.typeInfo);
+					return new G(a.map((t, n) => +(e < t)), r.typeInfo);
 				}
-				return new W(i < a ? 1 : 0, this.getTypeInfo("bool"));
+				return new W(+(i < a), this.getTypeInfo("bool"));
 			case "==":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
-					return t.length === r.length ? new G(t.map((e, t) => e === r[t] ? 1 : 0), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
+					return t.length === r.length ? new G(t.map((e, t) => +(e === r[t])), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
 				}
 				if (Z(i)) {
 					let e = a;
-					return new G(i.map((t, n) => t == e ? 1 : 0), n.typeInfo);
+					return new G(i.map((t, n) => +(t == e)), n.typeInfo);
 				}
 				if (Z(a)) {
 					let e = i;
-					return new G(a.map((t, n) => e == t ? 1 : 0), r.typeInfo);
+					return new G(a.map((t, n) => +(e == t)), r.typeInfo);
 				}
-				return new W(i === a ? 1 : 0, this.getTypeInfo("bool"));
+				return new W(+(i === a), this.getTypeInfo("bool"));
 			case "!=":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
@@ -5873,31 +5873,31 @@ var Ft = 0, It = class e {
 			case ">=":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
-					return t.length === r.length ? new G(t.map((e, t) => e >= r[t] ? 1 : 0), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
+					return t.length === r.length ? new G(t.map((e, t) => +(e >= r[t])), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
 				}
 				if (Z(i)) {
 					let e = a;
-					return new G(i.map((t, n) => t >= e ? 1 : 0), n.typeInfo);
+					return new G(i.map((t, n) => +(t >= e)), n.typeInfo);
 				}
 				if (Z(a)) {
 					let e = i;
-					return new G(a.map((t, n) => e >= t ? 1 : 0), r.typeInfo);
+					return new G(a.map((t, n) => +(e >= t)), r.typeInfo);
 				}
-				return new W(i >= a ? 1 : 0, this.getTypeInfo("bool"));
+				return new W(+(i >= a), this.getTypeInfo("bool"));
 			case "<=":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
-					return t.length === r.length ? new G(t.map((e, t) => e <= r[t] ? 1 : 0), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
+					return t.length === r.length ? new G(t.map((e, t) => +(e <= r[t])), n.typeInfo) : (console.error(`Vector length mismatch. Line ${e.line}.`), null);
 				}
 				if (Z(i)) {
 					let e = a;
-					return new G(i.map((t, n) => t <= e ? 1 : 0), n.typeInfo);
+					return new G(i.map((t, n) => +(t <= e)), n.typeInfo);
 				}
 				if (Z(a)) {
 					let e = i;
-					return new G(a.map((t, n) => e <= t ? 1 : 0), r.typeInfo);
+					return new G(a.map((t, n) => +(e <= t)), r.typeInfo);
 				}
-				return new W(i <= a ? 1 : 0, this.getTypeInfo("bool"));
+				return new W(+(i <= a), this.getTypeInfo("bool"));
 			case "&&":
 				if (Z(i) && Z(a)) {
 					let t = i, r = a;
@@ -6193,7 +6193,12 @@ var Ut = class {
 		return e;
 	}
 	_initialize(e) {
-		e ? typeof e == "string" ? this._tokens = new xt(e).scanTokens() : this._tokens = e : this._tokens = [], this._current = 0;
+		if (e) if (typeof e == "string") {
+			let t = new xt(e);
+			this._tokens = t.scanTokens();
+		} else this._tokens = e;
+		else this._tokens = [];
+		this._current = 0;
 	}
 	_updateNode(e, t) {
 		return e.line = t ?? this._currentLine, e;
@@ -6694,7 +6699,7 @@ var Ut = class {
 		}
 		if (this._match([X.keywords.true, X.keywords.false])) {
 			let e = this._previous().toString() === X.keywords.true.rule;
-			return this._updateNode(new R(new W(e ? 1 : 0, this._exec.getTypeInfo(A.bool)), A.bool));
+			return this._updateNode(new R(new W(+!!e, this._exec.getTypeInfo(A.bool)), A.bool));
 		}
 		if (this._check(X.tokens.paren_left)) return this._paren_expression();
 		if (this._match(X.keywords.bitcast)) {
