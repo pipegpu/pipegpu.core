@@ -1,6 +1,7 @@
 {
   "name": "@pipegpu/core",
   "version": "0.6.0",
+  "author": "axmand@qq.com",
   "type": "module",
   "main": "index.ts",
   "files": [
