@@ -58,7 +58,7 @@ class Buffer2D extends BaseBuffer {
      */
     protected updateGpuBuffer = (offset: number, byteLength: number, rawData: TypedArray1DFormat | ArrayBuffer) => {
         if (offset + byteLength > this.totalByteLength || rawData.byteLength > this.totalByteLength) {
-            throw new Error(`[E][VertexBuffer][updateGpuBuffer] buffer bytelength oversized, maximum bytelength: ${this.totalByteLength}`);
+            throw new Error(`[E][VertexBuffer][updateGpuBuffer] ${this.label}, buffer bytelength oversized, maximum bytelength: ${this.totalByteLength}`);
         }
         try {
             // rawdata perphaps typeof ArrayBuffer
