@@ -28,9 +28,20 @@ abstract class BaseHolder {
     protected debugLabel: string;
 
     /**
-     * 
+     * @warning !!!
+     *  order should maintain by graph itself, please be carful assign the value of order.
+     * @description
+     */
+    private order_: number = -1;
+    get Order(): number {
+        return this.order_;
+    }
+    set Order(v: number) {
+        this.order_ = v;
+    }
+
+    /**
      * @param opts 
-     * 
      */
     constructor(
         opts: {
