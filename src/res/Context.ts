@@ -133,6 +133,13 @@ class Context {
     }
 
     /**
+     * @description
+     */
+    get DeviceRatio(): number {
+        return this.contextDesc.devicePixelRatio;
+    }
+
+    /**
      * 
      */
     getSupportedFeatures = () => {
