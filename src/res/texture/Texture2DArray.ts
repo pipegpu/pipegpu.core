@@ -116,15 +116,29 @@ class Texture2DArray extends BaseTexture {
 
     /**
      * @description
-     * @param _encoder 
-     * @param frameStage 
+     * @param _cEncoder 
+     * @param _frameStage 
      * @returns 
      */
-    override getGpuTexture(_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUTexture {
+    override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
         if (!this.texture) {
             this.createGpuTexture();
         }
         this.refreshTextureDataSource();
+        return false;
+    }
+
+    /**
+     * @description
+     * @param _encoder 
+     * @param frameStage 
+     * @returns 
+     */
+    override getGpuTexture(): GPUTexture {
+        if (!this.texture) {
+            this.createGpuTexture();
+            this.refreshTextureDataSource();
+        }
         return this.texture!;
     }
 
@@ -156,8 +170,9 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-    * e.g use texture as storage binding for compute shader
-    */
+     * @description
+     * e.g use texture as storage binding for compute shader
+     */
     override useAsStorageBinding = () => {
         if (!this.isUsageIncludeStorageBinding()) {
             throw Error(`[E][Texture][useAsStorageBinding] ${typeof (this)} has no usage include 'GPUTextureUsage.STORAGE_BINDING', please check.`);

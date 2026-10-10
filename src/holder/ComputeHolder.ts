@@ -1,112 +1,105 @@
+import type { IUniformRecord } from "../compile/parseUniform";
 import type { Context } from "../res/Context";
-import type { ComputeHandle, HookHandle, UniformHandle } from "../res/Handle";
+import type { ComputeHandle, UniformHandle } from "../res/Handle";
 import type { ComputePipeline } from "../res/pipeline/ComputePipeline";
+import type { ComputeShader } from "../res/shader/ComputeShader";
 import type { BufferState } from "../state/BufferState";
+import type { SamplerState } from "../state/SamplerState";
 import type { TextureState } from "../state/TextureState";
 import { BaseHolder } from "./BaseHolder";
 
 /**
- * 
+ * @description
+ * @class ComputeHolder
  */
 class ComputeHolder extends BaseHolder {
     /**
-     * 
+     * @description
      */
     private computePipeline: ComputePipeline;
 
     /**
-     * 
-     */
-    private bufferState: BufferState;
-
-    /**
-     * 
-     */
-    private textureState: TextureState;
-
-    /**
-     * 
+     * @description
      */
     private computeHandler: ComputeHandle;
 
     /**
-     * 
+     * @description
      */
     private uniformHandler: UniformHandle;
 
     /**
-     * 
+     * @description
      */
-    private hookHandler?: HookHandle;
+    private cs: ComputeShader;
 
     /**
-     * 
-     */
-    private slotBindGroupMap: Map<number, GPUBindGroup>;
-
-    /**
-     * 
      * @param opts 
-     * 
      */
     constructor(
         opts: {
-            debugLabel: string,
             id: number,
+            debugLabel: string,
             context: Context,
-            computePipeline: ComputePipeline,
             bufferState: BufferState,
             textureState: TextureState,
+            samplerState: SamplerState,
+            uniformRecordMap: Map<string, IUniformRecord>,
+            gourpIDWithBindGroupLayoutMap: Map<number, GPUBindGroupLayout>,
+            gourpIDWithBindGroupLayoutDescriptorMap: Map<number, GPUBindGroupLayoutDescriptor>,
+            cs: ComputeShader,
+            computePipeline: ComputePipeline,
             computeHandler: ComputeHandle,
             uniformHandler: UniformHandle,
-            hookHandler?: HookHandle,
-            slotBindGroupMap: Map<number, GPUBindGroup>,
         }
     ) {
         super({
-            debugLabel: opts.debugLabel,
             id: opts.id,
+            debugLabel: opts.debugLabel,
             context: opts.context,
-            poropertyFormat: 'computeHolder'
+            poropertyFormat: 'computeHolder',
+            bufferState: opts.bufferState,
+            textureState: opts.textureState,
+            samplerState: opts.samplerState,
+            uniformRecordMap: opts.uniformRecordMap,
+            gourpIDWithBindGroupLayoutMap: opts.gourpIDWithBindGroupLayoutMap,
+            gourpIDWithBindGroupLayoutDescriptorMap: opts.gourpIDWithBindGroupLayoutDescriptorMap
         });
+        this.cs = opts.cs;
         this.computePipeline = opts.computePipeline;
-        this.bufferState = opts.bufferState;
-        this.textureState = opts.textureState;
         this.computeHandler = opts.computeHandler;
         this.uniformHandler = opts.uniformHandler;
-        this.hookHandler = opts.hookHandler;
-        this.slotBindGroupMap = opts.slotBindGroupMap;
+        this.refreshSlotBindGroupMap({ cs: this.cs });
     }
 
     /**
-     * 
-     * @param encoder 
+     * @param cEncoder 
      */
-    override build(encoder: GPUCommandEncoder): void {
+    override build(cEncoder: GPUCommandEncoder): void {
         // uniform update support:
         // - uniform buffer update
         // - texture update
-        this.uniformHandler('frameBegin', encoder, this.bufferState, this.textureState);
+        const bDirty = this.uniformHandler('recordingCommandStart', cEncoder, this.bufferState, this.textureState);
 
         const desc: GPUComputePassDescriptor = {
             label: `compute holder`
         };
-        const computePass = encoder.beginComputePass(desc);
-        computePass.setPipeline(this.computePipeline.getGpuComputePipeline());
+        const pEncoder = cEncoder.beginComputePass(desc);
+        pEncoder.setPipeline(this.computePipeline.getGpuComputePipeline());
+
+        //  
+        bDirty ? this.refreshSlotBindGroupMap({ cs: this.cs }) : null;
 
         // uniform slot assign
         this.slotBindGroupMap.forEach((bindGroup, slot) => {
-            computePass.setBindGroup(slot, bindGroup);
+            pEncoder.setBindGroup(slot, bindGroup);
         });
 
-        this.computeHandler(computePass);
-        computePass.end();
+        this.computeHandler(pEncoder, cEncoder);
+        pEncoder.end();
 
         // uniform copy buffer should recrod whild any pass encoder end
-        this.uniformHandler('frameFinish', encoder, this.bufferState, this.textureState);
-
-        // do hook event at frame end.
-        this.hookHandler ? this.hookHandler(encoder) : null;
+        this.uniformHandler('recordingCommandEnd', cEncoder, this.bufferState, this.textureState);
     }
 }
 

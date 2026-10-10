@@ -1,4 +1,14 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    type BaseHolder,
+    type Compiler,
+    type RenderHolderDesc,
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderHolder,
+    RenderProperty,
+    Uniforms
+} from "../..";
 
 const initDrawCount = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
     //

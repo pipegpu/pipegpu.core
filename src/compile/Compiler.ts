@@ -1,4 +1,3 @@
-import type { VariableInfo } from "wgsl_reflect";
 import { ComputeHolder } from "../holder/ComputeHolder";
 import { RenderHolder } from "../holder/RenderHolder";
 import type { ComputeProperty } from "../property/dispatch/ComputeProperty";
@@ -10,7 +9,7 @@ import type { UniformBuffer } from "../res/buffer/UniformBuffer";
 import type { VertexBuffer } from "../res/buffer/VertexBuffer";
 import { Context } from "../res/Context";
 import type { BlendFormat, ColorLoadStoreFormat, DepthLoadStoreFormat, MultiSampleFormat, StencilLoadStoreFormat, StencilStateFormat, TypedArray1DFormat, TypedArray2DFormat } from "../res/Format";
-import type { ComputeHandle, HookHandle, RenderHandle, BufferHandle, BufferArrayHandle, TextureArrayHandle, Texture3DHandle, Texture2DHandle } from "../res/Handle";
+import type { ComputeHandle, RenderHandle, BufferHandle, BufferArrayHandle, TextureArrayHandle, Texture3DHandle, Texture2DHandle } from "../res/Handle";
 import type { ComputeShader } from "../res/shader/ComputeShader";
 import type { FragmentShader } from "../res/shader/FragmentShader";
 import type { VertexShader } from "../res/shader/VertexShader";
@@ -27,7 +26,6 @@ import { parsePrimitiveState, type PrimitiveDesc } from "./parsePrimitiveState";
 import { parseRenderBindGroupLayout } from "./parseRenderBindGroupLayout";
 import { parseRenderDispatch } from "./parseRenderDispatch";
 import { parseUniform, type IUniformRecord, type UniformHandle } from "./parseUniform";
-import { emitUniforms } from "./emitUniforms";
 import { SamplerState } from "../state/SamplerState";
 import { emitRenderPipeline } from "./emitRenderPipeline";
 import { PipelineState } from "../state/PipelineState";
@@ -134,13 +132,6 @@ interface ComputeHolderDesc {
      * @description
      */
     dispatch: ComputeProperty,
-
-    /**
-     * @description
-     *  - compute shader tail handler.
-     *  - append command buffer at the end.
-     */
-    handler?: HookHandle,
 }
 
 /**
@@ -301,25 +292,23 @@ class Compiler {
         }) as GPUVertexState;
 
         // emit uniform
-        const slotBindGroupMap: Map<number, GPUBindGroup> = new Map();
-        const mergedUniformResourceMap: Map<number, VariableInfo[]> = new Map();
-        emitUniforms(
-            {
-                debugLabel: debugLabel,
-                context: this.context,
-                vertexShader: vertexShader,
-                fragmentShader: fragmentShader,
-                bufferState: this.bufferState,
-                textureState: this.textureState,
-                samplerState: this.samplerState,
-                uniformRecordMap: uniformRecordMap,
-                bufferIDUniformRecordsMap: bufferUniformRecordsMap,
-                gourpIDWithBindGroupLayoutMap: gourpIDWithBindGroupLayoutMap,
-                gourpIDWithBindGroupLayoutDescriptorMap: gourpIDWithBindGroupLayoutDescriptorMap
-            },
-            slotBindGroupMap,
-            mergedUniformResourceMap
-        );
+        // const slotBindGroupMap: Map<number, GPUBindGroup> = new Map();
+        // emitUniforms(
+        //     {
+        //         debugLabel: debugLabel,
+        //         context: this.context,
+        //         vertexShader: vertexShader,
+        //         fragmentShader: fragmentShader,
+        //         bufferState: this.bufferState,
+        //         textureState: this.textureState,
+        //         samplerState: this.samplerState,
+        //         uniformRecordMap: uniformRecordMap,
+        //         bufferIDUniformRecordsMap: bufferUniformRecordsMap,
+        //         gourpIDWithBindGroupLayoutMap: gourpIDWithBindGroupLayoutMap,
+        //         gourpIDWithBindGroupLayoutDescriptorMap: gourpIDWithBindGroupLayoutDescriptorMap
+        //     },
+        //     slotBindGroupMap
+        // );
 
         // emit render pipeline
         const renderPipeline: RenderPipeline = emitRenderPipeline({
@@ -333,24 +322,24 @@ class Compiler {
             multisampleState: multiSampleState
         });
 
-        //
-        // TODO::   
-        // dependeicese, includes input/output
-        //
-        // render holder
         return new RenderHolder({
-            debugLabel: debugLabel,
             id: uniqueID(),
+            debugLabel: debugLabel,
             context: this.context,
-            renderPipeline: renderPipeline,
             bufferState: this.bufferState,
             texturteState: this.textureState,
+            samplerState: this.samplerState,
+            uniformRecordMap: uniformRecordMap,
+            gourpIDWithBindGroupLayoutMap: gourpIDWithBindGroupLayoutMap,
+            gourpIDWithBindGroupLayoutDescriptorMap: gourpIDWithBindGroupLayoutDescriptorMap,
+            vs: vertexShader,
+            fs: fragmentShader,
+            renderPipeline: renderPipeline,
+            slotAttributeBufferIDMap: slotAttributeBufferIDMap,
+            colorAttachments: desc.colorAttachments,
+            depthStencilAttachment: desc.depthStencilAttachment,
             renderHandler: renderHandler,
             uniformHandler: unifomrHandler,
-            slotAttributeBufferIDMap: slotAttributeBufferIDMap,
-            slotBindGroupMap: slotBindGroupMap,
-            colorAttachments: desc.colorAttachments,
-            depthStencilAttachment: desc.depthStencilAttachment
         });
     }
 
@@ -411,24 +400,22 @@ class Compiler {
         });
 
         // emit uniform
-        const slotBindGroupMap: Map<number, GPUBindGroup> = new Map();
-        const mergedUniformResourceMap: Map<number, VariableInfo[]> = new Map();
-        emitUniforms(
-            {
-                debugLabel: debugLabel,
-                context: this.context,
-                computeShader: computeShader,
-                bufferState: this.bufferState,
-                textureState: this.textureState,
-                samplerState: this.samplerState,
-                uniformRecordMap: uniformRecordMap,
-                bufferIDUniformRecordsMap: bufferUniformRecordsMap,
-                gourpIDWithBindGroupLayoutMap: gourpIDWithBindGroupLayoutMap,
-                gourpIDWithBindGroupLayoutDescriptorMap: gourpIDWithBindGroupLayoutDescriptorMap
-            },
-            slotBindGroupMap,
-            mergedUniformResourceMap
-        );
+        // const slotBindGroupMap: Map<number, GPUBindGroup> = new Map();
+        // emitUniforms(
+        //     {
+        //         debugLabel: debugLabel,
+        //         context: this.context,
+        //         computeShader: computeShader,
+        //         bufferState: this.bufferState,
+        //         textureState: this.textureState,
+        //         samplerState: this.samplerState,
+        //         uniformRecordMap: uniformRecordMap,
+        //         bufferIDUniformRecordsMap: bufferUniformRecordsMap,
+        //         gourpIDWithBindGroupLayoutMap: gourpIDWithBindGroupLayoutMap,
+        //         gourpIDWithBindGroupLayoutDescriptorMap: gourpIDWithBindGroupLayoutDescriptorMap
+        //     },
+        //     slotBindGroupMap
+        // );
 
         // emit compute pipeline
         const computePipeline = emitComputePipeline({
@@ -438,21 +425,21 @@ class Compiler {
             pipelineState: this.pipelineState
         });
 
-        //
-        // TODO::   
-        // dependeicese, includes input/output
-        //
+        // need support dynamic expand uniforms.
         return new ComputeHolder({
-            debugLabel: debugLabel,
             id: uniqueID(),
+            debugLabel: debugLabel,
             context: this.context,
-            computePipeline: computePipeline,
             bufferState: this.bufferState,
             textureState: this.textureState,
+            samplerState: this.samplerState,
+            uniformRecordMap: uniformRecordMap,
+            gourpIDWithBindGroupLayoutMap: gourpIDWithBindGroupLayoutMap,
+            gourpIDWithBindGroupLayoutDescriptorMap: gourpIDWithBindGroupLayoutDescriptorMap,
+            cs: computeShader,
+            computePipeline: computePipeline,
             computeHandler: computeHandler,
             uniformHandler: unifomrHandler,
-            hookHandler: desc.handler,
-            slotBindGroupMap: slotBindGroupMap
         });
     }
 

@@ -106,7 +106,7 @@ class Texture3D extends BaseTexture {
     }
 
     /**
-     * 
+     * @description
      */
     protected override createGpuTexture(): void {
         const desc: GPUTextureDescriptor = {
@@ -123,14 +123,28 @@ class Texture3D extends BaseTexture {
 
     /**
      * @description
-     * @param encoder 
-     * @param frameStage 
+     * @param _cEncoder 
+     * @param _frameStage 
+     * @returns 
      */
-    override getGpuTexture = (_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUTexture => {
+    override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
         if (!this.texture) {
             this.createGpuTexture();
         }
         this.refreshTextureDataSource();
+        return false;
+    }
+
+    /**
+     * @description
+     * @param encoder 
+     * @param frameStage 
+     */
+    override getGpuTexture = (): GPUTexture => {
+        if (!this.texture) {
+            this.createGpuTexture();
+            this.refreshTextureDataSource();
+        }
         return this.texture as GPUTexture;
     }
 

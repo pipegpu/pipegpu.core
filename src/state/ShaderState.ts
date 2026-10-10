@@ -5,27 +5,24 @@ import { FragmentShader } from "../res/shader/FragmentShader";
 import { VertexShader } from "../res/shader/VertexShader";
 
 /**
- * 
+ * @description
  */
 class ShaderState {
-
     /**
-     * 
+     * @description
      */
     private static CACHE: Map<number, BaseShader> = new Map();
 
     /**
-     * 
+     * @description
      */
     private context: Context;
 
     /**
-     * 
+     * @description
      * @param opts 
      */
-    constructor(
-        context: Context,
-    ) {
+    constructor(context: Context) {
         this.context = context;
     }
 
@@ -39,7 +36,8 @@ class ShaderState {
     }
 
     /**
-     * hash32a return uint32
+     * @description
+     *  hash32a return uint32
      */
     createVertexShader = (
         opts: {
@@ -60,7 +58,7 @@ class ShaderState {
     }
 
     /**
-     * 
+     * @description
      */
     createFragmentShader = (
         opts: {
@@ -81,7 +79,7 @@ class ShaderState {
     }
 
     /**
-     * 
+     * @description
      */
     createComputeShader = (
         opts: {
@@ -100,7 +98,6 @@ class ShaderState {
         }
         return ShaderState.CACHE.get(shaderID) as ComputeShader;
     }
-
 }
 
 export {

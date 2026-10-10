@@ -1,4 +1,14 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderHolder,
+    RenderProperty,
+    Uniforms,
+    type BaseHolder,
+    type Compiler,
+    type RenderHolderDesc
+} from "../..";
 import type { IndexedIndirectBuffer } from "../../src/res/buffer/IndexedIndirectBuffer";
 import type { IndexedStorageBuffer } from "../../src/res/buffer/IndexedStorageBuffer";
 

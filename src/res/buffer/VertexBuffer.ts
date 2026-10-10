@@ -4,14 +4,12 @@ import type { BufferHandle } from "../Handle";
 import { Buffer1D } from "./Buffer1D";
 
 /**
- * 
+ * @description
  * @class VertexBuffer
- * 
  */
 class VertexBuffer extends Buffer1D {
-
     /**
-     * 
+     * @description
      * @param opts 
      */
     constructor(
@@ -34,7 +32,6 @@ class VertexBuffer extends Buffer1D {
             handler: opts.handler
         });
     }
-
 }
 
 export {

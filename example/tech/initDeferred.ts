@@ -16,7 +16,7 @@ import {
     RenderProperty,
     Texture2D,
     Uniforms,
-} from "../../src"
+} from "../.."
 
 import { fetchMesh } from "../util/fetchMesh";
 

@@ -4,26 +4,25 @@ import type { BufferArrayHandle } from "../Handle";
 import { StorageBuffer } from "./StorageBuffer";
 
 /**
- * 
+ * @description
  * mapbuffer is cpu-gps sync buffer.
  * - map read buffer.
  * - map write buffer.
  * - map self buffer. support storage buffer as default. also support query set usage.
- * 
  */
 class MapBuffer extends StorageBuffer {
     /**
-     * 
+     * @description read buffer, pull map buffer value from GPU-side.
      */
     protected mapReadBuffer!: GPUBuffer;
 
     /**
-     * 
+     * @description write buffer, push map buffer value to GPU-side.
      */
     protected mapWriteBuffer!: GPUBuffer;
 
     /**
-     * 
+     * @description
      * @param opts 
      */
     constructor(
@@ -49,7 +48,7 @@ class MapBuffer extends StorageBuffer {
     }
 
     /**
-     * 
+     *  @description
      *  read buffer.
      *  - copy gpu buffer to read buffer in each frame.
      *  - read buffer support PullSync in CPU stage.
@@ -57,39 +56,36 @@ class MapBuffer extends StorageBuffer {
     private createMapReadBuffer = () => {
         let desc: GPUBufferDescriptor = {
             size: this.getByteLength(),
-            label: `[MapBuffer][createMapReadBuffer][${this.label}]`,
+            label: `[MapBuffer][createMapReadBuffer][${this.debugLabel}]`,
             usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST
         };
         this.mapReadBuffer = this.context?.getGpuDevice().createBuffer(desc) as GPUBuffer;
     }
 
     /**
-     * 
+     * @description
      * write buffer.
      * - copy wirte buffer to gpu-side buffer in each frame.
      * - wirte buffer support PushSnyc in CPU stage.
-     * 
      */
     private createMapWriteBuffer = () => {
         let desc: GPUBufferDescriptor = {
             size: this.getByteLength(),
-            label: `[MapBuffer][createMapWriteBuffer][${this.label}]`,
+            label: `[MapBuffer][createMapWriteBuffer][${this.debugLabel}]`,
             usage: GPUBufferUsage.MAP_WRITE | GPUBufferUsage.COPY_SRC
         };
         this.mapWriteBuffer = this.context?.getGpuDevice().createBuffer(desc) as GPUBuffer;
     }
 
     /**
-     * 
      * @description TODO:: fit typedarray format.
      * @deprecated 
      * @param byteOffset 
      * @param byteLength 
      * @param typedArray 
-     * @returns 
-     * 
+     * @returns
      */
-    public async PushDataAsync(byteOffset: number, byteLength: number, typedArray: TypedArray1DFormat) {
+    async PushDataAsync(byteOffset: number, byteLength: number, typedArray: TypedArray1DFormat) {
         if (!this.buffer) {
             this.createGpuBuffer();
         }
@@ -109,12 +105,12 @@ class MapBuffer extends StorageBuffer {
     }
 
     /**
-     * 
+     * @description
      * @param byteOffset 
      * @param byteLength 
      * @returns 
      */
-    public async PullDataAsync(byteOffset?: number, byteLength?: number): Promise<ArrayBuffer | undefined> {
+    async PullDataAsync(byteOffset?: number, byteLength?: number): Promise<ArrayBuffer | undefined> {
         if (!this.buffer) {
             this.createGpuBuffer();
         }
@@ -135,14 +131,19 @@ class MapBuffer extends StorageBuffer {
     }
 
     /**
-     * 
+     * @description
+     * @param _byteLength 
+     */
+    override expand(_byteLength: number): never {
+        throw new Error(`[E][MapBuffer] mapbuffer not support 'expand' function.`);
+    }
+
+    /**
+     * @description
      * @param encoder 
      * @param frameStage 
-     * @returns 
-     * 
      */
-    override getGpuBuffer = (encoder: GPUCommandEncoder, frameStage: FrameStageFormat): GPUBuffer => {
-        super.getGpuBuffer(encoder, frameStage);
+    override refreshGpuBuffer(encoder: GPUCommandEncoder, frameStage: FrameStageFormat): boolean {
         if (!this.mapReadBuffer) {
             this.createMapReadBuffer();
         }
@@ -152,9 +153,29 @@ class MapBuffer extends StorageBuffer {
         if (!this.buffer) {
             this.createGpuBuffer();
         }
-        if ('frameFinish' === frameStage && encoder) {
+        if ('recordingCommandEnd' === frameStage && encoder) {
             const byteLength = this.getByteLength();
             encoder.copyBufferToBuffer(this.buffer, this.mapReadBuffer, byteLength);
+        }
+        return false;
+    }
+
+    /**
+     * @description
+     * @param encoder 
+     * @param frameStage 
+     * @returns 
+     */
+    override getGpuBuffer = (): GPUBuffer => {
+        super.getGpuBuffer();
+        if (!this.mapReadBuffer) {
+            this.createMapReadBuffer();
+        }
+        if (!this.mapWriteBuffer) {
+            this.createMapWriteBuffer();
+        }
+        if (!this.buffer) {
+            this.createGpuBuffer();
         }
         return this.buffer as GPUBuffer;
     }

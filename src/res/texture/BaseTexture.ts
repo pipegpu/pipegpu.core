@@ -434,35 +434,40 @@ abstract class BaseTexture {
     }
 
     /**
-     * return texture extends.width
+     * @description
+     *  return texture extends.width
      */
     get Width() {
         return this.width;
     }
 
     /**
-     * return texture extends.height
+     * @description
+     *  return texture extends.height
      */
     get Height() {
         return this.height;
     }
 
     /**
-     * return texture extends.depthOrArrayLayers
+     * @description
+     *  return texture extends.depthOrArrayLayers
      */
     get DepthOrArrayLayers() {
         return this.depthOrArrayLayers;
     }
 
     /**
-     * return assigned mipmapcount
+     * @description 
+     *  return assigned mipmapcount
      */
     get MipmapCount() {
         return this.mipmapCount;
     }
 
     /**
-     * return maximum mipmap level count.
+     * @description
+     *  return maximum mipmap level count.
      */
     get MaxMipmapCount() {
         return this.maxMipmapCount;
@@ -593,11 +598,19 @@ abstract class BaseTexture {
     }
 
     /**
+     * @description
+     * @param cEncoder 
+     * @param frameStage 
+     * @returns {boolean} indicate gputexture has changed, bindGroupLayout need rebuild if return 'true'.
+     */
+    abstract refreshGpuTexture(cEncoder: GPUCommandEncoder, frameStage: FrameStageFormat): boolean;
+
+    /**
      * 
      * @param encoder 
      * @param frameStage 
      */
-    abstract getGpuTexture(_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUTexture;
+    abstract getGpuTexture(): GPUTexture;
 
     /**
      * 

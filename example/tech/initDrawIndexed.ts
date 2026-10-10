@@ -1,4 +1,14 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderHolder,
+    RenderProperty,
+    Uniforms,
+    type BaseHolder,
+    type Compiler,
+    type RenderHolderDesc
+} from "../.."
 
 const initDrawIndexed = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
 

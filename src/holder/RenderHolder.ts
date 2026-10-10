@@ -1,9 +1,13 @@
+import type { IUniformRecord } from "../compile/parseUniform";
 import type { ColorAttachment } from "../res/attachment/ColorAttachment";
 import type { DepthStencilAttachment } from "../res/attachment/DepthStencilAttachment";
 import type { Context } from "../res/Context";
 import type { RenderHandle, UniformHandle } from "../res/Handle";
 import type { RenderPipeline } from "../res/pipeline/RenderPipeline";
+import type { FragmentShader } from "../res/shader/FragmentShader";
+import type { VertexShader } from "../res/shader/VertexShader";
 import type { BufferState } from "../state/BufferState";
+import type { SamplerState } from "../state/SamplerState";
 import type { TextureState } from "../state/TextureState";
 import { BaseHolder } from "./BaseHolder";
 
@@ -15,16 +19,6 @@ class RenderHolder extends BaseHolder {
      * 
      */
     private renderPipeline: RenderPipeline;
-
-    /**
-     * 
-     */
-    private bufferState: BufferState;
-
-    /**
-     * 
-     */
-    private texturteState: TextureState;
 
     /**
      * 
@@ -44,11 +38,6 @@ class RenderHolder extends BaseHolder {
     /**
      * 
      */
-    private slotBindGroupMap: Map<number, GPUBindGroup>;
-
-    /**
-     * 
-     */
     private colorAttachments: ColorAttachment[];
 
     /**
@@ -58,50 +47,70 @@ class RenderHolder extends BaseHolder {
 
     /**
      * 
+     */
+    private vs: VertexShader;
+
+    /**
+     * 
+     */
+    private fs: FragmentShader;
+
+    /**
+     * 
      * @param opts 
      */
     constructor(
         opts: {
-            debugLabel: string,
             id: number,
+            debugLabel: string,
             context: Context,
-            renderPipeline: RenderPipeline,
             bufferState: BufferState,
             texturteState: TextureState,
-            renderHandler: RenderHandle,
-            uniformHandler: UniformHandle,
+            samplerState: SamplerState,
+            uniformRecordMap: Map<string, IUniformRecord>,
+            gourpIDWithBindGroupLayoutMap: Map<number, GPUBindGroupLayout>,
+            gourpIDWithBindGroupLayoutDescriptorMap: Map<number, GPUBindGroupLayoutDescriptor>,
+            vs: VertexShader,
+            fs: FragmentShader,
+            renderPipeline: RenderPipeline,
             slotAttributeBufferIDMap: Map<number, number>,
-            slotBindGroupMap: Map<number, GPUBindGroup>,
             colorAttachments: ColorAttachment[],
             depthStencilAttachment?: DepthStencilAttachment,
+            renderHandler: RenderHandle,
+            uniformHandler: UniformHandle
         }
     ) {
         super({
             debugLabel: opts.debugLabel,
             id: opts.id,
             context: opts.context,
-            poropertyFormat: 'renderHolder'
+            poropertyFormat: 'renderHolder',
+            bufferState: opts.bufferState,
+            textureState: opts.texturteState,
+            samplerState: opts.samplerState,
+            uniformRecordMap: opts.uniformRecordMap,
+            gourpIDWithBindGroupLayoutMap: opts.gourpIDWithBindGroupLayoutMap,
+            gourpIDWithBindGroupLayoutDescriptorMap: opts.gourpIDWithBindGroupLayoutDescriptorMap
         });
+        this.vs = opts.vs;
+        this.fs = opts.fs;
         this.renderPipeline = opts.renderPipeline;
-        this.bufferState = opts.bufferState;
-        this.texturteState = opts.texturteState;
-        this.renderHandler = opts.renderHandler;
-        this.uniformHandler = opts.uniformHandler;
         this.slotAttributeBufferIDMap = opts.slotAttributeBufferIDMap;
-        this.slotBindGroupMap = opts.slotBindGroupMap;
         this.colorAttachments = opts.colorAttachments;
         this.depthStencilAttachment = opts.depthStencilAttachment;
+        this.renderHandler = opts.renderHandler;
+        this.uniformHandler = opts.uniformHandler;
+        this.refreshSlotBindGroupMap({ vs: this.vs, fs: this.fs });
     }
 
     /**
-     * @param encoder 
+     * @param cEncoder 
      */
-    override build = (encoder: GPUCommandEncoder): void => {
+    override build = (cEncoder: GPUCommandEncoder): void => {
         // support:
         // uniform update
         // texture update
-        // stage - frameBegin
-        this.uniformHandler('frameBegin', encoder, this.bufferState, this.texturteState);
+        const bDirty: boolean = this.uniformHandler('recordingCommandStart', cEncoder, this.bufferState, this.textureState);
 
         if (this.colorAttachments.length === 0) {
             console.log(`[E][RenderHolder][build] missing color attachment.`);
@@ -121,31 +130,34 @@ class RenderHolder extends BaseHolder {
             desc.depthStencilAttachment = this.depthStencilAttachment.getGpuRenderPassDepthStencilAttachment();
         }
 
-        const encoderRenderPass: GPURenderPassEncoder = encoder.beginRenderPass(desc);
-        encoderRenderPass.setPipeline(this.renderPipeline.getGpuRenderPipeline());
+        const pEncoder: GPURenderPassEncoder = cEncoder.beginRenderPass(desc);
+        pEncoder.setPipeline(this.renderPipeline.getGpuRenderPipeline());
 
         // assign vertex by slot index
         this.slotAttributeBufferIDMap.forEach((bufferID, slotID) => {
-            encoderRenderPass.setVertexBuffer(slotID, this.bufferState.getBuffer(bufferID)?.getGpuBuffer(encoder, 'frameBegin'));
+            const vertexBuffer = this.bufferState.getBuffer(bufferID);
+            vertexBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
+            pEncoder.setVertexBuffer(slotID, vertexBuffer.getGpuBuffer());
         });
+
+        //
+        bDirty ? this.refreshSlotBindGroupMap({ vs: this.vs, fs: this.fs }) : null;
 
         // uniform slot
         // in bind group, texture view settings in compile stage
         this.slotBindGroupMap.forEach((bindGroup, slotID) => {
-            encoderRenderPass.setBindGroup(slotID, bindGroup);
-        })
+            pEncoder.setBindGroup(slotID, bindGroup);
+        });
 
         // dispatch
-        this.renderHandler(encoderRenderPass);
+        this.renderHandler(pEncoder, cEncoder);
 
-        // 
-        encoderRenderPass.end();
+        // record pass end.
+        pEncoder.end();
 
         // update handler
-        // stage - frameFinish
-        this.uniformHandler('frameFinish', encoder, this.bufferState, this.texturteState);
+        this.uniformHandler('recordingCommandEnd', cEncoder, this.bufferState, this.textureState);
     }
-
 }
 
 export {

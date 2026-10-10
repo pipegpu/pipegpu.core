@@ -4,10 +4,10 @@ import type { BufferHandle } from "../Handle";
 import { Buffer1D } from "./Buffer1D";
 
 /**
- * 
+ * @description
+ * @class UniformBuffer
  */
 class UniformBuffer extends Buffer1D {
-
     /**
      * 
      * @param opts 
@@ -32,7 +32,6 @@ class UniformBuffer extends Buffer1D {
             handler: opts.handler
         });
     }
-
 }
 
 export {

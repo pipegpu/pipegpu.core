@@ -13,6 +13,11 @@ abstract class BaseBuffer {
     /**
      * @description
      */
+    protected debugLabel: string;
+
+    /**
+     * @description
+     */
     protected context: Context | undefined;
 
     /**
@@ -35,10 +40,8 @@ abstract class BaseBuffer {
      */
     protected latestTotalByteLength: number = 0;
 
-    protected label: string;
-
     /**
-     * 
+     * @description
      */
     constructor(
         opts: {
@@ -51,7 +54,7 @@ abstract class BaseBuffer {
     ) {
         this.id = opts.id;
         this.context = opts.context;
-        this.label = opts.label;
+        this.debugLabel = opts.label;
         this.bufferUsageFlags = opts.bufferUsageFlags | GPUBufferUsage.COPY_SRC;
         this.totalByteLength = this.latestTotalByteLength = opts.totalByteLength;
         if (!this.totalByteLength) {
@@ -60,7 +63,7 @@ abstract class BaseBuffer {
     }
 
     /**
-     * 
+     * @description
      * @returns 
      */
     getID = (): number => {
@@ -78,10 +81,7 @@ abstract class BaseBuffer {
      * @description
      *  expand buffer to new size.
      */
-    /**
-     * @description
-     */
-    public expand(byteLength: number): void {
+    expand(byteLength: number): void {
         if (byteLength < this.totalByteLength) {
             return;
         }
@@ -92,11 +92,19 @@ abstract class BaseBuffer {
     }
 
     /**
-     * 
+     * @description
+     * @param cEncoder 
+     * @param frameStage
+     * @returns {boolean} indicate gpubuffer has changed, bind group layout need rebuild if true;
+     */
+    abstract refreshGpuBuffer(cEncoder: GPUCommandEncoder, frameStage: FrameStageFormat): boolean;
+
+    /**
+     * @description
      * @param encoder 
      * @param frameStage 
      */
-    abstract getGpuBuffer(encoder: GPUCommandEncoder | null, frameStage: FrameStageFormat): GPUBuffer;
+    abstract getGpuBuffer(): GPUBuffer;
 }
 
 export {

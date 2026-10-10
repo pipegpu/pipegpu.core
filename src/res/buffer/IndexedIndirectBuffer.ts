@@ -4,7 +4,7 @@ import type { BufferArrayHandle } from "../Handle";
 import { StorageBuffer } from "./StorageBuffer";
 
 /**
- * 
+ * @description
  * https://gpuweb.github.io/gpuweb/#dom-gpurendercommandsmixin-drawindexedindirect
  *   
  * - index_count { 0 };
@@ -13,10 +13,11 @@ import { StorageBuffer } from "./StorageBuffer";
  * - vertex_offset { 0 };
  * - first_instance { 0 };
  * 
+ * @class IndexedIndirectBuffer
  */
 class IndexedIndirectBuffer extends StorageBuffer {
     /**
-     * 
+     * @description
      * @param opts 
      */
     constructor(
@@ -38,6 +39,7 @@ class IndexedIndirectBuffer extends StorageBuffer {
             rawDataArray: opts.rawDataArray,
             handler: opts.handler
         });
+
         // check total bytelength align by 20.
         if (this.totalByteLength % 20 !== 0) {
             throw new Error(`[E][IndirectBuffer] indexed indirect buffer align byte length is 20, please cheack buffer total byte length. current total byte length: ${this.totalByteLength}`);
@@ -45,15 +47,15 @@ class IndexedIndirectBuffer extends StorageBuffer {
     }
 
     /**
-     * 
-     * @returns 
+     * @description 
+     *  fixed indexed indirect with five parameter, ecah parameter type of U32.
+     * @returns {number}
      */
     getStride = (): number => {
         return 5 * 4;
     }
 
     /**
-     * 
      * @returns 
      */
     getOffset = (): number => {
@@ -61,13 +63,11 @@ class IndexedIndirectBuffer extends StorageBuffer {
     }
 
     /**
-     * 
      * @returns 
      */
     getIndexIndirectCount = (): number => {
         return this.rawDataArray?.length || 0;
     }
-
 }
 
 export {

@@ -1,3 +1,4 @@
+import { uniqueID } from "../../util/uniqueID";
 import type { Context } from "../Context";
 import type { FrameStageFormat } from "../Format";
 import type { BufferArrayHandle } from "../Handle";
@@ -14,7 +15,7 @@ class IndexedStorageBuffer extends StorageBuffer {
     private indexedFormat: GPUIndexFormat = 'uint32';
 
     /**
-     * 
+     * @description
      */
     private drawCount: number = 0;
 
@@ -82,32 +83,37 @@ class IndexedStorageBuffer extends StorageBuffer {
     }
 
     /**
-     * 
-     * @param _encoder 
+     * @description
+     * @param encoder 
      * @param frameStage 
-     * @returns 
      */
-    override getGpuBuffer(_encoder?: GPUCommandEncoder | null, frameStage?: FrameStageFormat): GPUBuffer {
+    override refreshGpuBuffer(encoder: GPUCommandEncoder, frameStage: FrameStageFormat): boolean {
+        let bDirty: boolean = false;
         if (this.latestTotalByteLength !== this.totalByteLength) {
             this.totalByteLength = this.latestTotalByteLength;
+            bDirty ||= true;
             if (!this.buffer) {
                 this.createGpuBuffer();
-            } else {
+            }
+            else {
                 const desc: GPUBufferDescriptor = {
-                    label: `[${this.label}]`,
+                    label: `[${this.debugLabel}]-refresh-${uniqueID()}`,
                     size: this.totalByteLength,
                     usage: this.bufferUsageFlags as GPUBufferUsageFlags
                 };
-                const latestBuffer = this.context!.getGpuDevice().createBuffer(desc);
-                _encoder?.copyBufferToBuffer(this.buffer, latestBuffer);
-                this.buffer.destroy();
-                this.buffer = latestBuffer;
+                const releaseBuf = this.buffer;
+                this.buffer = this.context!.getGpuDevice().createBuffer(desc);
+                encoder.copyBufferToBuffer(releaseBuf, this.buffer);
+                this.context?.getGpuDevice().queue.onSubmittedWorkDone().then(() => {
+                    releaseBuf.destroy();
+                });
             }
         }
         if (!this.buffer) {
             this.createGpuBuffer();
-        } else {
-            if (frameStage === "frameBegin" && this.handler) {
+        }
+        else {
+            if (frameStage === "recordingCommandStart" && this.handler) {
                 const handData = this.handler();
                 if (handData.rewrite) {
                     this.drawCount = 0;
@@ -121,9 +127,21 @@ class IndexedStorageBuffer extends StorageBuffer {
                 }
             }
         }
-        return this.buffer as GPUBuffer;
+        return bDirty;
     }
 
+    /**
+     * @description
+     * @param _encoder 
+     * @param frameStage 
+     * @returns 
+     */
+    override getGpuBuffer(): GPUBuffer {
+        if (!this.buffer) {
+            this.createGpuBuffer();
+        }
+        return this.buffer as GPUBuffer;
+    }
 }
 
 export {

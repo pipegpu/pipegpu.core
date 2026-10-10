@@ -4,12 +4,10 @@ import type { BufferArrayHandle } from "../Handle";
 import { Buffer2D } from "./Buffer2D";
 
 /**
- * 
+ * @description
  * @class StorageBuffer
- * 
  */
 class StorageBuffer extends Buffer2D {
-
     /**
      * 
      * @param {number}              opts.id
@@ -41,7 +39,6 @@ class StorageBuffer extends Buffer2D {
             handler: opts.handler
         });
     }
-
 }
 
 export {

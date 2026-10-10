@@ -46,11 +46,13 @@ type MultiSampleFormat =
     ;
 
 /**
- * 
+ * @description
+ * - recordingCommandStart, emit event when holder recording command start.
+ * - recordingCommandEnd, emit event when holder recording command end.
  */
 type FrameStageFormat =
-    | 'frameBegin'
-    | 'frameFinish'
+    | 'recordingCommandStart'
+    | 'recordingCommandEnd'
     ;
 
 /**

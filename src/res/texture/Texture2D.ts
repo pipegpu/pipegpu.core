@@ -60,12 +60,12 @@ class Texture2D extends BaseTexture {
      * https://github.com/pipegpu/pipegpu.core/issues/16
      * @param enable 
      */
-    public AutoIncrementMipLevelInStorageBinding = (enable: boolean) => {
+    AutoIncrementMipLevelInStorageBinding = (enable: boolean) => {
         this.autoIncrementMipLevelInStorageBindingUse = enable;
     }
 
     /**
-     * 
+     * @description
      */
     protected refreshTextureDataSource() {
         // depth texture not allow texture write from cpu.
@@ -81,7 +81,8 @@ class Texture2D extends BaseTexture {
                 this.extent3d
             );
             this.textureData_ = undefined;
-        } else if (this.handler_ && this.isDetphTexture()) {
+        }
+        else if (this.handler_ && this.isDetphTexture()) {
             const handData = this.handler_();
             if (!handData.rewrite || !handData.detail.rawData) {
                 return;
@@ -102,7 +103,7 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-     * 
+     * @description
      */
     protected override createGpuTexture(): void {
         const desc: GPUTextureDescriptor = {
@@ -119,12 +120,27 @@ class Texture2D extends BaseTexture {
 
     /**
      * @description
+     * @param _cEncoder 
+     * @param _frameStage 
+     * @returns 
+     */
+    override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
+        if (!this.texture) {
+            this.createGpuTexture();
+        }
+        this.refreshTextureDataSource();
+        return false;
+    }
+
+    /**
+     * @description
      * @param encoder 
      * @param frameStage 
      */
     override getGpuTexture = (_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUTexture => {
         if (!this.texture) {
             this.createGpuTexture();
+            this.refreshTextureDataSource();
         }
         return this.texture as GPUTexture;
     }

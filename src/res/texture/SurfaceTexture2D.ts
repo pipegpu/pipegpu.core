@@ -3,7 +3,7 @@ import type { FrameStageFormat } from "../Format";
 import { BaseTexture } from "./BaseTexture";
 
 /**
- * 
+ * @description
  */
 class SurfaceTexture2D extends BaseTexture {
     /**
@@ -42,13 +42,18 @@ class SurfaceTexture2D extends BaseTexture {
         return this.context.getFrameTextureView();
     }
 
+    override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
+        this.createGpuTexture();
+        return false;
+    }
+
     /**
      * 
      * @param [GPUCommandEncoder] encoder 
      * @param [FrameStageFormat] frameStage
      * 
      */
-    override getGpuTexture = (_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUTexture => {
+    override getGpuTexture = (): GPUTexture => {
         this.createGpuTexture();
         return this.texture as GPUTexture;
 

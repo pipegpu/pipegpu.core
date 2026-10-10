@@ -1,3 +1,4 @@
+import { uniqueID } from "../../util/uniqueID";
 import type { Context } from "../Context";
 import type { FrameStageFormat, TypedArray1DFormat, TypedArray2DFormat } from "../Format";
 import type { BufferArrayHandle } from "../Handle";
@@ -9,12 +10,12 @@ import { BaseBuffer } from "./BaseBuffer";
  */
 class Buffer2D extends BaseBuffer {
     /**
-     * 
+     * @description
      */
     protected handler?: BufferArrayHandle;
 
     /**
-     * 
+     * @description
      */
     protected rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>;
 
@@ -58,7 +59,7 @@ class Buffer2D extends BaseBuffer {
      */
     protected updateGpuBuffer = (offset: number, byteLength: number, rawData: TypedArray1DFormat | ArrayBuffer) => {
         if (offset + byteLength > this.totalByteLength || rawData.byteLength > this.totalByteLength) {
-            throw new Error(`[E][VertexBuffer][updateGpuBuffer] ${this.label}, buffer bytelength oversized, maximum bytelength: ${this.totalByteLength}`);
+            throw new Error(`[E][VertexBuffer][updateGpuBuffer] ${this.debugLabel}, buffer bytelength oversized, maximum bytelength: ${this.totalByteLength}`);
         }
         try {
             // rawdata perphaps typeof ArrayBuffer
@@ -71,7 +72,7 @@ class Buffer2D extends BaseBuffer {
             );
         }
         catch (err) {
-            console.error(`[updateGpuBuffer] ${this.label} error. message: ${err} `);
+            console.error(`[updateGpuBuffer] ${this.debugLabel} error. message: ${err} `);
         }
     }
 
@@ -85,7 +86,7 @@ class Buffer2D extends BaseBuffer {
     protected createGpuBuffer = () => {
         if (!this.buffer) {
             const desc: GPUBufferDescriptor = {
-                label: `[${this.label}]`,
+                label: `[${this.debugLabel}]`,
                 size: this.totalByteLength,
                 usage: this.bufferUsageFlags as GPUBufferUsageFlags
             };
@@ -111,31 +112,36 @@ class Buffer2D extends BaseBuffer {
 
     /**
      * @description
-     * @param _encoder 
+     * @param encoder 
      * @param frameStage 
-     * @returns
      */
-    override getGpuBuffer(_encoder?: GPUCommandEncoder | null, frameStage?: FrameStageFormat): GPUBuffer {
+    override refreshGpuBuffer(encoder: GPUCommandEncoder, frameStage: FrameStageFormat): boolean {
+        let bDirty: boolean = false;
         if (this.latestTotalByteLength !== this.totalByteLength) {
             this.totalByteLength = this.latestTotalByteLength;
+            bDirty ||= true;
             if (!this.buffer) {
                 this.createGpuBuffer();
-            } else {
+            }
+            else {
                 const desc: GPUBufferDescriptor = {
-                    label: `[${this.label}]`,
+                    label: `[${this.debugLabel}]-refresh-${uniqueID()}`,
                     size: this.totalByteLength,
                     usage: this.bufferUsageFlags as GPUBufferUsageFlags
                 };
-                const latestBuffer = this.context!.getGpuDevice().createBuffer(desc);
-                _encoder?.copyBufferToBuffer(this.buffer, latestBuffer);
-                this.buffer.destroy();
-                this.buffer = latestBuffer;
+                const releaseBuf = this.buffer;
+                this.buffer = this.context!.getGpuDevice().createBuffer(desc);
+                encoder.copyBufferToBuffer(releaseBuf, this.buffer);
+                this.context?.getGpuDevice().queue.onSubmittedWorkDone().then(() => {
+                    releaseBuf.destroy();
+                });
             }
         }
         if (!this.buffer) {
             this.createGpuBuffer();
-        } else {
-            if (frameStage === "frameBegin" && this.handler) {
+        }
+        else {
+            if (frameStage === "recordingCommandStart" && this.handler) {
                 const handData = this.handler();
                 if (handData.rewrite) {
                     handData.details.forEach(detail => {
@@ -145,6 +151,17 @@ class Buffer2D extends BaseBuffer {
                     });
                 }
             }
+        }
+        return bDirty;
+    }
+
+    /**
+     * @description
+     * @returns
+     */
+    override getGpuBuffer(): GPUBuffer {
+        if (!this.buffer) {
+            this.createGpuBuffer();
         }
         return this.buffer as GPUBuffer;
     }

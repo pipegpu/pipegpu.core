@@ -19,8 +19,8 @@ const parseComputeDispatch = (
     switch (t) {
         case 'computeDispatch':
             {
-                return (encoder: GPUComputePassEncoder): void => {
-                    encoder.dispatchWorkgroups(opts.dispatch.getGroupX(), opts.dispatch.getGroupY(), opts.dispatch.getGroupZ());
+                return (pEncoder: GPUComputePassEncoder, _cEncoder: GPUCommandEncoder): void => {
+                    pEncoder.dispatchWorkgroups(opts.dispatch.getGroupX(), opts.dispatch.getGroupY(), opts.dispatch.getGroupZ());
                 };
             }
         default:

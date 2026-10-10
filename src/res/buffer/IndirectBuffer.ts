@@ -4,7 +4,7 @@ import type { BufferArrayHandle } from "../Handle";
 import { StorageBuffer } from "./StorageBuffer";
 
 /**
- * 
+ * @description
  * ref:
  * https://toji.dev/webgpu-best-practices/indirect-draws.html
  * 
@@ -12,12 +12,10 @@ import { StorageBuffer } from "./StorageBuffer";
  * - instance_count { 1 };
  * - first_vertex { 0 };
  * - first_instance { 0 };
- * 
  */
 class IndirectBuffer extends StorageBuffer {
-
     /**
-     * 
+     * @description
      * @param opts 
      */
     constructor(
@@ -39,6 +37,7 @@ class IndirectBuffer extends StorageBuffer {
             rawDataArray: opts.rawDataArray,
             handler: opts.handler,
         });
+
         // check total bytelength align by 16.
         if (this.totalByteLength % 16 !== 0) {
             throw new Error(`[E][IndirectBuffer] indirect buffer align byte length is 16, please cheack buffer total byte length. current total byte length: ${this.totalByteLength}`);
@@ -56,7 +55,6 @@ class IndirectBuffer extends StorageBuffer {
     getIndexIndirectCount = (): number => {
         return this.rawDataArray?.length || 0;
     }
-
 }
 
 export {

@@ -35,11 +35,12 @@ class TextureState {
      * @param id 
      * @returns 
      */
-    getTexture = (textureID: number): BaseTexture | undefined => {
+    getTexture = (textureID: number): BaseTexture => {
         if (!TextureState.TEXTURE_SET.has(textureID)) {
             throw new Error(`[E][TextureState][getTexture] find texture failed, id: ${textureID}`);
+        } else {
+            return TextureState.TEXTURE_SET.get(textureID)!;
         }
-        return TextureState.TEXTURE_SET.get(textureID);
     }
 
     /**
@@ -107,7 +108,7 @@ class TextureState {
     }
 
     /**
-     * 
+     * @description
      * @param opts 
      * @param id 
      * @returns 
@@ -123,6 +124,7 @@ class TextureState {
     }
 
     /**
+     * @description
      * @param opts 
      * @returns 
      */
@@ -156,6 +158,7 @@ class TextureState {
     }
 
     /**
+     * @description
      * @param opts 
      * @returns 
      */

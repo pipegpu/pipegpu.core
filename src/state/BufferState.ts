@@ -43,7 +43,8 @@ class BufferState {
     getBuffer = (bufferID: number): BaseBuffer => {
         if (!BufferState.BUFFER_SET.has(bufferID)) {
             throw new Error(`[E][BufferState][getBuffer] find buffer failed.`);
-        } else {
+        }
+        else {
             return BufferState.BUFFER_SET.get(bufferID)!;
         }
     }

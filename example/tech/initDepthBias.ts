@@ -8,8 +8,8 @@ import {
     Context,
     RenderHolder,
     RenderProperty,
-    Uniforms,
-} from "../../src"
+    Uniforms
+} from "../.."
 
 import {
     mat4,

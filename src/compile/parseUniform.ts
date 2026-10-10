@@ -6,8 +6,8 @@ import type { TextureSamplerProperty } from "../property/uniform/TextureSamplerP
 import { UniformBufferProperty } from "../property/uniform/UniformBufferProperty";
 import type { FrameStageFormat, PropertyFormat } from "../res/Format";
 import type { UniformHandle } from "../res/Handle";
-import type { BufferState } from "../state/BufferState"
-import type { TextureState } from "../state/TextureState"
+import type { BufferState } from "../state/BufferState";
+import type { TextureState } from "../state/TextureState";
 
 /**
  * @description
@@ -17,7 +17,7 @@ import type { TextureState } from "../state/TextureState"
  * @param _bufferState
  * @param _textureState
  */
-const emptyUniformHandler: UniformHandle = (_frameStage: FrameStageFormat, _encoder: GPUCommandEncoder, _bufferState: BufferState, _textureState: TextureState): void => { }
+const emptyUniformHandler: UniformHandle = (_frameStage: FrameStageFormat, _encoder: GPUCommandEncoder, _bufferState: BufferState, _textureState: TextureState): boolean => { return false }
 
 /**
  * @interface IUniformRecord
@@ -130,25 +130,31 @@ const parseUniform = (
         }
     });
 
-    // support cpu-side update:
-    // - buffer update
-    // - texture update
+    /**
+     * @description
+     *  support cpu-side update:
+     * - buffer update
+     * - texture update
+     */
     if (bc.length || tc.length) {
         return (frameStage: FrameStageFormat, encoder: GPUCommandEncoder, bufferState: BufferState, textureState: TextureState) => {
+            let bDirty: boolean = false;
             bc.forEach(bufferID => {
-                bufferState.getBuffer(bufferID)?.getGpuBuffer(encoder, frameStage);
+                bDirty ||= bufferState.getBuffer(bufferID)?.refreshGpuBuffer(encoder, frameStage);
             });
             tc.forEach(textureID => {
-                textureState.getTexture(textureID)?.getGpuTexture(encoder, frameStage);
+                bDirty ||= textureState.getTexture(textureID)?.refreshGpuTexture(encoder, frameStage);
             });
+            return bDirty;
         }
-    } else {
+    }
+    else {
         return emptyUniformHandler;
     }
 }
 
 export {
     type IUniformRecord,
-    type UniformHandle as UniformHandle,
+    type UniformHandle,
     parseUniform
 }

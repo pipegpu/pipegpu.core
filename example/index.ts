@@ -4,9 +4,9 @@ import {
     Compiler,
     BaseHolder,
     DepthStencilAttachment,
-} from '../src/index'
+} from '../index'
 
-// import { initDrawCount } from './tech/initDrawCount';
+import { initDrawCount } from './tech/initDrawCount';
 // import { initDrawIndexed } from './tech/initDrawIndexed';
 // import { initDrawInstance } from './tech/initDrawInstance';
 // import { initKTXTexture2D } from './tech/initKTXTexture2D';
@@ -23,7 +23,7 @@ import {
 // import { initTextureCube } from './tech/initTextureCube.ts';
 // import { initDepthBias } from './tech/initDepthBias.ts';
 // import { initHZB } from './tech/initHZB.ts';
-import { initDrawMeshlet } from './tech/initDrawMeshlet';
+// import { initDrawMeshlet } from './tech/initDrawMeshlet';
 
 (async () => {
 
@@ -79,7 +79,7 @@ import { initDrawMeshlet } from './tech/initDrawMeshlet';
     }
 
     const holders: BaseHolder[] = [];
-    // holders.push(initDrawCount(compiler, colorAttachments, depthStencilAttachment));
+    holders.push(initDrawCount(compiler, colorAttachments, depthStencilAttachment));
     // holders.push(await initKTXTexture2D(compiler, colorAttachments, depthStencilAttachment));
     // holders.push(initDrawIndexed(compiler, colorAttachments, depthStencilAttachment));
     // holders.push(initDrawInstance(compiler, colorAttachments, depthStencilAttachment));
@@ -95,7 +95,7 @@ import { initDrawMeshlet } from './tech/initDrawMeshlet';
     // holders.push(...await initDeferred(context, compiler, colorAttachments, depthStencilAttachment, ASPECT, NEAR, FAR));
     // holders.push(await initDepthBias(context, compiler, colorAttachments, ASPECT, NEAR, FAR));
     // holders.push(...await initHZB(context, compiler, colorAttachments, ASPECT, NEAR, FAR));
-    holders.push(await initDrawMeshlet(compiler, colorAttachments, depthStencilAttachment));
+    // holders.push(await initDrawMeshlet(compiler, colorAttachments, depthStencilAttachment));
 
     // const textureCube = await initTextureCube(context, compiler, colorAttachments, ASPECT, NEAR, FAR);
     // const graph: OrderedGraph = new OrderedGraph(context);
