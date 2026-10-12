@@ -1,5 +1,5 @@
 import type { UserConfig } from 'vite';
-import dts from 'vite-plugin-dts';
+import dts from 'unplugin-dts/vite'
 
 export default {
   base: './',
