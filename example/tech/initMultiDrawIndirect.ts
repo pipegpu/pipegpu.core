@@ -6,7 +6,7 @@ import {
     RenderProperty,
     Uniforms,
     type Compiler,
-    type RenderHolderDesc
+    type RenderLetDesc
 } from '../..';
 
 const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
@@ -37,7 +37,7 @@ const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttach
     const dispatch: RenderProperty = new RenderProperty(indirectBuffer, indirectDrawCountBuffer, 2);
 
     //
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: `
@@ -113,7 +113,7 @@ const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttach
     desc.uniforms?.assign("uColorG", uniformBufferG);
     desc.uniforms?.assign("uColorB", uniformBufferB);
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

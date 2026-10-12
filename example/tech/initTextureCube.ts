@@ -2,7 +2,7 @@ import { mat4, vec3 } from 'wgpu-matrix';
 
 import {
     type BufferHandleDetail,
-    type RenderHolderDesc,
+    type RenderLetDesc,
     Attributes,
     ColorAttachment,
     Compiler,
@@ -92,7 +92,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         rawData: cubeData.triangles
     });
 
-    const desc: RenderHolderDesc = {
+    const desc: RenderLetDesc = {
         label: `reversedZ`,
         vertexShader: compiler.createVertexShader({
             code: WGSLCode,
@@ -196,7 +196,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         desc.uniforms?.assign(`sampler0`, sampler);
     }
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

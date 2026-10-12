@@ -4,7 +4,7 @@ import {
     type ColorAttachment,
     type Compiler,
     type Context,
-    type RenderHolderDesc,
+    type RenderLetDesc,
     Attributes,
     BaseLet,
     DepthStencilAttachment,
@@ -125,7 +125,7 @@ fn fs_main(f: FRAGMENT) -> GBUFFER {
             colorLoadStoreFormat: 'clearStore',
         });
 
-        const desc: RenderHolderDesc = {
+        const desc: RenderLetDesc = {
             label: `deferred generate gbuffer.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -200,7 +200,7 @@ fn fs_main(f: FRAGMENT) -> GBUFFER {
             }));
         }
 
-        lets.push(compiler.compileRenderHolder(desc));
+        lets.push(compiler.compileRenderLet(desc));
     }
 
     // deferred rendering
@@ -259,7 +259,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4 <f32>
         });
 
 
-        const desc: RenderHolderDesc = {
+        const desc: RenderLetDesc = {
             label: `deferred shading.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -280,7 +280,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4 <f32>
         desc.uniforms?.assign(`normal_texture`, normalTexture);
         desc.uniforms?.assign(`texture_sampler`, textureSampler);
 
-        lets.push(compiler.compileRenderHolder(desc));
+        lets.push(compiler.compileRenderLet(desc));
     }
 
     return lets;

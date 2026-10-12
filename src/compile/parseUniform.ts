@@ -125,7 +125,7 @@ const parseUniform = (
                 }
             default:
                 {
-                    throw new Error(`[E][parseUniform][holder][name] ${opts.debugLabel}, unsupported property type: ${t}`);
+                    throw new Error(`[E][parseUniform] error, ${opts.debugLabel}, unsupported property type: ${t}`);
                 }
         }
     });

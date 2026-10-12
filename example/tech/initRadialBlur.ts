@@ -2,7 +2,7 @@ import {
     type Context,
     type BufferHandleDetail,
     type Compiler,
-    type RenderHolderDesc,
+    type RenderLetDesc,
     Attributes,
     ColorAttachment,
     DepthStencilAttachment,
@@ -40,7 +40,7 @@ const initRadialBlur = async (context: Context, compiler: Compiler, colorAttachm
 
 
     //https://www.shadertoy.com/view/XsKGRW
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: `
@@ -440,7 +440,7 @@ r = vec3<f32>(rotated_xy.x, rotated_xy.y, r.z);
         }));
     }
 
-    lets.push(compiler.compileRenderHolder(desc))
+    lets.push(compiler.compileRenderLet(desc))
 
     // deferred rendering
     {
@@ -554,7 +554,7 @@ fn fs_main(f: VertexOutput) -> @location(0) vec4 <f32>  {
         });
 
 
-        const desc: RenderHolderDesc = {
+        const desc: RenderLetDesc = {
             label: `combine shading.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -623,7 +623,7 @@ fn fs_main(f: VertexOutput) -> @location(0) vec4 <f32>  {
             desc.attributes?.assign('in_uv', uvBuffer);
         }
 
-        lets.push(compiler.compileRenderHolder(desc));
+        lets.push(compiler.compileRenderLet(desc));
     }
 
     return lets;

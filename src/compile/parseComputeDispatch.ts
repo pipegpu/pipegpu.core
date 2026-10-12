@@ -13,7 +13,7 @@ const parseComputeDispatch = (
     }
 ): ComputeHandle => {
     if (!opts.dispatch) {
-        throw new Error(`[E][parseComputeDispatch] missing compute 'dispatch' in 'ComputeHolderDesc'`)
+        throw new Error(`[E][parseComputeDispatch] missing compute 'dispatch' in 'ComputeLetDesc'`)
     }
     const t = opts.dispatch.getPropertyFormat();
     switch (t) {
@@ -25,7 +25,7 @@ const parseComputeDispatch = (
             }
         default:
             {
-                throw new Error(`[E][parseComputeDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in 'ComputeHolderDesc'`)
+                throw new Error(`[E][parseComputeDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in 'ComputeLetDesc'`)
             }
     }
 }

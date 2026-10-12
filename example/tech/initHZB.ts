@@ -2,8 +2,8 @@ import { mat4, vec3 } from 'wgpu-matrix';
 
 import {
     type BufferHandleDetail,
-    type ComputeHolderDesc,
-    type RenderHolderDesc,
+    type ComputeLetDesc,
+    type RenderLetDesc,
     Attributes,
     BaseLet,
     ColorAttachment,
@@ -153,7 +153,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32> {
         
 `;
 
-        const desc: RenderHolderDesc = {
+        const desc: RenderLetDesc = {
             label: `deferred generate gbuffer.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -227,7 +227,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32> {
             }));
         }
 
-        lets.push(compiler.compileRenderHolder(desc));
+        lets.push(compiler.compileRenderLet(desc));
     }
 
     const hzbTexture = compiler.createTexture2D({
@@ -313,7 +313,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) f32
 
 `;
 
-        const desc: RenderHolderDesc = {
+        const desc: RenderLetDesc = {
             label: `deferred shading.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -332,7 +332,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) f32
         desc.uniforms?.assign(`depthTexture`, depthTexture);
         desc.uniforms?.assign(`depthTextureSampler`, depthTextureSampler);
 
-        lets.push(compiler.compileRenderHolder(desc));
+        lets.push(compiler.compileRenderLet(desc));
     }
 
     // 2. build hzb
@@ -377,7 +377,7 @@ fn cp_main(@builtin(global_invocation_id) global_id: vec3<u32>)
                 Math.max(Math.ceil((hzbTexture.Height >> k) / workGroupY), 1),
                 1
             );
-            const desc: ComputeHolderDesc = {
+            const desc: ComputeLetDesc = {
                 label: `download sampling: ${k}`,
                 computeShader: compiler.createComputeShader({
                     code: WGSLCode,
@@ -388,7 +388,7 @@ fn cp_main(@builtin(global_invocation_id) global_id: vec3<u32>)
             };
             desc.uniforms.assign('input_texture', hzbTexture);
             desc.uniforms.assign('output_texture', hzbTexture);
-            lets.push(compiler.compileComputeHolder(desc))
+            lets.push(compiler.compileComputeLet(desc))
         }
 
     }
@@ -446,7 +446,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32>
 
         `;
 
-        const desc: RenderHolderDesc = {
+        const desc: RenderLetDesc = {
             label: `deferred shading.`,
             vertexShader: compiler.createVertexShader({
                 code: WGSLCode,
@@ -478,7 +478,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32>
             },
         }));
 
-        lets.push( compiler.compileRenderHolder(desc));
+        lets.push(compiler.compileRenderLet(desc));
     }
 
     return lets;

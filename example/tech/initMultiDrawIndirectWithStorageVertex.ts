@@ -1,4 +1,4 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderHolderDesc } from '../..';
+import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderLetDesc } from '../..';
 
 const initMultiDrawIndirectWithStorageVertex = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
@@ -72,7 +72,7 @@ fn fs_main(f:FRAGMENT) -> @location(0) vec4f {
 
     `;
 
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: WGSLCode,
@@ -108,7 +108,7 @@ fn fs_main(f:FRAGMENT) -> @location(0) vec4f {
         desc.uniforms?.assign("vertex_arr", positionBuffer);
     }
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

@@ -22,9 +22,8 @@ export * from './src/compile/Compiler.ts';
 
 /**
  * @description
- * holder:
- * - compute holder
- * - render holder
+ * - compute let
+ * - render let
  */
 export * from './src/let/BaseLet.ts';
 export * from './src/let/ComputeLet.ts';

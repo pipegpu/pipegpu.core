@@ -20,7 +20,7 @@ const parseRenderDispatch = (
     }
 ): RenderHandle => {
     if (!opts.dispatch) {
-        throw new Error(`[E][parseRenderDispatch] ${opts.debugLabel} missing render 'dispatch' in 'RenderHolderDesc'`)
+        throw new Error(`[E][parseRenderDispatch] ${opts.debugLabel} missing render 'dispatch' in 'RenderLetDesc'.`)
     }
     const t: PropertyFormat = opts.dispatch.getPropertyFormat();
     switch (t) {
@@ -100,7 +100,7 @@ const parseRenderDispatch = (
             }
         default:
             {
-                throw new Error(`[E][parseRenderDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in render 'RenderHolderDesc'`)
+                throw new Error(`[E][parseRenderDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in render 'RenderLetDesc'.`)
             }
     }
 }

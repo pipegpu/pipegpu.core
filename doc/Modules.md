@@ -50,11 +50,11 @@ npx playwright install
 
 ---
 
-### holder
+### let
 
-- [x] BaseHolder
-- [x] ComputeHolder
-- [x] RenderHolder
+- [x] BaseLet
+- [x] ComputeLet
+- [x] RenderLet
 
 ---
 

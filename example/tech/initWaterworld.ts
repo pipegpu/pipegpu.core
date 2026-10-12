@@ -1,7 +1,7 @@
 import {
     type BufferHandleDetail,
     type Compiler,
-    type RenderHolderDesc,
+    type RenderLetDesc,
     Attributes,
     BaseLet,
     ColorAttachment,
@@ -22,7 +22,7 @@ const initWaterworld = async (compiler: Compiler, colorAttachments: ColorAttachm
     }
 
 
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: `
@@ -532,7 +532,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
         }));
     }
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

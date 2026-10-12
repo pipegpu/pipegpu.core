@@ -82,10 +82,9 @@ class ComputeLet extends BaseLet {
         // - texture update
         const bDirty = this.uniformHandler('recordingCommandStart', cEncoder, this.bufferState, this.textureState);
 
-        const desc: GPUComputePassDescriptor = {
-            label: `compute holder`
-        };
-        const pEncoder = cEncoder.beginComputePass(desc);
+        const pEncoder = cEncoder.beginComputePass({
+            label: `compute let.`
+        });
         pEncoder.setPipeline(this.computePipeline.getGpuComputePipeline());
 
         //  

@@ -53,7 +53,7 @@ import type { Texture3D } from "../res/texture/Texture3D";
  * @param label {String} 
  * @param vertexShader {VertexShader}
  */
-interface RenderHolderDesc {
+interface RenderLetDesc {
     /**
      * debug label(stats info head bar)
      */
@@ -110,9 +110,9 @@ interface RenderHolderDesc {
 /**
  * support:
  * gpu-driven style
- * @class ComputeHolderDesc
+ * @class ComputeLetDesc
  */
-interface ComputeHolderDesc {
+interface ComputeLetDesc {
     /**
      * @description
      */
@@ -193,12 +193,12 @@ class Compiler {
      * @param desc 
      * @returns 
      */
-    compileRenderHolder = (desc: RenderHolderDesc): RenderLet => {
-        const debugLabel = `[RenderHolder][${desc.label}]`;
+    compileRenderLet = (desc: RenderLetDesc): RenderLet => {
+        const debugLabel = `[RenderLet][${desc.label}]`;
         const vertexShader = desc.vertexShader, fragmentShader = desc.fragmentShader;
         // vaildation shader
         if (!vertexShader || !fragmentShader) {
-            throw new Error(`[E][Compiler][compileRenderHolder] ${debugLabel} missing shader, vertexShader: ${vertexShader}; fragmentShader:${fragmentShader}`);
+            throw new Error(`[E][Compiler][compileRenderLet] ${debugLabel} missing shader, vertexShader: ${vertexShader}; fragmentShader:${fragmentShader}`);
         }
 
         // force update reflected info
@@ -225,7 +225,7 @@ class Compiler {
             bufferUniformRecordsMap: bufferUniformRecordsMap
         });
 
-        // parse render holder bindgrouplayout
+        // parse render bindgrouplayout
         const bindGroupLayouts: GPUBindGroupLayout[] = [];
         const gourpIDWithBindGroupLayoutMap: Map<number, GPUBindGroupLayout> = new Map();
         const gourpIDWithBindGroupLayoutDescriptorMap: Map<number, GPUBindGroupLayoutDescriptor> = new Map();
@@ -347,11 +347,11 @@ class Compiler {
      * @description
      * @param desc 
      */
-    compileComputeHolder = (desc: ComputeHolderDesc): ComputeLet => {
-        const debugLabel = `[ComputeHolder][${desc.label}]`;
+    compileComputeLet = (desc: ComputeLetDesc): ComputeLet => {
+        const debugLabel = `[ComputeLet][${desc.label}]`;
         const computeShader = desc.computeShader;
         if (!computeShader) {
-            throw new Error(`[E][Compiler][compileComputeHolder] ${debugLabel} missing shader, computeShader: ${computeShader}`);
+            throw new Error(`[E][Compiler][compileComputeLet] ${debugLabel} missing shader, computeShader: ${computeShader}`);
         }
 
         // force update reflected info
@@ -367,7 +367,7 @@ class Compiler {
             bufferUniformRecordsMap: bufferUniformRecordsMap
         });
 
-        // parse render holder bindgrouplayout
+        // parse render bindgrouplayout
         const bindGroupLayouts: GPUBindGroupLayout[] = [];
         const gourpIDWithBindGroupLayoutMap: Map<number, GPUBindGroupLayout> = new Map();
         const gourpIDWithBindGroupLayoutDescriptorMap: Map<number, GPUBindGroupLayoutDescriptor> = new Map();
@@ -956,7 +956,7 @@ class Compiler {
 }
 
 export {
-    type RenderHolderDesc,
-    type ComputeHolderDesc,
+    type RenderLetDesc,
+    type ComputeLetDesc,
     Compiler
 }

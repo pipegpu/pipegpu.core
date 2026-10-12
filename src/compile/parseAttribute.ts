@@ -59,7 +59,7 @@ const parseAttribute = (
                 }
             default:
                 {
-                    throw new Error(`[E][ParseAttribute][holder][name] ${opts.debugLabel} unsupport property type: ${t}`);
+                    throw new Error(`[E][ParseAttribute] error, ${opts.debugLabel} unsupport property type: ${t}`);
                 }
         }
     });

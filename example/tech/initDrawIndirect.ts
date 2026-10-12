@@ -6,7 +6,7 @@ import {
     RenderProperty,
     Uniforms,
     type Compiler,
-    type RenderHolderDesc
+    type RenderLetDesc
 } from "../..";
 
 const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
@@ -23,7 +23,7 @@ const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[
 
     const dispatch: RenderProperty = new RenderProperty(indirectBuffer);
 
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: `
@@ -99,7 +99,7 @@ const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[
     desc.uniforms?.assign("uColorG", uniformBufferG);
     desc.uniforms?.assign("uColorB", uniformBufferB);
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

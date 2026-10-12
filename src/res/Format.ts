@@ -47,8 +47,8 @@ type MultiSampleFormat =
 
 /**
  * @description
- * - recordingCommandStart, emit event when holder recording command start.
- * - recordingCommandEnd, emit event when holder recording command end.
+ * - recordingCommandStart, emit event when graph's let recording command start.
+ * - recordingCommandEnd, emit event when graph's let recording command end.
  */
 type FrameStageFormat =
     | 'recordingCommandStart'

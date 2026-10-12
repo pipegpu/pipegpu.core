@@ -1,5 +1,5 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderHolderDesc } from "../..";
-import { fetchKTX2AsBc7RGBA, type KTXDataPack } from "../util/fetchKTX";
+import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderLetDesc } from '../..';
+import { fetchKTX2AsBc7RGBA, type KTXDataPack } from '../util/fetchKTX';
 
 const initDrawKTX2Texture2DArray = async (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<RenderLet> => {
 
@@ -49,7 +49,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
 
     `;
 
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: code,
@@ -135,7 +135,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
         desc.uniforms?.assign('texture_array', texture2DArray);
     }
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

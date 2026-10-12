@@ -1,4 +1,4 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderHolderDesc } from "../..";
+import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderLetDesc } from "../..";
 
 const initDrawInstanced = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
@@ -11,7 +11,7 @@ const initDrawInstanced = (compiler: Compiler, colorAttachments: ColorAttachment
         dispatch = new RenderProperty(indexBuffer, 4);
     }
 
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: `
@@ -106,7 +106,7 @@ fn fs_main(in:VSOutput) -> @location(0) vec4f {
         desc.uniforms?.assign("ssbo_offset", offsetBuffer);
     }
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

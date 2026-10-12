@@ -7,7 +7,7 @@ import {
     Uniforms,
     type BufferArrayHandle,
     type Compiler,
-    type RenderHolderDesc
+    type RenderLetDesc
 } from '../..';
 import type { IndexedIndirectBuffer } from "../../src/res/buffer/IndexedIndirectBuffer";
 import type { IndexedStorageBuffer } from "../../src/res/buffer/IndexedStorageBuffer";
@@ -62,7 +62,7 @@ const initMultiDrawIndexedIndirect = (compiler: Compiler, colorAttachments: Colo
         dispatch = new RenderProperty(indexStorageBuffer, indexedIndirectBuffer, indirectDrawCountBuffer, 2);
     }
 
-    let desc: RenderHolderDesc = {
+    let desc: RenderLetDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
             code: `
@@ -140,7 +140,7 @@ fn fs_main(in:VertexOutput) -> @location(0) vec4f {
         desc.attributes?.assign("color", colorBuffer);
     }
 
-    return compiler.compileRenderHolder(desc);
+    return compiler.compileRenderLet(desc);
 }
 
 export {

@@ -114,7 +114,7 @@ class RenderLet extends BaseLet {
         const bDirty: boolean = this.uniformHandler('recordingCommandStart', cEncoder, this.bufferState, this.textureState);
 
         if (this.colorAttachments.length === 0) {
-            console.log(`[E][RenderHolder][build] missing color attachment.`);
+            console.log(`[E][RenderLet][build] missing color attachment.`);
             return;
         }
 

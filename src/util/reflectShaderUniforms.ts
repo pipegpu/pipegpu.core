@@ -318,7 +318,7 @@ const reflectShaderUniforms = (code: string, entryPoint: string, shaderStage: GP
             case ResourceType.Texture:
                 {
                     if (!uniforms?.getPropertyMap().has(binding.name)) {
-                        throw new Error(`[E][reflectShaderUniforms] ${debugLabel} input uniforms missing texture property, name: ${binding.name}. please check holder descriptor uniforms.`)
+                        throw new Error(`[E][reflectShaderUniforms] ${debugLabel} input uniforms missing texture property, name: ${binding.name}. please check let descriptor uniforms.`)
                     }
                     bindGroupLayoutEntry.texture = {};
                     bindGroupLayoutEntry.texture.viewDimension = getTextureViewDimension(binding);
@@ -342,7 +342,7 @@ const reflectShaderUniforms = (code: string, entryPoint: string, shaderStage: GP
             case ResourceType.Sampler:
                 {
                     if (!uniforms?.getPropertyMap().has(binding.name)) {
-                        throw new Error(`[E][reflectShaderUniforms] ${debugLabel} input uniforms missing sampler property, name: ${binding.name}. please check holder descriptor uniforms.`)
+                        throw new Error(`[E][reflectShaderUniforms] ${debugLabel} input uniforms missing sampler property, name: ${binding.name}. please check let descriptor uniforms.`)
                     }
 
                     // TODO:: wait wgsl_reflect support reflect relationshiop bteween texture and textureSampler.
