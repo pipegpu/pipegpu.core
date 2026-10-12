@@ -1,7 +1,6 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderHolderDesc } from '../..';
 
-const initDrawWithArrayBuffer = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
-    //
+const initDrawWithArrayBuffer = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
     let desc: RenderHolderDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
@@ -82,8 +81,8 @@ const initDrawWithArrayBuffer = (compiler: Compiler, colorAttachments: ColorAtta
         });
         desc.uniforms?.assign("uColorB", uniformBufferB);
     }
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

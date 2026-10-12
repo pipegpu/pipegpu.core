@@ -22,6 +22,6 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "types": ["@webgpu/types"]
   },
-  "include": ["build", "src", "index.ts", "test"],
-  "exclude": ["example/**/*"]
+  "include": ["build", "src", "index.ts", "test", "example"]
+  // "exclude": ["example/**/*"]
 }

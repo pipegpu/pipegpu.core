@@ -1,7 +1,16 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type BufferHandleDetail, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    type BufferHandleDetail,
+    type Compiler,
+    type RenderHolderDesc,
+    Attributes,
+    BaseLet,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderProperty,
+    Uniforms,
+} from '../..';
 
-
-const initWaterworld = async (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseHolder> => {
+const initWaterworld = async (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseLet> => {
 
     let dispatch: RenderProperty;
     {
@@ -523,11 +532,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
         }));
     }
 
-
-
-
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

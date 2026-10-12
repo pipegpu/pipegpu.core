@@ -3,43 +3,41 @@ import type { TextureState } from "../state/TextureState";
 import type { FrameStageFormat, TypedArray1DFormat } from "./Format";
 
 /**
- * 
+ * @description
  */
 type UniformHandle = (frameStage: FrameStageFormat, encoder: GPUCommandEncoder, bufferState: BufferState, textureState: TextureState) => boolean;
 
 /**
- * 
+ * @description
  */
 type RenderHandle = (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder) => void;
 
 /**
- * 
+ * @description
  */
 type ComputeHandle = (pEncoder: GPUComputePassEncoder, cEncoder: GPUCommandEncoder) => void;
 
 
 /**
- * 
+ * @description
  */
 type BufferHandleDetail = {
     /**
-     * 
+     * @description
      * gpu buffer byte offset
      * 
      */
     offset: number,
 
     /**
-     * 
+     * @description
      * cpu write buffer total byte length.
-     * 
      */
     byteLength: number,
 
     /**
-     * 
+     * @description
      * cpu write source data.
-     * 
      */
     rawData?: TypedArray1DFormat | ArrayBuffer
 };

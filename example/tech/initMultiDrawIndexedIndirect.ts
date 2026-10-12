@@ -1,8 +1,18 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type BufferArrayHandle, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderLet,
+    RenderProperty,
+    Uniforms,
+    type BufferArrayHandle,
+    type Compiler,
+    type RenderHolderDesc
+} from '../..';
 import type { IndexedIndirectBuffer } from "../../src/res/buffer/IndexedIndirectBuffer";
 import type { IndexedStorageBuffer } from "../../src/res/buffer/IndexedStorageBuffer";
 
-const initMultiDrawIndexedIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
+const initMultiDrawIndexedIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
     let dispatch: RenderProperty;
     {
@@ -130,8 +140,7 @@ fn fs_main(in:VertexOutput) -> @location(0) vec4f {
         desc.attributes?.assign("color", colorBuffer);
     }
 
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

@@ -1,5 +1,8 @@
 import { FunctionInfo, InputInfo, TypeInfo, WgslReflect } from "wgsl_reflect";
 
+/**
+ * @description
+ */
 interface IReflectAttributes {
     attributeCount: number,
     attributeMap: Map<string, GPUVertexAttribute>,
@@ -8,10 +11,9 @@ interface IReflectAttributes {
 }
 
 /**
- * 
+ * @description
  * @param {TypeInfo} t input type with reflect form wgsl shahder code.
  * @returns {string} webgpu attribute format type. e.g 'float32x4'
- * 
  */
 const getVertexFormat = (t: TypeInfo): GPUVertexFormat => {
     switch (t.getTypeName()) {
@@ -51,11 +53,20 @@ const getVertexFormat = (t: TypeInfo): GPUVertexFormat => {
         case 'vec4f':
         case 'vec4<f32>':
             return 'float32x4';
-        default:
+        default: {
             throw new Error(`[E][reflectShaderAttributes][getVertexFormat] unsupported vertex format. type: ${t.getTypeName()}`);
+        }
+
     }
 }
 
+/**
+ * @description
+ * @param code 
+ * @param entryPoint 
+ * @param debugLabel 
+ * @returns 
+ */
 const reflectShaderAttributes = (code: string, entryPoint: string, debugLabel?: string): IReflectAttributes => {
     const reflect = new WgslReflect(code);
 

@@ -1,32 +1,25 @@
+import { mat4, vec3 } from "wgpu-matrix";
 import {
-    mat4,
-    vec3
-} from "wgpu-matrix";
-
-import {
-    type BaseHolder,
     type BufferHandleDetail,
     type ColorAttachment,
     type Compiler,
     type Context,
     type RenderHolderDesc,
     Attributes,
+    BaseLet,
     DepthStencilAttachment,
-    RenderHolder,
     RenderProperty,
     Texture2D,
     Uniforms,
 } from "../.."
-
 import { fetchMesh } from "../util/fetchMesh";
-
 
 /**
  * ref: https://webgpu.github.io/webgpu-samples/?sample=deferredRendering
  */
-const initDeferred = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment, aspect: number, near: number, far: number): Promise<BaseHolder[]> => {
+const initDeferred = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment, aspect: number, near: number, far: number): Promise<BaseLet[]> => {
 
-    const holders: BaseHolder[] = [];
+    const lets: BaseLet[] = [];
 
     let positionTexture: Texture2D;
     let normalTexture: Texture2D;
@@ -207,8 +200,7 @@ fn fs_main(f: FRAGMENT) -> GBUFFER {
             }));
         }
 
-        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-        holders.push(renderHolder);
+        lets.push(compiler.compileRenderHolder(desc));
     }
 
     // deferred rendering
@@ -288,11 +280,10 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4 <f32>
         desc.uniforms?.assign(`normal_texture`, normalTexture);
         desc.uniforms?.assign(`texture_sampler`, textureSampler);
 
-        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-        holders.push(renderHolder);
+        lets.push(compiler.compileRenderHolder(desc));
     }
 
-    return holders;
+    return lets;
 };
 
 export {

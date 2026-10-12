@@ -1,27 +1,23 @@
+import { mat4, vec3 } from 'wgpu-matrix';
+
 import {
-    type BaseHolder,
     type BufferHandleDetail,
     type RenderHolderDesc,
     Attributes,
     ColorAttachment,
     Compiler,
     Context,
-    RenderHolder,
+    RenderLet,
     RenderProperty,
     Uniforms,
-} from "../../src"
-
-import {
-    mat4,
-    vec3
-} from 'wgpu-matrix';
+} from '../..';
 
 /**
  * reversedZ
  * ref: https://webgpu.github.io/webgpu-samples/?sample=reversedZ#main.ts
  * ref: https://github.com/greggman/wgpu-matrix
  */
-const initReversedZ = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseHolder> => {
+const initReversedZ = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<RenderLet> => {
 
     // depth stencil attachment
     const reversedZDepthTexture = compiler.createTexture2D({
@@ -166,8 +162,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         }));
     }
 
-    const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-    return renderHolder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

@@ -5,7 +5,7 @@ import { RenderPipeline } from "../res/pipeline/RenderPipeline";
 import { uniqueID } from "../util/uniqueID";
 
 /**
- * 
+ * @description
  */
 class PipelineState {
     /**

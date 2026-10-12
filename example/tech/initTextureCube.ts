@@ -1,21 +1,17 @@
+import { mat4, vec3 } from 'wgpu-matrix';
+
 import {
-    type BaseHolder,
     type BufferHandleDetail,
     type RenderHolderDesc,
     Attributes,
     ColorAttachment,
     Compiler,
     Context,
-    RenderHolder,
+    RenderLet,
     RenderProperty,
     TextureSampler,
-    Uniforms,
-} from "../../src"
-
-import {
-    mat4,
-    vec3
-} from 'wgpu-matrix';
+    Uniforms
+} from '../..';
 import { fetchMesh } from "../util/fetchMesh";
 import { fetchKTX2AsBc7RGBA, type KTXDataPack } from "../util/fetchKTX";
 import type { TextureCube } from "../../src/res/texture/TextureCube";
@@ -25,7 +21,7 @@ import type { TextureCube } from "../../src/res/texture/TextureCube";
  * ref: https://webgpu.github.io/webgpu-samples/?sample=reversedZ#main.ts
  * ref: https://github.com/greggman/wgpu-matrix
  */
-const initTextureCube = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseHolder> => {
+const initTextureCube = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<RenderLet> => {
 
     // depth stencil attachment
     const reversedZDepthTexture = compiler.createTexture2D({
@@ -112,7 +108,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         depthStencilAttachment: reversedZDepthStencilAttachment,
         dispatch: new RenderProperty(indexBuffer),
         primitiveDesc: {
-            cullFormat: 'backCW'
+            cullFormat: 'backCCW'
         }
     };
 
@@ -200,8 +196,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         desc.uniforms?.assign(`sampler0`, sampler);
     }
 
-    const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-    return renderHolder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

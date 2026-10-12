@@ -1,10 +1,24 @@
 import GUI from 'lil-gui';
 
 const ControlTArr = [
-    'initDrawCount',
-    'initDrawIndexed',
-    'initKTX2Texture2D'
+    'drawCountLet',
+    'drawIndexedLet',
+    'drawInstancedLet',
+    'drawIndirectLet',
+    'drawIndexedIndirectLet',
+    'drawWithArrayBufferLet',
+    'ktx2Texutre2DLet',
+    'ktx2Texture2DArrayLet',
+    'multiDrawIndirectLet',
+    'multiDrawIndexedIndirectLet',
+    'multiDrawIndirectWithStorageVertexLet',
+    'reversedZLet',
+    'deferredLet',
+    'textureCubeLet',
+    'depthBiasLet',
+    'hzbLets'
 ] as const;
+
 type ControlTYPE = typeof ControlTArr[number];
 
 const InitControlPannel = (ctl: { t: ControlTYPE }) => {

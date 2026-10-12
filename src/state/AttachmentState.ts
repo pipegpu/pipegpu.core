@@ -8,34 +8,31 @@ import type { Texture2D } from "../res/texture/Texture2D";
 import { uniqueID } from "../util/uniqueID";
 
 /**
- * 
+ * @description
  */
 class AttachmentState {
-
     /**
-     * 
+     * @description
      */
     private static ATTACHMENT_SET: Map<number, BaseAttachment> = new Map();
 
     /**
-     * 
+     * @description
      */
     private context: Context;
 
     /**
-     * 
+     * @description
      * @param context 
-     * 
      */
     constructor(context: Context) {
         this.context = context;
     }
 
     /**
-     * 
+     * @description
      * @param attachmentID 
      * @returns 
-     * 
      */
     getAttachment = (attachmentID: number): BaseAttachment | undefined => {
         if (!AttachmentState.ATTACHMENT_SET.has(attachmentID)) {
@@ -45,7 +42,7 @@ class AttachmentState {
     }
 
     /**
-     * 
+     * @description
      * @param opts 
      * @returns 
      */
@@ -73,7 +70,7 @@ class AttachmentState {
     }
 
     /**
-     * 
+     * @description
      * @param opts 
      * @returns 
      */
@@ -113,7 +110,6 @@ class AttachmentState {
         }
         return AttachmentState.ATTACHMENT_SET.get(depthStencilAttachmentID) as DepthStencilAttachment;
     }
-
 }
 
 export {

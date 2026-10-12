@@ -4,7 +4,7 @@ import type { TextureProperty } from "../property/uniform/TextureProperty";
 import type { TextureSamplerProperty } from "../property/uniform/TextureSamplerProperty";
 
 /**
- * 
+ * @description
  */
 interface IReflectUniforms {
     bindGroupCount: number,
@@ -13,21 +13,9 @@ interface IReflectUniforms {
 }
 
 /**
- * @deprecated sampler binding type related with input unifomrs.
- * @param t 
- */
-// const getSamplerBindingType = (binding: VariableInfo): GPUSamplerBindingType => {
-//     if (binding.resourceType === ResourceType.Sampler) {
-//         return "filtering";
-//     }
-//     throw new Error(`[E][reflectShaderUniforms][getSamplerBindingType] unsupported buffer binding type: ${binding.resourceType}`);
-// }
-
-/**
- * 
+ * @description
  * @param binding 
  * @returns 
- * 
  */
 const getBufferBindingType = (binding: VariableInfo): GPUBufferBindingType => {
     if (binding.resourceType === ResourceType.Uniform) {
@@ -42,12 +30,10 @@ const getBufferBindingType = (binding: VariableInfo): GPUBufferBindingType => {
 }
 
 /**
- * 
  * ref:
  * https://www.w3.org/TR/webgpu/#gputexture
  * @param binding 
  * @returns 
- * 
  */
 const getTextureViewDimension = (binding: VariableInfo): GPUTextureViewDimension => {
     switch (binding.type.name) {

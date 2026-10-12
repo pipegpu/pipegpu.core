@@ -2,16 +2,14 @@ import {
     Attributes,
     ColorAttachment,
     DepthStencilAttachment,
-    RenderHolder,
+    RenderLet,
     RenderProperty,
     Uniforms,
-    type BaseHolder,
     type Compiler,
     type RenderHolderDesc
 } from "../..";
 
-const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
-
+const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
     const indirectBufferData = new Uint32Array([
         6,
         1,
@@ -25,7 +23,6 @@ const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[
 
     const dispatch: RenderProperty = new RenderProperty(indirectBuffer);
 
-    //
     let desc: RenderHolderDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
@@ -102,8 +99,7 @@ const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[
     desc.uniforms?.assign("uColorG", uniformBufferG);
     desc.uniforms?.assign("uColorB", uniformBufferB);
 
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

@@ -7,7 +7,7 @@ import {
     Uniforms,
     type Compiler,
     type RenderHolderDesc
-} from "../.."
+} from "../..";
 
 const initDrawIndexed = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 

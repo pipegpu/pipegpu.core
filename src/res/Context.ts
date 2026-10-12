@@ -3,7 +3,8 @@ import { getMaxMipmapCount } from "../util/getMaxMipmapLevel.ts";
 import type { FeatureNameFormat } from "./Format.ts";
 
 /**
- * 
+ * @description
+ * @class Context
  */
 class Context {
     /**

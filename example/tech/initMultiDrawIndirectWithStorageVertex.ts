@@ -1,6 +1,6 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderHolderDesc } from '../..';
 
-const initMultiDrawIndirectWithStorageVertex = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
+const initMultiDrawIndirectWithStorageVertex = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
     let dispatch: RenderProperty;
     {
@@ -108,8 +108,7 @@ fn fs_main(f:FRAGMENT) -> @location(0) vec4f {
         desc.uniforms?.assign("vertex_arr", positionBuffer);
     }
 
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

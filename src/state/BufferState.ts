@@ -13,7 +13,7 @@ import type { BufferHandle, BufferArrayHandle } from "../res/Handle";
 import { uniqueID } from "../util/uniqueID";
 
 /**
- * 
+ * @description
  */
 class BufferState {
     /**

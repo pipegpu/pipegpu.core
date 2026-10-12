@@ -1,24 +1,19 @@
+import { mat4, vec3 } from 'wgpu-matrix';
+
 import {
-    type BaseHolder,
     type BufferHandleDetail,
     type ComputeHolderDesc,
     type RenderHolderDesc,
     Attributes,
+    BaseLet,
     ColorAttachment,
     Compiler,
     ComputeProperty,
     Context,
-    RenderHolder,
     RenderProperty,
     Texture2D,
     Uniforms,
-} from "../../src";
-
-import {
-    mat4,
-    vec3
-} from 'wgpu-matrix';
-
+} from '../..';
 import { fetchMesh } from "../util/fetchMesh";
 
 const createMipSlider = (mipmapCount: number, handler: Function): void => {
@@ -87,9 +82,8 @@ const createMipSlider = (mipmapCount: number, handler: Function): void => {
  * @function initHZB
  * @example
  */
-const initHZB = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseHolder[]> => {
-    // 
-    const holders: BaseHolder[] = [];
+const initHZB = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseLet[]> => {
+    const lets: BaseLet[] = [];
     const W = context.getViewportWidth(), H = context.getViewportHeight();
 
     // depth stencil attachment
@@ -233,16 +227,16 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32> {
             }));
         }
 
-        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-        holders.push(renderHolder);
+        lets.push(compiler.compileRenderHolder(desc));
     }
 
-    const hzbTexture = compiler.createTextureStorage2D({
+    const hzbTexture = compiler.createTexture2D({
         width: W,
         height: H,
         textureFormat: 'r32float',
         appendixTextureUsages: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.STORAGE_BINDING | GPUTextureUsage.TEXTURE_BINDING
     });
+
     //
     let level = 0;
     {
@@ -338,8 +332,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) f32
         desc.uniforms?.assign(`depthTexture`, depthTexture);
         desc.uniforms?.assign(`depthTextureSampler`, depthTextureSampler);
 
-        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-        holders.push(renderHolder);
+        lets.push(compiler.compileRenderHolder(desc));
     }
 
     // 2. build hzb
@@ -395,7 +388,7 @@ fn cp_main(@builtin(global_invocation_id) global_id: vec3<u32>)
             };
             desc.uniforms.assign('input_texture', hzbTexture);
             desc.uniforms.assign('output_texture', hzbTexture);
-            holders.push(compiler.compileComputeHolder(desc))
+            lets.push(compiler.compileComputeHolder(desc))
         }
 
     }
@@ -484,11 +477,11 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4<f32>
                 }
             },
         }));
-        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-        holders.push(renderHolder);
+
+        lets.push( compiler.compileRenderHolder(desc));
     }
 
-    return holders;
+    return lets;
 }
 
 export {

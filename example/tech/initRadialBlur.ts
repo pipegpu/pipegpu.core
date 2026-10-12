@@ -1,7 +1,19 @@
-import { type Context, Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Texture2D, Uniforms, type BaseHolder, type BufferHandleDetail, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    type Context,
+    type BufferHandleDetail,
+    type Compiler,
+    type RenderHolderDesc,
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderProperty,
+    Texture2D,
+    Uniforms,
+    BaseLet
+} from '../../';
 
-const initRadialBlur = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseHolder[]> => {
-    const holders: BaseHolder[] = [];
+const initRadialBlur = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): Promise<BaseLet[]> => {
+    const lets: BaseLet[] = [];
     let positionTexture: Texture2D;
     const W = context.getViewportWidth(), H = context.getViewportHeight();
     let dispatch: RenderProperty;
@@ -428,11 +440,7 @@ r = vec3<f32>(rotated_xy.x, rotated_xy.y, r.z);
         }));
     }
 
-
-
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    holders.push(holder)
-
+    lets.push(compiler.compileRenderHolder(desc))
 
     // deferred rendering
     {
@@ -535,7 +543,6 @@ fn fs_main(f: VertexOutput) -> @location(0) vec4 <f32>  {
     return vec4<f32>(result.xyz, 1.0);
 }
 
-
         `;
 
         const textureSampler = compiler.createTextureSampler({
@@ -616,12 +623,10 @@ fn fs_main(f: VertexOutput) -> @location(0) vec4 <f32>  {
             desc.attributes?.assign('in_uv', uvBuffer);
         }
 
-        const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-        holders.push(renderHolder);
+        lets.push(compiler.compileRenderHolder(desc));
     }
 
-
-    return holders;
+    return lets;
 }
 
 export {

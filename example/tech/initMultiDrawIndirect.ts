@@ -1,7 +1,15 @@
-import { Attributes, ColorAttachment, DepthStencilAttachment, RenderHolder, RenderProperty, Uniforms, type BaseHolder, type Compiler, type RenderHolderDesc } from "../../src";
+import {
+    Attributes,
+    ColorAttachment,
+    DepthStencilAttachment,
+    RenderLet,
+    RenderProperty,
+    Uniforms,
+    type Compiler,
+    type RenderHolderDesc
+} from '../..';
 
-const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
-
+const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
     const indirectBufferData1 = new Uint32Array([
         3,
         1,
@@ -105,8 +113,7 @@ const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttach
     desc.uniforms?.assign("uColorG", uniformBufferG);
     desc.uniforms?.assign("uColorB", uniformBufferB);
 
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

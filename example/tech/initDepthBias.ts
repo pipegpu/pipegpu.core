@@ -1,24 +1,20 @@
+import { mat4, vec3 } from 'wgpu-matrix';
 import {
-    type BaseHolder,
     type BufferHandleDetail,
     type RenderHolderDesc,
     Attributes,
     ColorAttachment,
     Compiler,
     Context,
-    RenderHolder,
+    RenderLet,
     RenderProperty,
     Uniforms
 } from "../.."
 
-import {
-    mat4,
-    vec3
-} from 'wgpu-matrix';
-
 /**
+ * @description
  */
-const initDepthBias = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<BaseHolder> => {
+const initDepthBias = async (context: Context, compiler: Compiler, colorAttachments: ColorAttachment[], aspect: number, near: number, far: number): Promise<RenderLet> => {
 
     // depth stencil attachment
     const depthTexture = compiler.createTexture2D({
@@ -165,8 +161,7 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         }));
     }
 
-    const renderHolder: RenderHolder = compiler.compileRenderHolder(desc);
-    return renderHolder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {
