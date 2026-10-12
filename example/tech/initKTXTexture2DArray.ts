@@ -140,5 +140,5 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4f {
 }
 
 export {
-    initKTXTexture2DArray
+    initKTXTexture2DArray as initDrawKTX2Texture2DArray
 }

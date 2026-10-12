@@ -1,3 +1,5 @@
+import { BaseLet } from "./BaseLet";
+
 import type { IUniformRecord } from "../compile/parseUniform";
 import type { ColorAttachment } from "../res/attachment/ColorAttachment";
 import type { DepthStencilAttachment } from "../res/attachment/DepthStencilAttachment";
@@ -9,12 +11,11 @@ import type { VertexShader } from "../res/shader/VertexShader";
 import type { BufferState } from "../state/BufferState";
 import type { SamplerState } from "../state/SamplerState";
 import type { TextureState } from "../state/TextureState";
-import { BaseHolder } from "./BaseHolder";
 
 /**
  * @description
  */
-class RenderHolder extends BaseHolder {
+class RenderLet extends BaseLet {
     /**
      * 
      */
@@ -84,7 +85,7 @@ class RenderHolder extends BaseHolder {
             debugLabel: opts.debugLabel,
             id: opts.id,
             context: opts.context,
-            poropertyFormat: 'renderHolder',
+            poropertyFormat: 'renderLet',
             bufferState: opts.bufferState,
             textureState: opts.texturteState,
             samplerState: opts.samplerState,
@@ -161,5 +162,5 @@ class RenderHolder extends BaseHolder {
 }
 
 export {
-    RenderHolder
+    RenderLet
 }

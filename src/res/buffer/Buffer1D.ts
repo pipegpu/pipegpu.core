@@ -26,7 +26,7 @@ class Buffer1D extends BaseBuffer {
      * @param {number}              opts.totalByteLength
      * @param {GPUBufferUsageFlags} opts.bufferUsageFlags
      * @param {TypedArray1DFormat}  [opts.typedArrayData1D]     - either opts.handler or opts.typedArrayData1D must be assigned a value.
-     * @param {BufferHandle}       [opts.handler]              - either opts.handler or opts.typedArrayData1D must be assigned a value.
+     * @param {BufferHandle}        [opts.handler]              - either opts.handler or opts.typedArrayData1D must be assigned a value.
      */
     constructor(
         opts: {

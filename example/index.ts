@@ -2,28 +2,40 @@ import {
     type ColorAttachment,
     Context,
     Compiler,
-    BaseHolder,
+    BaseLet,
     DepthStencilAttachment,
-} from '../index'
+    RenderLet,
+} from '../index';
+
+import { ControlTYPE, InitControlPannel } from './ui.ts';
 
 import { initDrawCount } from './tech/initDrawCount';
-// import { initDrawIndexed } from './tech/initDrawIndexed';
-// import { initDrawInstance } from './tech/initDrawInstance';
-// import { initKTXTexture2D } from './tech/initKTXTexture2D';
-// import { initKTXTexture2DArray } from './tech/initKTXTexture2DArray';
-// import { initDrawIndriect } from './tech/initDrawIndirect';
-// import { initMultiDrawIndirect } from './tech/initMultiDrawIndirect';
-// import { initDrawIndexedIndirect } from './tech/initDrawIndexedIndirect.ts';
-// import { initMultiDrawIndexedIndirect } from './tech/initMultiDrawIndexedIndirect.ts';
-// import { initMultiDrawIndirectWithStorageVertex } from './tech/initMultiDrawIndirectWithStorageVertex.ts';
-// import { initTexelCopy } from './tech/initTexelCopy.ts';
-// import { initDrawWithArrayBuffer } from './tech/initDrawWithArrayBuffer.ts';
-// import { initReversedZ } from './tech/initReversedZ.ts';
-// import { initDeferred } from './tech/initDeferred.ts';
-// import { initTextureCube } from './tech/initTextureCube.ts';
-// import { initDepthBias } from './tech/initDepthBias.ts';
-// import { initHZB } from './tech/initHZB.ts';
-// import { initDrawMeshlet } from './tech/initDrawMeshlet';
+import { initDrawIndexed } from './tech/initDrawIndexed';
+import { initDrawInstance } from './tech/initDrawInstance';
+import { initDrawKTX2Texture2D } from './tech/initKTXTexture2D';
+import { initDrawKTX2Texture2DArray } from './tech/initKTXTexture2DArray';
+import { initDrawIndriect } from './tech/initDrawIndirect';
+import { initMultiDrawIndirect } from './tech/initMultiDrawIndirect';
+import { initDrawIndexedIndirect } from './tech/initDrawIndexedIndirect.ts';
+import { initMultiDrawIndexedIndirect } from './tech/initMultiDrawIndexedIndirect.ts';
+import { initMultiDrawIndirectWithStorageVertex } from './tech/initMultiDrawIndirectWithStorageVertex.ts';
+import { initTexelCopy } from './tech/initTexelCopy.ts';
+import { initDrawWithArrayBuffer } from './tech/initDrawWithArrayBuffer.ts';
+import { initReversedZ } from './tech/initReversedZ.ts';
+import { initDeferred } from './tech/initDeferred.ts';
+import { initTextureCube } from './tech/initTextureCube.ts';
+import { initDepthBias } from './tech/initDepthBias.ts';
+import { initHZB } from './tech/initHZB.ts';
+import { initDrawMeshlet } from './tech/initDrawMeshlet';
+
+type Controls = {
+    t: ControlTYPE;
+    drawCountLet?: RenderLet;
+    drawIndexedLet?: RenderLet;
+    drawInstanceLet?: RenderLet;
+    drawKtx2Texutre2DLet?: RenderLet;
+    rawKTX2Texture2DArrayLet?: RenderLet;
+}
 
 (async () => {
 
@@ -39,9 +51,10 @@ import { initDrawCount } from './tech/initDrawCount';
         width: W,
         height: H,
         devicePixelRatio: devicePixelRatio,
-        // requestFeatures: ['texture-compression-bc', 'chromium-experimental-multi-draw-indirect']
+        requestFeatures: ['texture-compression-bc'] // 'chromium-experimental-multi-draw-indirect'
     });
     await context.init();
+
     const compiler: Compiler = new Compiler(context);
     {
         const canvas: HTMLCanvasElement = document.getElementById(SELECTOR) as HTMLCanvasElement;
@@ -78,10 +91,12 @@ import { initDrawCount } from './tech/initDrawCount';
         });
     }
 
-    const holders: BaseHolder[] = [];
-    holders.push(initDrawCount(compiler, colorAttachments, depthStencilAttachment));
-    // holders.push(await initKTXTexture2D(compiler, colorAttachments, depthStencilAttachment));
-    // holders.push(initDrawIndexed(compiler, colorAttachments, depthStencilAttachment));
+    const ctl: Controls = { t: 'initDrawCount' };
+
+    InitControlPannel(ctl);
+
+    // holders.push();
+    // holders.push();
     // holders.push(initDrawInstance(compiler, colorAttachments, depthStencilAttachment));
     // holders.push(await initKTXTexture2DArray(compiler, colorAttachments, depthStencilAttachment));
     // holders.push(await initDrawIndriect(compiler, colorAttachments, depthStencilAttachment));
@@ -126,22 +141,43 @@ import { initDrawCount } from './tech/initDrawCount';
     // holders.push(depthBias);
     // holders.push(...hierarchicalZBuffer);
 
+
     const renderLoop = async () => {
+        const passes: BaseLet[] = [];
+        switch (ctl.t) {
+            case "initDrawCount": {
+                ctl.drawCountLet = ctl.drawCountLet || initDrawCount(compiler, colorAttachments, depthStencilAttachment);
+                passes.push(ctl.drawCountLet);
+                break;
+            }
+            case 'initDrawIndexed': {
+                ctl.drawIndexedLet = ctl.drawIndexedLet || initDrawIndexed(compiler, colorAttachments, depthStencilAttachment);
+                passes.push(ctl.drawIndexedLet);
+                break;
+            }
+            case 'initKTX2Texture2D': {
+                ctl.drawKtx2Texutre2DLet = ctl.drawKtx2Texutre2DLet || await initDrawKTX2Texture2D(compiler, colorAttachments, depthStencilAttachment);
+                passes.push(ctl.drawKtx2Texutre2DLet);
+                break;
+            }
+            default:
+                break;
+        }
+
+        // WARNING:: refresh resource need all cpu side resorce update finished.
         context.refreshFrameResource();
 
         const encoder = context.getCommandEncoder();
-        holders.forEach(element => {
+        passes.forEach(element => {
             element.build(encoder);
         });
 
         context.submitFrameResource();
-        // const rawDebugBuffer = await texelCopyDebugBuffer.PullDataAsync(0, 4);
-        // const f32DebugBuffer = new Float32Array(rawDebugBuffer as ArrayBuffer);
-        // console.log(f32DebugBuffer);
+
         requestAnimationFrame(renderLoop);
     };
 
-    renderLoop();
+    await renderLoop();
 })();
 
 

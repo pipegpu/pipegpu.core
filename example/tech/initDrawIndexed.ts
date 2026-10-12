@@ -2,15 +2,14 @@ import {
     Attributes,
     ColorAttachment,
     DepthStencilAttachment,
-    RenderHolder,
+    RenderLet,
     RenderProperty,
     Uniforms,
-    type BaseHolder,
     type Compiler,
     type RenderHolderDesc
 } from "../.."
 
-const initDrawIndexed = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
+const initDrawIndexed = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
     let dispatch: RenderProperty;
     {
@@ -92,10 +91,7 @@ fn fs_main(in:VertexOutput) -> @location(0) vec4f {
         desc.attributes?.assign("color", colorBuffer);
     }
 
-
-
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

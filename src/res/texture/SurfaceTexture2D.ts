@@ -7,7 +7,6 @@ import { BaseTexture } from "./BaseTexture";
  */
 class SurfaceTexture2D extends BaseTexture {
     /**
-     * 
      * @param opts 
      */
     constructor(
@@ -43,7 +42,6 @@ class SurfaceTexture2D extends BaseTexture {
     }
 
     override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
-        this.createGpuTexture();
         return false;
     }
 

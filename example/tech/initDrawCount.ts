@@ -1,17 +1,15 @@
 import {
-    type BaseHolder,
     type Compiler,
     type RenderHolderDesc,
     Attributes,
     ColorAttachment,
     DepthStencilAttachment,
-    RenderHolder,
+    RenderLet,
     RenderProperty,
     Uniforms
 } from "../..";
 
-const initDrawCount = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): BaseHolder => {
-    //
+const initDrawCount = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
     let desc: RenderHolderDesc = {
         label: '[DEMO][render]',
         vertexShader: compiler.createVertexShader({
@@ -88,8 +86,7 @@ const initDrawCount = (compiler: Compiler, colorAttachments: ColorAttachment[], 
     desc.uniforms?.assign("uColorG", uniformBufferG);
     desc.uniforms?.assign("uColorB", uniformBufferB);
 
-    const holder: RenderHolder | undefined = compiler.compileRenderHolder(desc);
-    return holder;
+    return compiler.compileRenderHolder(desc);
 }
 
 export {

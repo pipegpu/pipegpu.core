@@ -19,22 +19,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "sourceMap": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable",
-    ],
-    "types": [
-      "@webgpu/types"
-    ]
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["@webgpu/types"]
   },
-  "include": [
-    "build",
-    "src",
-    "index.ts"
-  ],
-  "exclude": [
-    "example/**/*",
-    // "test/**/*"
-  ]
+  "include": ["build", "src", "index.ts", "test"],
+  "exclude": ["example/**/*"]
 }

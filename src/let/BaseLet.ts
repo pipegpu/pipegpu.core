@@ -1,45 +1,57 @@
 import { ResourceType, type VariableInfo } from "wgsl_reflect";
+
 import type { IUniformRecord } from "../compile/parseUniform";
 import type { Context } from "../res/Context"
+import type { VertexShader } from "../res/shader/VertexShader";
+import type { FragmentShader } from "../res/shader/FragmentShader";
+import type { ComputeShader } from "../res/shader/ComputeShader";
 import type { PropertyFormat } from "../res/Format"
 import type { BufferState } from "../state/BufferState";
 import type { SamplerState } from "../state/SamplerState";
 import type { TextureState } from "../state/TextureState";
-import type { VertexShader } from "../res/shader/VertexShader";
-import type { FragmentShader } from "../res/shader/FragmentShader";
-import type { ComputeShader } from "../res/shader/ComputeShader";
 
 /**
- * @class BaseHolder
+ * @class BaseLet
+ * for compute / render parallel dispatch
+ * - render, 
+ * - compute, parallel dispatch for simulation\solver\ etc.. 
  */
-abstract class BaseHolder {
+abstract class BaseLet {
     /**
      * @description
+     *  unique identity.
      */
     private id: number;
 
     /**
      * @description
+     *  for descriptor label.
      */
     protected debugLabel: string;
 
     /**
      * @description
+     *  kernel, webgpu context shared.
      */
     protected context: Context;
 
     /**
      * @description
+     *  buffer caches.
      */
     protected bufferState: BufferState;
 
     /**
      * @description
+     *  texture caches.
      */
     protected textureState: TextureState;
 
     /**
      * @description
+     *  solot bind group mapping.
+     *  - mapping of bindGroup index / GPUBindGroup.
+     *  - refresh GPUBindGroup resource bindings if indeed.
      */
     protected slotBindGroupMap: Map<number, GPUBindGroup> = new Map();
 
@@ -199,7 +211,7 @@ abstract class BaseHolder {
                             const resourcID = record?.resourceID as number;
                             const texture = this.textureState.getTexture(resourcID);
                             if (!texture) {
-                                throw new Error(`[E][emitUniforms] ${this.debugLabel} missing texture, id:${resourcID}`);
+                                throw new Error(`[E][emitUniforms] ${this.debugLabel} gpu texture invalid, id:${resourcID}`);
                             }
                             // if resource type is texture storage, used as storage texture
                             if (t === ResourceType.Texture) {
@@ -281,5 +293,5 @@ abstract class BaseHolder {
 }
 
 export {
-    BaseHolder
+    BaseLet
 }

@@ -1,5 +1,5 @@
-import { ComputeHolder } from "../holder/ComputeHolder";
-import { RenderHolder } from "../holder/RenderHolder";
+import { ComputeLet } from "../let/ComputeLet";
+import { RenderLet } from "../let/RenderLet";
 import type { ComputeProperty } from "../property/dispatch/ComputeProperty";
 import type { RenderProperty } from "../property/dispatch/RenderProperty";
 import type { Attributes, Uniforms } from "../property/Properties";
@@ -193,7 +193,7 @@ class Compiler {
      * @param desc 
      * @returns 
      */
-    compileRenderHolder = (desc: RenderHolderDesc): RenderHolder => {
+    compileRenderHolder = (desc: RenderHolderDesc): RenderLet => {
         const debugLabel = `[RenderHolder][${desc.label}]`;
         const vertexShader = desc.vertexShader, fragmentShader = desc.fragmentShader;
         // vaildation shader
@@ -322,7 +322,7 @@ class Compiler {
             multisampleState: multiSampleState
         });
 
-        return new RenderHolder({
+        return new RenderLet({
             id: uniqueID(),
             debugLabel: debugLabel,
             context: this.context,
@@ -347,7 +347,7 @@ class Compiler {
      * @description
      * @param desc 
      */
-    compileComputeHolder = (desc: ComputeHolderDesc): ComputeHolder => {
+    compileComputeHolder = (desc: ComputeHolderDesc): ComputeLet => {
         const debugLabel = `[ComputeHolder][${desc.label}]`;
         const computeShader = desc.computeShader;
         if (!computeShader) {
@@ -426,7 +426,7 @@ class Compiler {
         });
 
         // need support dynamic expand uniforms.
-        return new ComputeHolder({
+        return new ComputeLet({
             id: uniqueID(),
             debugLabel: debugLabel,
             context: this.context,

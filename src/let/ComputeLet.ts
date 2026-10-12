@@ -1,3 +1,5 @@
+import { BaseLet } from "./BaseLet";
+
 import type { IUniformRecord } from "../compile/parseUniform";
 import type { Context } from "../res/Context";
 import type { ComputeHandle, UniformHandle } from "../res/Handle";
@@ -6,13 +8,12 @@ import type { ComputeShader } from "../res/shader/ComputeShader";
 import type { BufferState } from "../state/BufferState";
 import type { SamplerState } from "../state/SamplerState";
 import type { TextureState } from "../state/TextureState";
-import { BaseHolder } from "./BaseHolder";
 
 /**
  * @description
- * @class ComputeHolder
+ * @class ComputeLet
  */
-class ComputeHolder extends BaseHolder {
+class ComputeLet extends BaseLet {
     /**
      * @description
      */
@@ -57,7 +58,7 @@ class ComputeHolder extends BaseHolder {
             id: opts.id,
             debugLabel: opts.debugLabel,
             context: opts.context,
-            poropertyFormat: 'computeHolder',
+            poropertyFormat: 'computeLet',
             bufferState: opts.bufferState,
             textureState: opts.textureState,
             samplerState: opts.samplerState,
@@ -104,5 +105,5 @@ class ComputeHolder extends BaseHolder {
 }
 
 export {
-    ComputeHolder
+    ComputeLet
 }
