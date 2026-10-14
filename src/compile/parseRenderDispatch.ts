@@ -17,6 +17,7 @@ const parseRenderDispatch = (
     opts: {
         debugLabel: string,
         dispatch: RenderProperty,
+        supportsMultiDrawIndirect?: boolean,
     }
 ): RenderHandle => {
     if (!opts.dispatch) {
@@ -70,7 +71,14 @@ const parseRenderDispatch = (
                     const maxDrawCount: number = Math.min(opts.dispatch.getMaxDrawCount()!, 65535 * 64);
                     indirectBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     indirectCountBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
-                    (pEncoder as any).multiDrawIndirect(indirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
+                    if (opts.supportsMultiDrawIndirect) {
+                        (pEncoder as any).multiDrawIndirect(indirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
+                    }
+                    else {
+                        for (let drawIndex = 0; drawIndex < maxDrawCount; drawIndex++) {
+                            pEncoder.drawIndirect(indirectBuffer.getGpuBuffer(), drawIndex * 16);
+                        }
+                    }
                 };
             }
         case 'drawIndexedIndirect':
@@ -95,7 +103,14 @@ const parseRenderDispatch = (
                     pEncoder.setIndexBuffer(indexedStorageBuffer.getGpuBuffer(), indexedStorageBuffer.getIndexedFormat());
                     indexedIndirectBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     indirectCountBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
-                    (pEncoder as any).multiDrawIndexedIndirect(indexedIndirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
+                    if (opts.supportsMultiDrawIndirect) {
+                        (pEncoder as any).multiDrawIndexedIndirect(indexedIndirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
+                    }
+                    else {
+                        for (let drawIndex = 0; drawIndex < maxDrawCount; drawIndex++) {
+                            pEncoder.drawIndexedIndirect(indexedIndirectBuffer.getGpuBuffer(), drawIndex * 20);
+                        }
+                    }
                 };
             }
         default:

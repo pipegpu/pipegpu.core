@@ -242,7 +242,8 @@ class Compiler {
         // parse render dispatch
         const renderHandler: RenderHandle = parseRenderDispatch({
             debugLabel: debugLabel,
-            dispatch: desc.dispatch
+            dispatch: desc.dispatch,
+            supportsMultiDrawIndirect: this.context.getSupportedFeatures()?.has('chromium-experimental-multi-draw-indirect') || false
         });
 
         // parse multi sample state
