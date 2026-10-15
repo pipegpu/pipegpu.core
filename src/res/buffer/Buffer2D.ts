@@ -98,7 +98,8 @@ class Buffer2D extends BaseBuffer {
                 this.updateGpuBuffer(offset, typedArray.byteLength, typedArray);
                 offset += typedArray.byteLength;
             });
-        } else if (this.handler) {
+        } 
+        else if (this.handler) {
             const handData = this.handler();
             if (handData.rewrite) {
                 handData.details.forEach(detail => {
