@@ -63,6 +63,7 @@ export * from './src/res/attachment/DepthStencilAttachment.ts';
 export * from './src/res/pipeline/ComputePipeline.ts';
 export * from './src/res/pipeline/RenderPipeline.ts';
 export * from './src/res/sampler/TextureSampler.ts';
+export * from './src/res/sampler/ComparisonSampler.ts';
 export * from './src/res/shader/ComputeShader.ts';
 export * from './src/res/shader/FragmentShader.ts';
 export * from './src/res/shader/VertexShader.ts';
