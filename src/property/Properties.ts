@@ -115,7 +115,7 @@ class Uniforms extends Properties {
             return;
         }
         else {
-            throw new Error(`[E][Properties][Uniforms][assign] unsupported buffer type, buffer: ${b}`);
+            throw new Error(`[E][Properties][Uniforms][assign] unsupported k-v pair, key:${a}, v: ${b}`);
         }
     }
 
