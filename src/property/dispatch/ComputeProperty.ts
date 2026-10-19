@@ -1,22 +1,21 @@
 import { BaseProperty } from "../BaseProperty";
 
 /**
- * 
+ * @description
+ * Defines a type for a function that returns a number, used for dynamic workgroup sizes.
  * support dynamic work size 
  * - x: WorkSizeHandle
  * - y: WorkSizeHandle
  * - z: WorkSizeHandle
- * 
  */
 type WorkSizeHandle = { (): number; }
 
 /**
- * 
+ * @description
+ * Represents a compute property that supports dynamic workgroup sizes for GPU compute dispatch.
  * @class ComputeProperty
- * 
  */
 class ComputeProperty extends BaseProperty {
-
     /**
      * 
      */
@@ -81,7 +80,8 @@ class ComputeProperty extends BaseProperty {
     }
 
     /**
-     * 
+     * @description
+     * Get the number of workgroups in the X dimension.
      * @returns 
      */
     getGroupX = (): number => {
@@ -92,7 +92,8 @@ class ComputeProperty extends BaseProperty {
     }
 
     /**
-     * 
+     * @description
+     * Get the number of workgroups in the Y dimension.
      * @returns 
      */
     getGroupY = (): number => {
@@ -103,7 +104,8 @@ class ComputeProperty extends BaseProperty {
     }
 
     /**
-     * 
+     * @description
+     * Get the number of workgroups in the Z dimension.
      * @returns 
      */
     getGroupZ = (): number => {
