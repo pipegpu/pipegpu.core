@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "target": "ES2020",
+    "target": "esnext",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "declaration": true,
@@ -19,9 +19,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "sourceMap": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": ["@webgpu/types"]
   },
   "include": ["build", "src", "index.ts", "test", "example"]
-  // "exclude": ["example/**/*"]
 }
