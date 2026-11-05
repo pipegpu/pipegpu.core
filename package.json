@@ -1,9 +1,15 @@
 {
   "name": "@pipegpu/core",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": "axmand@qq.com",
   "type": "module",
-  "main": "index.ts",
+  "types": "./build/index.es.d.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "default": "./build/index.es.js"
+    }
+  },
   "keywords": [
     "webgpu",
     "frame graph",

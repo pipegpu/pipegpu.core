@@ -22,5 +22,6 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": ["@webgpu/types"]
   },
-  "include": ["build", "src", "index.ts", "test", "example"]
+  "include": ["build", "src", "index.ts", "test"],
+  "exclude": ["example", "test"]
 }
