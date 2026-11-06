@@ -3,10 +3,13 @@
   "version": "0.7.1",
   "author": "axmand@qq.com",
   "type": "module",
-  "types": "./build/index.es.d.ts",
   "exports": {
     ".": {
-      "development": "./index.ts",
+      "development": {
+        "types": "./index.ts",
+        "default": "./index.ts"
+      },
+      "types": "./build/index.es.d.ts",
       "default": "./build/index.es.js"
     }
   },
