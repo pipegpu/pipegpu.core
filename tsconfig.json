@@ -8,6 +8,7 @@
     "outDir": "build",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
+    "customConditions": ["development"],
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
