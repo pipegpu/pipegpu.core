@@ -187,7 +187,7 @@ class BufferState {
         opts: {
             label: string,
             totalByteLength: number,
-            rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
+            rawDataArr?: Uint32Array[],
             handler?: BufferArrayHandle,
         }
     ): IndirectBuffer => {
@@ -197,7 +197,7 @@ class BufferState {
             label: opts.label,
             context: this.context,
             totalByteLength: opts.totalByteLength,
-            rawDataArray: opts.rawDataArray,
+            rawDataArr: opts.rawDataArr,
             handler: opts.handler
         });
         BufferState.BUFFER_SET.set(bufferID, buffer);

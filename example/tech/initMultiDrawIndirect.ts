@@ -24,7 +24,7 @@ const initMultiDrawIndirect = (compiler: Compiler, colorAttachments: ColorAttach
     ]);
     const indirectBuffer = compiler.createIndirectBuffer({
         totalByteLength: indirectBufferData1.byteLength + indirectBufferData2.byteLength,
-        rawDataArray: [indirectBufferData1, indirectBufferData2],
+        rawDataArr: [indirectBufferData1, indirectBufferData2],
     });
 
     const indirectDrawCountData = new Uint32Array([2]);

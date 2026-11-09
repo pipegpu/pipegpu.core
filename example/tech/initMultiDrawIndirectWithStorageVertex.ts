@@ -15,7 +15,7 @@ const initMultiDrawIndirectWithStorageVertex = (compiler: Compiler, colorAttachm
 
         const indexedIndirectBuffer = compiler.createIndirectBuffer({
             totalByteLength: 20 * 2,
-            rawDataArray: [
+            rawDataArr: [
                 new Uint32Array([6, 1, 0, 0, 0]),
                 new Uint32Array([6, 1, 6, 0, 0])
             ],

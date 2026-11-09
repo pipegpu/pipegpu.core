@@ -553,7 +553,7 @@ class Compiler {
         opts: {
             debugLabel?: string,
             totalByteLength: number,
-            rawDataArray?: TypedArray2DFormat,
+            rawDataArr?: Uint32Array[],
             handler?: BufferArrayHandle,
         }
     ): IndirectBuffer => {
@@ -563,7 +563,7 @@ class Compiler {
         return this.bufferState.createIndirectBuffer({
             label: opts.debugLabel || "indirectbuffer",
             totalByteLength: opts.totalByteLength,
-            rawDataArray: opts.rawDataArray,
+            rawDataArr: opts.rawDataArr,
             handler: opts.handler,
         });
     }

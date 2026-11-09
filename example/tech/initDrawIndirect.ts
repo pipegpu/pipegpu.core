@@ -18,7 +18,7 @@ const initDrawIndriect = (compiler: Compiler, colorAttachments: ColorAttachment[
     ]);
     const indirectBuffer = compiler.createIndirectBuffer({
         totalByteLength: indirectBufferData.byteLength,
-        rawDataArray: [indirectBufferData],
+        rawDataArr: [indirectBufferData],
     });
 
     const dispatch: RenderProperty = new RenderProperty(indirectBuffer);

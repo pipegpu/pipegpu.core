@@ -26,7 +26,7 @@ const initDrawIndexedIndirect = (compiler: Compiler, colorAttachments: ColorAtta
         const indexedIndirectData = new Uint32Array([indexData.byteLength / indexData.BYTES_PER_ELEMENT, 1, 0, 0, 0]);
         const indexedIndirectBuffer = compiler.createIndirectBuffer({
             totalByteLength: indexedIndirectData.byteLength,
-            rawDataArray: [indexedIndirectData]
+            rawDataArr: [indexedIndirectData]
         });
 
         dispatch = new RenderProperty(indexStorageBuffer, indexedIndirectBuffer);

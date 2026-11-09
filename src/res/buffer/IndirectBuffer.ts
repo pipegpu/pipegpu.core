@@ -84,7 +84,7 @@ class IndirectBuffer extends StorageBuffer {
             label: string,
             context: Context,
             totalByteLength: number,
-            rawDataArray?: [Uint32Array],
+            rawDataArr?: Uint32Array[],
             handler?: BufferArrayHandle,
         }
     ) {
@@ -94,13 +94,13 @@ class IndirectBuffer extends StorageBuffer {
             context: opts.context,
             totalByteLength: opts.totalByteLength,
             bufferUsageFlags: GPUBufferUsage.INDIRECT | GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | GPUBufferUsage.COPY_SRC,
-            rawDataArray: opts.rawDataArray,
+            rawDataArray: opts.rawDataArr,
             handler: opts.handler,
         });
 
         let item: Uint32Array | undefined = undefined
-        if (opts.rawDataArray && opts.rawDataArray.length > 0) {
-            item = opts.rawDataArray[0];
+        if (opts.rawDataArr && opts.rawDataArr.length > 0) {
+            item = opts.rawDataArr[0];
         }
         else if (this.handler) {
             const details = this.handler().details;
