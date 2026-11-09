@@ -70,8 +70,8 @@ const parseRenderDispatch = (
                         (pEncoder as any).multiDrawIndirect(indirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
                     }
                     else {
-                        for (let drawIndex = 0; drawIndex < maxDrawCount; drawIndex++) {
-                            pEncoder.drawIndirect(indirectBuffer.getGpuBuffer(), drawIndex * 16);
+                        for (let drawIndex = 0; drawIndex < indirectBuffer.getCount(); drawIndex++) {
+                            pEncoder.drawIndirect(indirectBuffer.getGpuBuffer(), drawIndex * indirectBuffer.getStride());
                         }
                     }
                 };
@@ -91,19 +91,19 @@ const parseRenderDispatch = (
             {
                 return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
                     const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
-                    const indexedIndirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
+                    const indirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
                     const indirectCountBuffer: StorageBuffer = opts.dispatch.getIndirectCountBuffer()!;
                     const maxDrawCount: number = Math.min(opts.dispatch.getMaxDrawCount()!, 65535 * 64);
                     indexedBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     pEncoder.setIndexBuffer(indexedBuffer.getGpuBuffer(), indexedBuffer.getIndexedFormat());
-                    indexedIndirectBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
+                    indirectBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     indirectCountBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     if (opts.supportsMultiDrawIndirect) {
-                        (pEncoder as any).multiDrawIndexedIndirect(indexedIndirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
+                        (pEncoder as any).multiDrawIndexedIndirect(indirectBuffer.getGpuBuffer(), 0, maxDrawCount, indirectCountBuffer.getGpuBuffer(), 0);
                     }
                     else {
-                        for (let drawIndex = 0; drawIndex < maxDrawCount; drawIndex++) {
-                            pEncoder.drawIndexedIndirect(indexedIndirectBuffer.getGpuBuffer(), drawIndex * 20);
+                        for (let drawIndex = 0; drawIndex < indirectBuffer.getCount(); drawIndex++) {
+                            pEncoder.drawIndexedIndirect(indirectBuffer.getGpuBuffer(), drawIndex * indirectBuffer.getStride());
                         }
                     }
                 };

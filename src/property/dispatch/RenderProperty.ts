@@ -1,5 +1,5 @@
 import { IndexedBuffer } from "../../res/buffer/IndexedBuffer";
-import { INDIRECT_TYPE, IndirectBuffer } from "../../res/buffer/IndirectBuffer";
+import { IndirectBuffer } from "../../res/buffer/IndirectBuffer";
 import { StorageBuffer } from "../../res/buffer/StorageBuffer";
 import { BaseProperty } from "../BaseProperty";
 
@@ -121,7 +121,7 @@ class RenderProperty extends BaseProperty {
         else if (
             a instanceof IndexedBuffer &&
             b instanceof IndirectBuffer &&
-            b.getIndirectType() === INDIRECT_TYPE.DRAW_INDEXED_INDIRECT &&
+            b.getIndirectType() === 'DRAW_INDEXED_INDIRECT' &&
             c == undefined && d == undefined
         ) {
             this.propertyFormat = 'drawIndexedIndirect'
@@ -132,7 +132,7 @@ class RenderProperty extends BaseProperty {
         else if (
             a instanceof IndexedBuffer &&
             b instanceof IndirectBuffer &&
-            b.getIndirectType() === INDIRECT_TYPE.MULTI_DRAW_INDEXED_INDIRECT &&
+            b.getIndirectType() === 'MULTI_DRAW_INDEXED_INDIRECT' &&
             c instanceof StorageBuffer &&
             typeof d === 'number'
         ) {
@@ -146,7 +146,7 @@ class RenderProperty extends BaseProperty {
         else if (
             a instanceof IndexedBuffer &&
             b instanceof IndirectBuffer &&
-            b.getIndirectType() === INDIRECT_TYPE.MULTI_DRAW_INDEXED_INDIRECT &&
+            b.getIndirectType() === 'MULTI_DRAW_INDEXED_INDIRECT' &&
             c instanceof StorageBuffer &&
             typeof d === "function" &&
             d.length === 0
@@ -160,7 +160,7 @@ class RenderProperty extends BaseProperty {
         // indirectBuffer: IndirectBuffer
         else if (
             a instanceof IndirectBuffer &&
-            a.getIndirectType() === INDIRECT_TYPE.DRAW_INDIRECT &&
+            a.getIndirectType() === 'DRAW_INDIRECT' &&
             b === undefined &&
             c == undefined &&
             d == undefined
@@ -171,7 +171,7 @@ class RenderProperty extends BaseProperty {
         // indirectBuffer: IndirectBuffer, indirectDrawCountBuffer: StorageBuffer, maxDrawCount: number
         else if (
             a instanceof IndirectBuffer &&
-            a.getIndirectType() === INDIRECT_TYPE.MULTI_DRAW_INDIRECT &&
+            a.getIndirectType() === 'MULTI_DRAW_INDIRECT' &&
             b instanceof StorageBuffer &&
             typeof c === 'number' &&
             d == undefined
@@ -184,7 +184,7 @@ class RenderProperty extends BaseProperty {
         // indirectBuffer: IndirectBuffer, indirectDrawCountBuffer: StorageBuffer, maxDrawCount: MaxDrawCountHandle
         else if (
             a instanceof IndirectBuffer &&
-            a.getIndirectType() === INDIRECT_TYPE.MULTI_DRAW_INDEXED_INDIRECT &&
+            a.getIndirectType() === 'MULTI_DRAW_INDEXED_INDIRECT' &&
             b instanceof StorageBuffer &&
             typeof c === "function" &&
             c.length === 0 &&

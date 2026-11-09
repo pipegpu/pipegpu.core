@@ -1,5 +1,4 @@
 import { type Context } from "../Context";
-import { type TypedArray2DFormat } from "../Format";
 import type { BufferArrayHandle } from "../Handle";
 import { StorageBuffer } from "./StorageBuffer";
 
@@ -7,13 +6,15 @@ import { StorageBuffer } from "./StorageBuffer";
  * @description
  *  Enumeration of indirect buffer types and their corresponding stride in bytes.
  */
-enum INDIRECT_TYPE {
-    DISPATCH_WORKGROUPS_INDIRECT = 12,
-    DRAW_INDIRECT = 16,
-    DRAW_INDEXED_INDIRECT = 20,
-    MULTI_DRAW_INDIRECT,
-    MULTI_DRAW_INDEXED_INDIRECT
+const INDIRECT = {
+    DISPATCH_WORKGROUPS_INDIRECT: 12,
+    DRAW_INDIRECT: 16,
+    MULTI_DRAW_INDIRECT: 16,
+    DRAW_INDEXED_INDIRECT: 20,
+    MULTI_DRAW_INDEXED_INDIRECT: 20,
 };
+
+type INDIRECT_TYPE = keyof typeof INDIRECT;
 
 /**
  * @description
@@ -71,7 +72,7 @@ class IndirectBuffer extends StorageBuffer {
      * @description
      *  The type of indirect draw call this buffer is used for.
      */
-    private indirectType_: INDIRECT_TYPE = INDIRECT_TYPE.DRAW_INDIRECT;
+    private indirectType_: INDIRECT_TYPE = 'DRAW_INDIRECT'
 
     /**
      * @description
@@ -83,7 +84,7 @@ class IndirectBuffer extends StorageBuffer {
             label: string,
             context: Context,
             totalByteLength: number,
-            rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
+            rawDataArray?: [Uint32Array],
             handler?: BufferArrayHandle,
         }
     ) {
@@ -97,23 +98,34 @@ class IndirectBuffer extends StorageBuffer {
             handler: opts.handler,
         });
 
-        // align 16, use draw indirect.
-        if (this.totalByteLength % INDIRECT_TYPE.DRAW_INDIRECT === 0) {
-            this.stride_ = INDIRECT_TYPE.DRAW_INDIRECT;
-            this.count_ = this.totalByteLength / this.stride_;
-            this.indirectType_ = this.count_ > 1 ? INDIRECT_TYPE.MULTI_DRAW_INDIRECT : INDIRECT_TYPE.DRAW_INDIRECT;
+        let item: Uint32Array | undefined = undefined
+        if (opts.rawDataArray && opts.rawDataArray.length > 0) {
+            item = opts.rawDataArray[0];
         }
-        // align 20, use drawIndexedIndirect.
-        else if (this.totalByteLength % INDIRECT_TYPE.DRAW_INDEXED_INDIRECT === 0) {
-            this.stride_ = INDIRECT_TYPE.DRAW_INDEXED_INDIRECT;
-            this.count_ = this.totalByteLength / this.stride_;
-            this.indirectType_ = this.count_ > 1 ? INDIRECT_TYPE.MULTI_DRAW_INDEXED_INDIRECT : INDIRECT_TYPE.DRAW_INDEXED_INDIRECT;
+        else if (this.handler) {
+            const details = this.handler().details;
+            if (details && details.length > 0) {
+                item = details[0].rawData as Uint32Array;
+            }
         }
-        // align 12, use dispatchWorkgroupsIndirect.
-        else if (this.totalByteLength % INDIRECT_TYPE.DISPATCH_WORKGROUPS_INDIRECT === 0) {
-            this.stride_ = INDIRECT_TYPE.DISPATCH_WORKGROUPS_INDIRECT;
-            this.indirectType_ = INDIRECT_TYPE.DISPATCH_WORKGROUPS_INDIRECT;
+        if (!item) {
+            throw new Error(`[E][IndirectBuffer] invalid indirect buffer.`);
+        }
+
+        if (item.length === 4 && this.totalByteLength % INDIRECT.DRAW_INDIRECT === 0) {
+            this.stride_ = INDIRECT.DRAW_INDIRECT;
             this.count_ = this.totalByteLength / this.stride_;
+            this.indirectType_ = this.count_ > 1 ? 'MULTI_DRAW_INDIRECT' : 'DRAW_INDIRECT';
+        }
+        else if (item.length === 5 && this.totalByteLength % INDIRECT.DRAW_INDEXED_INDIRECT === 0) {
+            this.stride_ = INDIRECT.DRAW_INDEXED_INDIRECT;
+            this.count_ = this.totalByteLength / this.stride_;
+            this.indirectType_ = this.count_ > 1 ? 'MULTI_DRAW_INDEXED_INDIRECT' : 'DRAW_INDEXED_INDIRECT';
+        }
+        else if (item.length === 3 && this.totalByteLength % INDIRECT.DISPATCH_WORKGROUPS_INDIRECT === 0) {
+            this.stride_ = INDIRECT.DISPATCH_WORKGROUPS_INDIRECT;
+            this.count_ = this.totalByteLength / this.stride_;
+            this.indirectType_ = 'DISPATCH_WORKGROUPS_INDIRECT';
         }
         else {
             throw new Error(`[E][IndirectBuffer] indirect buffer align byte length is 16/20/12, please cheack buffer total byte length. current total byte length: ${this.totalByteLength}`);
@@ -138,6 +150,6 @@ class IndirectBuffer extends StorageBuffer {
 }
 
 export {
-    INDIRECT_TYPE,
+    type INDIRECT_TYPE,
     IndirectBuffer
 }
