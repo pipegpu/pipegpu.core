@@ -88,8 +88,10 @@ fn fs_main(f: FRAGMENT) -> @location(0) vec4f {
         totalByteLength: cubeData.positions.byteLength,
         rawData: cubeData.positions,
     });
-    const indexBuffer = compiler.createIndexBuffer({
-        rawData: cubeData.triangles
+    const indexBuffer = compiler.createIndexedBuffer({
+        debugLabel: `[DEMO] indexed buffer.`,
+        totalByteLength: cubeData.triangles.byteLength,
+        rawDataArray: [cubeData.triangles]
     });
 
     const desc: RenderLetDesc = {

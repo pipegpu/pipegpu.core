@@ -8,8 +8,8 @@ import {
     type Compiler,
     type RenderLetDesc
 } from "../..";
-import type { IndexedIndirectBuffer } from "../../src/res/buffer/IndexedIndirectBuffer";
-import type { IndexedStorageBuffer } from "../../src/res/buffer/IndexedStorageBuffer";
+
+import type { IndexedBuffer } from "../../src/res/buffer/IndexedBuffer";
 
 const initDrawIndexedIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
@@ -17,14 +17,14 @@ const initDrawIndexedIndirect = (compiler: Compiler, colorAttachments: ColorAtta
     {
         // index storage buffer
         const indexData = new Uint32Array([0, 1, 2, 0, 2, 3]);
-        const indexStorageBuffer: IndexedStorageBuffer = compiler.createIndexedStorageBuffer({
+        const indexStorageBuffer: IndexedBuffer = compiler.createIndexedBuffer({
             totalByteLength: indexData.byteLength,
             rawDataArray: [indexData],
         });
 
         // indexed indirect buffer
         const indexedIndirectData = new Uint32Array([indexData.byteLength / indexData.BYTES_PER_ELEMENT, 1, 0, 0, 0]);
-        const indexedIndirectBuffer: IndexedIndirectBuffer = compiler.createIndexedIndirectBuffer({
+        const indexedIndirectBuffer = compiler.createIndirectBuffer({
             totalByteLength: indexedIndirectData.byteLength,
             rawDataArray: [indexedIndirectData]
         });

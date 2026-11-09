@@ -3,13 +3,13 @@ import type { FrameStageFormat } from "../Format";
 import { BaseSampler } from "./BaseSampler";
 
 /**
- * @class
- * @description
+ * @class TextureSampler
+ * @description Texture sampler class.
  */
 class TextureSampler extends BaseSampler {
     /**
-     * 
-     * @param opts 
+     * @description Create a new texture sampler.
+     * @param opts The options for creating the texture sampler.
      */
     constructor(
         opts: {
@@ -31,18 +31,17 @@ class TextureSampler extends BaseSampler {
     }
 
     /**
-     * 
-     * @param _encoder 
-     * @param _frameStage 
-     * @returns 
+     * @description Get the GPU sampler for the given command encoder and frame stage.
+     * @param _encoder The command encoder.
+     * @param _frameStage The frame stage.
+     * @returns {GPUSampler} The GPU sampler.
      */
-    public override getGpuSampler = (_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUSampler => {
+    override getGpuSampler = (_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUSampler => {
         if (!this.sampler) {
             this.createGpuSampler();
         }
         return this.sampler as GPUSampler;
     }
-
 }
 
 export {

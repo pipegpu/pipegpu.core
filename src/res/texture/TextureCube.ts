@@ -9,7 +9,8 @@ import { Texture2DArray } from "./Texture2DArray";
  */
 class TextureCube extends Texture2DArray {
     /**
-     * 
+     * @description The cube texture data.
+     * @param opts The options for creating the cube texture.
      * @param opts 
      */
     constructor(

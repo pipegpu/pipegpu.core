@@ -1,7 +1,7 @@
-import type { Context } from "../Context"
-import type { DepthLoadStoreFormat, StencilLoadStoreFormat, StencilStateFormat } from "../Format"
-import type { Texture2D } from "../texture/Texture2D"
-import { BaseAttachment } from "./BaseAttachment"
+import type { Context } from "../Context";
+import type { DepthLoadStoreFormat, StencilLoadStoreFormat, StencilStateFormat } from "../Format";
+import type { Texture2D } from "../texture/Texture2D";
+import { BaseAttachment } from "./BaseAttachment";
 
 /**
  * @description

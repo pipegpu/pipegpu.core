@@ -79,8 +79,10 @@ fn fs_main(f: FRAGMENT) -> GBUFFER {
             totalByteLength: dragonData.normals.byteLength,
             rawData: dragonData.normals
         });
-        const indexBuffer = compiler.createIndexBuffer({
-            rawData: dragonData.triangles
+        const indexBuffer = compiler.createIndexedBuffer({
+            debugLabel: `deferred indexed buffer.`,
+            totalByteLength: dragonData.triangles.byteLength,
+            rawDataArray: [dragonData.triangles]
         });
 
         // depth stencil attachment

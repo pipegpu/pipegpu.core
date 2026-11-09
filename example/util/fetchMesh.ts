@@ -6,7 +6,7 @@ type MeshDataPack = {
     triangles: Uint32Array,
 };
 
-const MakeTriangleIndicesFn = function (triangles: [number, number, number][]) {
+const makeTriangleIndicesFn = function (triangles: [number, number, number][]) {
     let triNdx = 0;
     let vNdx = 0;
     const fn = function () {
@@ -25,9 +25,9 @@ const MakeTriangleIndicesFn = function (triangles: [number, number, number][]) {
     return fn;
 };
 
-const GenerateNormals = function (maxAngle: number, positions: [number, number, number][], triangles: [number, number, number][]) {
+const generateNormals = function (maxAngle: number, positions: [number, number, number][], triangles: [number, number, number][]) {
     // first compute the normal of each face
-    const getNextIndex = MakeTriangleIndicesFn(triangles);
+    const getNextIndex = makeTriangleIndicesFn(triangles);
     const numFaceVerts = getNextIndex.numElements;
     const numVerts = positions.length;
     const numFaces = numFaceVerts / 3;
@@ -172,7 +172,7 @@ const fetchMesh = async (uri: string): Promise<MeshDataPack> => {
             throw new Error(`[E][fetchMesh] fetch mesh failed, response code: ${response.status}`);
         }
         const json = await response.json();
-        const { positions, normals, triangles } = GenerateNormals(
+        const { positions, normals, triangles } = generateNormals(
             Math.PI,
             json.positions as [number, number, number][],
             json.cells as [number, number, number][]

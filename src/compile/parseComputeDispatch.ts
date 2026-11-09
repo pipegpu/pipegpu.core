@@ -1,5 +1,5 @@
-import type { ComputeProperty } from "../property/dispatch/ComputeProperty"
-import type { ComputeHandle } from "../res/Handle"
+import type { ComputeProperty } from "../property/dispatch/ComputeProperty";
+import type { ComputeHandle } from "../res/Handle";
 
 /** 
  * @function parseComputeDispatch
@@ -28,7 +28,7 @@ const parseComputeDispatch = (
                 throw new Error(`[E][parseComputeDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in 'ComputeLetDesc'`)
             }
     }
-}
+};
 
 export {
     parseComputeDispatch

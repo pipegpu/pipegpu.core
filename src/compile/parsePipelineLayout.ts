@@ -18,7 +18,7 @@ const parsePipelineLayout = (
     };
     const pipelineLayout: GPUPipelineLayout = opts.context.getGpuDevice().createPipelineLayout(pipeLineLayoutDescriptor);
     return pipelineLayout;
-}
+};
 
 export {
     parsePipelineLayout

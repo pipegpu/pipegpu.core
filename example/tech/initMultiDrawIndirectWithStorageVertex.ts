@@ -1,10 +1,11 @@
 import { Attributes, ColorAttachment, DepthStencilAttachment, RenderLet, RenderProperty, Uniforms, type Compiler, type RenderLetDesc } from '../..';
+import type { IndexedBuffer } from '../../src/res/buffer/IndexedBuffer';
 
 const initMultiDrawIndirectWithStorageVertex = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
     let dispatch: RenderProperty;
     {
-        const indexStorageBuffer = compiler.createIndexedStorageBuffer({
+        const indexStorageBuffer: IndexedBuffer = compiler.createIndexedBuffer({
             totalByteLength: 6 * 4 * 2,
             rawDataArray: [
                 new Uint32Array([0, 1, 2, 2, 1, 0]),
@@ -12,7 +13,7 @@ const initMultiDrawIndirectWithStorageVertex = (compiler: Compiler, colorAttachm
             ],
         });
 
-        const indexedIndirectBuffer = compiler.createIndexedIndirectBuffer({
+        const indexedIndirectBuffer = compiler.createIndirectBuffer({
             totalByteLength: 20 * 2,
             rawDataArray: [
                 new Uint32Array([6, 1, 0, 0, 0]),

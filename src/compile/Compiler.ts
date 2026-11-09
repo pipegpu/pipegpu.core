@@ -40,13 +40,11 @@ import { parseComputeProgrammableStage } from "./parseComputeProgrammableStage";
 import { emitComputePipeline } from "./emitComputePipeline";
 import type { StorageBuffer } from "../res/buffer/StorageBuffer";
 import type { MapBuffer } from "../res/buffer/Mapbuffer";
-import type { IndexedBuffer } from "../res/buffer/IndexedBuffer";
-import type { IndexedStorageBuffer } from "../res/buffer/IndexedStorageBuffer";
 import type { IndirectBuffer } from "../res/buffer/IndirectBuffer";
-import type { IndexedIndirectBuffer } from "../res/buffer/IndexedIndirectBuffer";
 import type { ComparisonSampler } from "../res/sampler/ComparisonSampler";
 import type { TextureSampler } from "../res/sampler/TextureSampler";
 import type { Texture3D } from "../res/texture/Texture3D";
+import type { IndexedBuffer } from "../res/buffer/IndexedBuffer";
 
 /**
  * render holde descriptor
@@ -470,27 +468,6 @@ class Compiler {
     /**
      * 
      * @param opts 
-     * @returns 
-     * 
-     */
-    createIndexBuffer = (
-        opts: {
-            debugLabel?: string,
-            rawData: Uint16Array | Uint32Array,
-        }
-    ): IndexedBuffer => {
-        if (opts.rawData.byteLength % 4 !== 0) {
-            throw new Error(`[E][Compiler][createIndexBuffer] buffer bytelength must align with 4. current index buffer byte length: ${opts.rawData.byteLength}`);
-        }
-        return this.bufferState.createIndexBuffer({
-            label: opts.debugLabel || "indexbuffer",
-            rawData: opts.rawData,
-        });
-    }
-
-    /**
-     * 
-     * @param opts 
      * @param id 
      * @returns 
      * 
@@ -546,19 +523,19 @@ class Compiler {
      * @param opts 
      * @returns 
      */
-    createIndexedStorageBuffer = (
+    createIndexedBuffer = (
         opts: {
             debugLabel?: string,
             totalByteLength: number,
             rawDataArray?: Array<Uint16Array> | Array<Uint32Array>,
             handler?: BufferArrayHandle,
         }
-    ): IndexedStorageBuffer => {
+    ): IndexedBuffer => {
         if (opts.totalByteLength >= this.context.getLimits().maxStorageBufferBindingSize) {
-            throw new Error(`[E][createIndexedStorageBuffer] ${opts.debugLabel} total byte length vaild.`)
+            throw new Error(`[E][createIndexedBuffer] ${opts.debugLabel} total byte length vaild.`)
         }
-        return this.bufferState.createIndexedStorageBuffer({
-            label: opts.debugLabel || "indexedstoragebuffer",
+        return this.bufferState.createIndexedBuffer({
+            label: opts.debugLabel || "indexedbuffer",
             totalByteLength: opts.totalByteLength,
             rawDataArray: opts.rawDataArray,
             handler: opts.handler,
@@ -566,8 +543,8 @@ class Compiler {
     }
 
     /**
-     * 
-     * [vertex_count, instance_count, first_vertex, first_instance]
+     * @description indirectDraw
+     *  [vertex_count, instance_count, first_vertex, first_instance]
      * @param opts 
      * @returns 
      * 
@@ -592,36 +569,9 @@ class Compiler {
     }
 
     /**
-     * 
-     * [index_count, instance_count, first_index, vertex_offset, first_instance]
+     * @description Creates a map buffer
      * @param opts 
      * @returns 
-     * 
-     */
-    createIndexedIndirectBuffer = (
-        opts: {
-            debugLabel?: string,
-            totalByteLength: number,
-            rawDataArray?: TypedArray2DFormat,
-            handler?: BufferArrayHandle,
-        }
-    ): IndexedIndirectBuffer => {
-        if (opts.totalByteLength >= this.context.getLimits().maxStorageBufferBindingSize) {
-            throw new Error(`[E][createIndexedIndirectBuffer] ${opts.debugLabel} total byte length vaild.`)
-        }
-        return this.bufferState.createIndexedIndirectBuffer({
-            label: opts.debugLabel || "indexedindirectbuffer",
-            totalByteLength: opts.totalByteLength,
-            rawDataArray: opts.rawDataArray,
-            handler: opts.handler,
-        });
-    }
-
-    /**
-     * 
-     * @param opts 
-     * @returns 
-     * 
      */
     createMapBuffer = (
         opts: {
@@ -645,7 +595,7 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description Creates a vertex shader
      * @param opts 
      * @returns 
      * 
@@ -664,10 +614,9 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description Creates a fragment shader
      * @param opts 
      * @returns 
-     * 
      */
     createFragmentShader = (
         opts: {
@@ -683,10 +632,9 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description Creates a compute shader
      * @param opts 
      * @returns 
-     * 
      */
     createComputeShader = (
         opts: {
@@ -702,10 +650,9 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description Creates a color attachment
      * @param opts 
      * @returns 
-     * 
      */
     createColorAttachment = (
         opts: {
@@ -725,10 +672,9 @@ class Compiler {
     }
 
     /**
-     * 
+     * @description Creates a depth stencil attachment
      * @param opts 
      * @returns 
-     * 
      */
     createDepthStencilAttachment = (
         opts: {
@@ -762,16 +708,17 @@ class Compiler {
     }
 
     /**
-     * @description link to surface for rendering in each frame.
-     * @returns SurfaceTexture2D
-     * 
+     * @description Creates a surface texture for rendering in each frame.
+     * @returns {SurfaceTexture2D} The created surface texture.
      */
     createSurfaceTexture2D = () => {
         return this.textureState.createSurfaceTexture2D();
     }
 
     /**
-     * @function createTexture2D
+     * @description Creates a 2D texture
+     * @param opts 
+     * @returns {Texture2D} The created 2D texture.
      */
     createTexture2D = (
         opts: {
@@ -797,9 +744,9 @@ class Compiler {
     }
 
     /**
+     * @description Creates a 2D texture
      * @param opts 
      * @returns 
-     * 
      */
     createTexture2DArray = (
         opts: {
@@ -827,6 +774,7 @@ class Compiler {
     }
 
     /**
+     * @description Creates a cube texture
      * @function createTextureCube
      */
     createTextureCube = (
@@ -922,7 +870,7 @@ class Compiler {
     }
 
     /**
-     * @function createComparisonSampler
+     * @description Creates a comparison sampler.
      */
     createComparisonSampler = (
         opts: {

@@ -1,4 +1,4 @@
-import type { MultiSampleFormat } from "../res/Format"
+import type { MultiSampleFormat } from "../res/Format";
 
 /**
  * @function parseMultisampleState
@@ -33,7 +33,7 @@ const parseMultisampleState = (
             break;
     }
     return multiSampleState;
-}
+};
 
 export {
     parseMultisampleState

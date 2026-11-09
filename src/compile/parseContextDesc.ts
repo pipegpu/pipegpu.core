@@ -147,7 +147,7 @@ const parseContextDesc = (opts: IContextOpts): ContextDesc => {
         canvas: canvas,
     };
     return desc;
-}
+};
 
 export {
     type IContextOpts,

@@ -1,17 +1,12 @@
-import type { RenderProperty } from "../property/dispatch/RenderProperty"
+import type { RenderProperty } from "../property/dispatch/RenderProperty";
 import type { IndexedBuffer } from "../res/buffer/IndexedBuffer";
-import type { IndexedIndirectBuffer } from "../res/buffer/IndexedIndirectBuffer";
-import type { IndexedStorageBuffer } from "../res/buffer/IndexedStorageBuffer";
 import type { IndirectBuffer } from "../res/buffer/IndirectBuffer";
 import type { StorageBuffer } from "../res/buffer/StorageBuffer";
 import type { PropertyFormat } from "../res/Format";
 import type { RenderHandle } from "../res/Handle";
 
 /**
- * @function parseRenderDispatch
- * @param bufferState 
- * @param dispatch 
- * @param _handler 
+ * @description Parses the render dispatch and returns a render handle.
  */
 const parseRenderDispatch = (
     opts: {
@@ -39,17 +34,17 @@ const parseRenderDispatch = (
                     const indexBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
                     indexBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
-                    pEncoder.setIndexBuffer(indexBuffer.getGpuBuffer(), indexBuffer.getIndexFormat());
+                    pEncoder.setIndexBuffer(indexBuffer.getGpuBuffer(), indexBuffer.getIndexedFormat());
                     pEncoder.drawIndexed(indexBuffer.getMaxDrawCount(), instanceCount, 0, 0, 0);
                 };
             }
         case 'drawIndexedStorage':
             {
                 return (pEncoder: GPURenderPassEncoder, _cEncoder: GPUCommandEncoder): void => {
-                    const indexedStorageBuffer: IndexedStorageBuffer = opts.dispatch.getIndexStorageBuffer()!;
+                    const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
-                    pEncoder.setIndexBuffer(indexedStorageBuffer.getGpuBuffer(), indexedStorageBuffer.getIndexedFormat());
-                    pEncoder.drawIndexed(indexedStorageBuffer.getMaxDrawCount(), instanceCount, 0, 0, 0);
+                    pEncoder.setIndexBuffer(indexedBuffer.getGpuBuffer(), indexedBuffer.getIndexedFormat());
+                    pEncoder.drawIndexed(indexedBuffer.getMaxDrawCount(), instanceCount, 0, 0, 0);
                 };
             };
         case 'drawIndirect':
@@ -84,23 +79,23 @@ const parseRenderDispatch = (
         case 'drawIndexedIndirect':
             {
                 return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
-                    const indexedStorageBuffer: IndexedStorageBuffer = opts.dispatch.getIndexStorageBuffer()!;
-                    const indexedIndirectBuffer: IndexedIndirectBuffer = opts.dispatch.getIndexedIndirectBuffer()!;
-                    indexedStorageBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
+                    const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
+                    const indexedIndirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
+                    indexedBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     indexedIndirectBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
-                    pEncoder.setIndexBuffer(indexedStorageBuffer.getGpuBuffer(), indexedStorageBuffer.getIndexedFormat());
+                    pEncoder.setIndexBuffer(indexedBuffer.getGpuBuffer(), indexedBuffer.getIndexedFormat());
                     pEncoder.drawIndexedIndirect(indexedIndirectBuffer.getGpuBuffer(), 0);
                 };
             }
         case 'multiDrawIndexedIndirect':
             {
                 return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
-                    const indexedStorageBuffer: IndexedStorageBuffer = opts.dispatch.getIndexStorageBuffer()!;
-                    const indexedIndirectBuffer: IndexedIndirectBuffer = opts.dispatch.getIndexedIndirectBuffer()!;
+                    const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
+                    const indexedIndirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
                     const indirectCountBuffer: StorageBuffer = opts.dispatch.getIndirectCountBuffer()!;
                     const maxDrawCount: number = Math.min(opts.dispatch.getMaxDrawCount()!, 65535 * 64);
-                    indexedStorageBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
-                    pEncoder.setIndexBuffer(indexedStorageBuffer.getGpuBuffer(), indexedStorageBuffer.getIndexedFormat());
+                    indexedBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
+                    pEncoder.setIndexBuffer(indexedBuffer.getGpuBuffer(), indexedBuffer.getIndexedFormat());
                     indexedIndirectBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     indirectCountBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
                     if (opts.supportsMultiDrawIndirect) {
@@ -115,7 +110,7 @@ const parseRenderDispatch = (
             }
         default:
             {
-                throw new Error(`[E][parseRenderDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in render 'RenderLetDesc'.`)
+                throw new Error(`[E][parseRenderDispatch] ${opts.debugLabel} unsupport render dispatch type:${t} in render 'RenderLetDesc'.`);
             }
     }
 }

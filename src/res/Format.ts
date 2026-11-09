@@ -1,5 +1,5 @@
 /**
- * 
+ * @description Define various format types used in the GPU context.
  */
 type TypedArray1DFormat =
     | Int8Array
@@ -14,12 +14,12 @@ type TypedArray1DFormat =
     ;
 
 /**
- * 
+ * @description Define a 1D typed array format.
  */
 type TypedArray2DFormat = Array<TypedArray1DFormat>;
 
 /**
- * 
+ * @description Define a 2D typed array format as an array of 1D typed arrays.
  */
 type BlendFormat =
     | 'disable'             //
@@ -28,7 +28,7 @@ type BlendFormat =
     ;
 
 /**
- * 
+ * @description Define blend formats for color blending operations.
  */
 type ColorLoadStoreFormat =
     | 'clearStore' // load clear, store store
@@ -36,7 +36,7 @@ type ColorLoadStoreFormat =
     ;
 
 /**
- * 
+ * @description Define multi-sample formats for anti-aliasing.
  */
 type MultiSampleFormat =
     | '1x'
@@ -56,7 +56,7 @@ type FrameStageFormat =
     ;
 
 /**
- * 
+ * @description Define frame stage formats for recording command events.
  */
 type PropertyFormat =
     | 'none'
@@ -88,7 +88,7 @@ type PropertyFormat =
     ;
 
 /**
- * 
+ * @description Define depth load/store formats for depth textures.
  */
 type DepthLoadStoreFormat =
     | 'loadStore'
@@ -96,7 +96,7 @@ type DepthLoadStoreFormat =
     ;
 
 /**
- * 
+ * @description Define stencil load/store formats for stencil textures.
  */
 type StencilLoadStoreFormat =
     | 'loadStore'
@@ -104,14 +104,14 @@ type StencilLoadStoreFormat =
     ;
 
 /**
- * 
+ * @description Define stencil load/store formats for stencil textures.
  */
 type StencilStateFormat =
     | 'alwaysKeep'
     ;
 
 /**
- * 
+ * @description Define stencil state formats.
  */
 type CullFormat =
     | 'none'
@@ -122,7 +122,7 @@ type CullFormat =
     ;
 
 /**
- * 
+ * @description Define cull formats for face culling in rendering.
  */
 type FeatureNameFormat = GPUFeatureName
     | 'chromium-experimental-multi-draw-indirect'
@@ -130,7 +130,6 @@ type FeatureNameFormat = GPUFeatureName
     | 'chromium-experimental-timestamp-query-inside-passes'
     | 'chromium-experimental-unorm16-texture-formats'
     ;
-
 
 export type {
     CullFormat,

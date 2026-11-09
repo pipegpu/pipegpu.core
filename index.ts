@@ -51,8 +51,7 @@ export * from './src/property/dispatch/RenderProperty.ts';
  */
 export * from './src/res/buffer/BaseBuffer.ts';
 export * from './src/res/buffer/IndexedBuffer.ts';
-export * from './src/res/buffer/IndexedIndirectBuffer.ts';
-export * from './src/res/buffer/IndexedStorageBuffer.ts';
+export * from './src/res/buffer/IndexedBuffer.ts';
 export * from './src/res/buffer/IndirectBuffer.ts';
 export * from './src/res/buffer/Mapbuffer.ts';
 export * from './src/res/buffer/StorageBuffer.ts';

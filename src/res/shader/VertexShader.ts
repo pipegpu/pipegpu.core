@@ -5,18 +5,17 @@ import type { Context } from "../Context";
 import { BaseShader } from "./BaseShader";
 
 /**
- * 
+ * @description Class representing a vertex shader.
  */
 class VertexShader extends BaseShader {
-
     /**
-     * 
+     * @description The reflected attributes of the vertex shader.
      */
     private reflectedAttributes: IReflectAttributes | undefined;
 
     /**
-     * 
-     * @param opts 
+     * @description Create a new vertex shader instance.
+     * @param opts The options for creating the vertex shader.
      * 
      */
     constructor(
@@ -35,8 +34,9 @@ class VertexShader extends BaseShader {
     }
 
     /**
-     * 
-     * 
+     * @description Reflect the vertex shader's attributes and uniforms.
+     * @param uniforms The uniforms to reflect.
+     * @param debugLabel An optional debug label for the shader.
      */
     public override reflect = (uniforms?: Uniforms, debugLabel?: string): void => {
         this.createGpuShader(`[VertexShader] let name:${debugLabel}, shader id: ${this.getID()}.`);
@@ -45,42 +45,37 @@ class VertexShader extends BaseShader {
     }
 
     /**
-     * 
-     * @returns 
-     * 
+     * @description Get the vertex attribute map.
+     * @returns The map of vertex attributes.
      */
     getVertexAttributeMap = (): Map<string, GPUVertexAttribute> | undefined => {
         return this.reflectedAttributes?.attributeMap;
     }
 
     /**
-     * 
-     * @returns 
-     * 
+     * @description Get the ordered list of vertex attributes.
+     * @returns The ordered list of vertex attributes.
      */
     getOrderedAttribute = (): GPUVertexAttribute[] | undefined => {
         return this.reflectedAttributes?.attributeOdered;
     }
 
     /**
-     * 
-     * @param location 
-     * @returns 
-     * 
+     * @description Get the attribute name by its location.
+     * @param location The location of the attribute.
+     * @returns The name of the attribute at the specified location.
      */
     getAttributeNameByLocation = (location: number): string | undefined => {
         return this.reflectedAttributes?.locationMap.get(location);
     }
 
     /**
-     * 
-     * @returns 
-     * 
+     * @description Get the count of vertex attributes.
+     * @returns The number of vertex attributes.
      */
     getAttributeCount = (): number | undefined => {
         return this.reflectedAttributes?.attributeCount;
     }
-
 }
 
 export {

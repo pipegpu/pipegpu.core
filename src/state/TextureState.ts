@@ -10,30 +10,30 @@ import { TextureCube } from "../res/texture/TextureCube";
 import { uniqueID } from "../util/uniqueID";
 
 /**
- * @description
+ * @description Define the state for managing textures, including 2D, 3D, and array textures.
  */
 class TextureState {
     /**
-     * @description
+     * @description The set of textures managed by this state.
      */
     private static TEXTURE_SET: Map<number, BaseTexture> = new Map();
 
     /**
-     * @description
+     * @description The WebGPU context associated with this texture state.
      */
     private context: Context;
 
     /**
-     * @description
-     * @param opts 
+     * @description Creates a new TextureState with the given WebGPU context.
+     * @param context The WebGPU context to associate with this texture state.
      */
     constructor(context: Context) {
         this.context = context;
     }
 
     /**
-     * @param id 
-     * @returns 
+     * @param textureID The ID of the texture to retrieve.
+     * @returns The texture associated with the given ID.
      */
     getTexture = (textureID: number): BaseTexture => {
         if (!TextureState.TEXTURE_SET.has(textureID)) {
@@ -44,7 +44,7 @@ class TextureState {
     }
 
     /**
-     * @param id 
+     * @param textureID The ID of the texture to retrieve.
      */
     createTexutre2D = (
         opts: {
@@ -74,9 +74,9 @@ class TextureState {
     }
 
     /**
-     * @description
-     * @param opts 
-     * @returns 
+     * @description Creates a 3D texture with the given options.
+     * @param opts The options for creating the 3D texture.
+     * @returns The created Texture3D instance.
      */
     createTexture3D = (
         opts: {
@@ -108,10 +108,8 @@ class TextureState {
     }
 
     /**
-     * @description
-     * @param opts 
-     * @param id 
-     * @returns 
+     * @description Creates a surface 2D texture.
+     * @returns The created SurfaceTexture2D instance.
      */
     createSurfaceTexture2D = (): SurfaceTexture2D => {
         const textureID: number = uniqueID();
@@ -124,9 +122,9 @@ class TextureState {
     }
 
     /**
-     * @description
-     * @param opts 
-     * @returns 
+     * @description Creates a 2D texture array with the given options.
+     * @param opts The options for creating the 2D texture array.
+     * @returns The created Texture2DArray instance.
      */
     createTexture2DArray = (
         opts: {
@@ -158,9 +156,9 @@ class TextureState {
     }
 
     /**
-     * @description
-     * @param opts 
-     * @returns 
+     * @description Creates a texture cube with the given options.
+     * @param opts The options for creating the texture cube.
+     * @returns The created TextureCube instance.
      */
     createTextureCube = (
         opts: {

@@ -3,77 +3,74 @@ import { getMaxMipmapCount } from "../util/getMaxMipmapLevel.ts";
 import type { FeatureNameFormat } from "./Format.ts";
 
 /**
- * @description
+ * @description The WebGPU context class.
  * @class Context
  */
 class Context {
     /**
-     * 
+     * @description The context description for the WebGPU context.
      */
     private contextDesc: ContextDesc;
 
     /**
-     * 
+     * @description The GPU canvas context.
      */
     private gpuContext: GPUCanvasContext | null | undefined;
 
     /**
-     *  
+     *  @description The GPU device.
      */
     private device: GPUDevice | null | undefined;
 
     /**
-     * 
+     * @description The GPU device.
      */
     private adapter: GPUAdapter | null | undefined;
 
     /**
-     * 
+     * @description The GPU adapter.
      */
     private queue: GPUQueue | null | undefined;
 
     /**
-     * 
+     * @description The supported GPU features.
      */
     private features: GPUSupportedFeatures | undefined;
 
     /**
-     * 
+     * @description The GPU queue.
      */
     private limits: GPUSupportedLimits | undefined;
 
     /**
-     * 
+     * @description The supported GPU limits.
      */
     private frameTargetTexture: GPUTexture | undefined;
 
     /**
-     * 
+     * @description The frame target GPU texture.
      */
     private frameTargetTextureView: GPUTextureView | undefined;
 
     /**
-     * 
+     * @description The frame target GPU texture view.
      */
     private commandEncoder: GPUCommandEncoder | undefined;
 
     /**
-     * 
-     * request supported features.
+     * @description The command encoder for the current frame.
      * 
      */
     private supportedFeatures!: GPUSupportedFeatures;
 
     /**
-     * 
-     * request GPUFeature from input.
-     * 
+     * @description The requested GPU features from the input options.
      */
     private requestFeatures?: FeatureNameFormat[];
 
     /**
-     * 
-     * @param opts 
+     * @description The input options for creating the WebGPU context.
+     * @param opts The input options for creating the WebGPU context.
      */
     constructor(opts: IContextOpts) {
         this.contextDesc = parseContextDesc(opts);
@@ -84,7 +81,6 @@ class Context {
     /**
      * @description need use 'await' for adapter request, e.g:
      * const adapter = await context.init();
-     * 
      */
     async init() {
         this.adapter = await navigator.gpu.requestAdapter();
@@ -127,28 +123,28 @@ class Context {
     }
 
     /**
-     * 
+     * @description The description of the GPU adapter.
      */
     get GPUDescription(): string {
         return this.adapter?.info.description || "unknown";
     }
 
     /**
-     * @description
+     * @description The device pixel ratio of the context.
      */
     get DeviceRatio(): number {
         return this.contextDesc.devicePixelRatio;
     }
 
     /**
-     * 
+     * @description The supported GPU features.
      */
     getSupportedFeatures = () => {
         return this.features;
     }
 
     /**
-     * 
+     * @description Refresh the frame resources, including the frame target texture, its view, and the command encoder.
      */
     refreshFrameResource = (): void => {
         this.frameTargetTexture = this.gpuContext?.getCurrentTexture() as GPUTexture;
@@ -157,7 +153,7 @@ class Context {
     }
 
     /**
-     * 
+     * @description Submit the current frame's command buffers to the GPU queue.
      */
     submitFrameResource = (): void => {
         const desc: GPUCommandBufferDescriptor = {};
@@ -166,84 +162,85 @@ class Context {
     }
 
     /**
-     * 
+     * @description Get the command encoder for the current frame.
+     * @returns The GPUCommandEncoder for the current frame.
      */
     getCommandEncoder = (): GPUCommandEncoder => {
         return this.commandEncoder as GPUCommandEncoder;
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the frame target GPU texture view.
+     * @returns The GPUTextureView for the current frame.
      */
     getFrameTexture = (): GPUTexture => {
         return this.frameTargetTexture as GPUTexture;
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the frame target GPU texture.
+     * @returns The GPUTexture for the current frame.
      */
     getFrameTextureView = (): GPUTextureView => {
         return this.frameTargetTextureView as GPUTextureView;
     }
 
     /**
-     * 
+     * @description Get the viewport width of the context.
      */
     getViewportWidth = (): number => {
         return this.contextDesc.viewportWidth;
     }
 
     /**
-     * 
+     * @description Get the viewport height of the context.
      */
     getViewportHeight = (): number => {
         return this.contextDesc.viewportHeight;
     }
 
     /**
-     * @description
+     * @description Get the maximum 2D mipmap count based on the viewport size.
      */
     getMax2DMipmapCount = (): number => {
         return getMaxMipmapCount(this.getViewportWidth(), this.getViewportHeight());
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the GPU device.
+     * @returns The GPUDevice instance.
      */
     getGpuDevice = (): GPUDevice => {
         return this.device as GPUDevice;
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the GPU queue.
+     * @returns The GPUQueue instance.
      */
     getGpuQueue = (): GPUQueue => {
         return this.queue as GPUQueue;
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the supported GPU limits.
+     * @returns The GPUSupportedLimits instance.
      */
     getLimits = (): GPUSupportedLimits => {
         return this.limits as GPUSupportedLimits;
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the preferred texture format for the canvas.
+     * @returns The GPUTextureFormat for the canvas.
      */
     getPreferredTextureFormat = (): GPUTextureFormat => {
         return navigator.gpu.getPreferredCanvasFormat();
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the preferred depth texture format.
+     * @returns The GPUTextureFormat for depth textures.
      */
     getPreferredDepthTexuteFormat = (): GPUTextureFormat => {
         return 'depth24plus';

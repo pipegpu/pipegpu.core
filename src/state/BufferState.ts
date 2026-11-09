@@ -1,7 +1,5 @@
 import type { BaseBuffer } from "../res/buffer/BaseBuffer";
 import { IndexedBuffer } from "../res/buffer/IndexedBuffer";
-import { IndexedIndirectBuffer } from "../res/buffer/IndexedIndirectBuffer";
-import { IndexedStorageBuffer } from "../res/buffer/IndexedStorageBuffer";
 import { IndirectBuffer } from "../res/buffer/IndirectBuffer";
 import { MapBuffer } from "../res/buffer/Mapbuffer";
 import { StorageBuffer } from "../res/buffer/StorageBuffer";
@@ -17,28 +15,25 @@ import { uniqueID } from "../util/uniqueID";
  */
 class BufferState {
     /**
-     * 
+     * @description BufferState manages the creation and storage of various GPU buffer types.
      */
     private static BUFFER_SET: Map<number, BaseBuffer> = new Map();
 
     /**
-     * 
+     * @description The context associated with this BufferState instance.
      */
     private context: Context;
 
     /**
-     * 
-     * @param opts 
-     * 
+     * @description Constructs a new BufferState instance with the given context.
+     * @param context The context to associate with this BufferState instance.
      */
     constructor(context: Context) {
         this.context = context;
     }
 
     /**
-     * 
-     * @param id 
-     * 
+     * @description Retrieves a buffer by its ID.
      */
     getBuffer = (bufferID: number): BaseBuffer => {
         if (!BufferState.BUFFER_SET.has(bufferID)) {
@@ -50,34 +45,9 @@ class BufferState {
     }
 
     /**
-     * 
-     * @param id 
-     * @returns 
-     * 
-     */
-    createIndexBuffer(
-        opts: {
-            label: string,
-            rawData: Uint16Array | Uint32Array,
-        }
-    ): IndexedBuffer {
-        const bufferID: number = uniqueID();
-        const buffer: IndexedBuffer = new IndexedBuffer({
-            id: bufferID,
-            label: opts.label,
-            context: this.context,
-            totalByteLength: opts.rawData.byteLength,
-            typedArrayData1D: opts.rawData
-        });
-        BufferState.BUFFER_SET.set(bufferID, buffer);
-        return BufferState.BUFFER_SET.get(bufferID) as IndexedBuffer;
-    }
-
-    /**
-     * 
-     * @param opts 
-     * @param id 
-     * 
+     * @description Creates a uniform buffer with the given options.
+     * @param opts The options for creating the uniform buffer.
+     * @returns The created UniformBuffer instance.
      */
     createUniformBuffer = (
         opts: {
@@ -101,10 +71,9 @@ class BufferState {
     }
 
     /**
-     * 
-     * @param opts 
-     * @returns 
-     * 
+     * @description Creates a map buffer with the given options.
+     * @param opts The options for creating the map buffer.
+     * @returns The created MapBuffer instance.
      */
     createMapBuffer = (
         opts: {
@@ -130,10 +99,9 @@ class BufferState {
     }
 
     /**
-     * 
-     * @param opts 
-     * @returns 
-     * 
+     * @description Creates a storage buffer with the given options.
+     * @param opts The options for creating the storage buffer.
+     * @returns The created StorageBuffer instance.
      */
     createStorageBuffer = (
         opts: {
@@ -159,20 +127,20 @@ class BufferState {
     }
 
     /**
-     * 
-     * @param opts
-     * 
+     * @description Creates an indexed buffer with the given options.
+     * @param opts The options for creating the indexed buffer.
+     * @returns The created IndexedBuffer instance.
      */
-    createIndexedStorageBuffer = (
+    createIndexedBuffer = (
         opts: {
             label: string,
             totalByteLength: number,
             rawDataArray?: Array<Uint16Array> | Array<Uint32Array>,
             handler?: BufferArrayHandle
         }
-    ): IndexedStorageBuffer => {
+    ): IndexedBuffer => {
         const bufferID: number = uniqueID();
-        const buffer: IndexedStorageBuffer = new IndexedStorageBuffer({
+        const buffer: IndexedBuffer = new IndexedBuffer({
             id: bufferID,
             label: opts.label,
             context: this.context,
@@ -181,15 +149,13 @@ class BufferState {
             handler: opts.handler
         });
         BufferState.BUFFER_SET.set(bufferID, buffer);
-        return BufferState.BUFFER_SET.get(bufferID) as IndexedStorageBuffer;
+        return BufferState.BUFFER_SET.get(bufferID) as IndexedBuffer;
     }
 
     /**
-     * 
-     * @param opts 
-     * @param id 
-     * @returns 
-     * 
+     * @description Creates a vertex buffer with the given options.
+     * @param opts The options for creating the vertex buffer.
+     * @returns The created VertexBuffer instance.
      */
     createVertexBuffer = (
         opts: {
@@ -213,10 +179,9 @@ class BufferState {
     }
 
     /**
-     * 
-     * @param opts 
-     * @returns 
-     * 
+     * @description Creates an indirect buffer with the given options.
+     * @param opts The options for creating the indirect buffer.
+     * @returns The created IndirectBuffer instance.
      */
     createIndirectBuffer = (
         opts: {
@@ -238,34 +203,6 @@ class BufferState {
         BufferState.BUFFER_SET.set(bufferID, buffer);
         return BufferState.BUFFER_SET.get(bufferID) as IndirectBuffer;
     }
-
-    /**
-     * 
-     * @param opts 
-     * @returns 
-     * 
-     */
-    createIndexedIndirectBuffer = (
-        opts: {
-            label: string,
-            totalByteLength: number,
-            rawDataArray?: TypedArray2DFormat | Array<ArrayBuffer>,
-            handler?: BufferArrayHandle,
-        }
-    ): IndexedIndirectBuffer => {
-        const bufferID: number = uniqueID();
-        const buffer: IndexedIndirectBuffer = new IndexedIndirectBuffer({
-            id: bufferID,
-            label: opts.label,
-            context: this.context,
-            totalByteLength: opts.totalByteLength,
-            rawDataArray: opts.rawDataArray,
-            handler: opts.handler,
-        });
-        BufferState.BUFFER_SET.set(bufferID, buffer);
-        return BufferState.BUFFER_SET.get(bufferID) as IndexedIndirectBuffer;
-    }
-
 }
 
 export {

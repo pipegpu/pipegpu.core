@@ -1,6 +1,6 @@
 import type { PropertyFormat } from "../res/Format";
-import type { VertexShader } from "../res/shader/VertexShader"
-import type { IAttributeRecord } from "./parseAttribute"
+import type { VertexShader } from "../res/shader/VertexShader";
+import type { IAttributeRecord } from "./parseAttribute";
 
 /**
  * @param vertexFormat

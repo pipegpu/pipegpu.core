@@ -4,17 +4,17 @@ import type { Texture2DHandle } from "../Handle";
 import { BaseTexture } from "./BaseTexture";
 
 /**
- * @description
+ * @description Class representing a 2D texture.
  * @class Texture2D
  */
 class Texture2D extends BaseTexture {
     /**
-     * 
+     * @description The options for creating the 2D texture.
      */
     protected textureData_?: TypedArray1DFormat;
 
     /**
-     * @description
+     * @description The typed array containing the texture data.
      */
     protected handler_?: Texture2DHandle;
 
@@ -25,8 +25,8 @@ class Texture2D extends BaseTexture {
     private autoIncrementMipLevelInStorageBindingUse: boolean = false;
 
     /**
-     * 
-     * @param opts 
+     * @description Constructor for the Texture2D class.
+     * @param opts The options for creating the 2D texture.
      */
     constructor(
         opts: {
@@ -65,7 +65,7 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-     * @description
+     * @description Enable or disable auto increment of mip level in storage binding use.
      */
     protected refreshTextureDataSource() {
         // depth texture not allow texture write from cpu.
@@ -103,7 +103,7 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-     * @description
+     * @description Create the GPU texture for the 2D texture.
      */
     protected override createGpuTexture(): void {
         const desc: GPUTextureDescriptor = {
@@ -119,10 +119,10 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-     * @description
-     * @param _cEncoder 
-     * @param _frameStage 
-     * @returns 
+     * @description Refresh the GPU texture for the 2D texture.
+     * @param _cEncoder The command encoder.
+     * @param _frameStage The frame stage format.
+     * @returns A boolean indicating whether the GPU texture was refreshed.
      */
     override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
         if (!this.texture) {
@@ -133,9 +133,10 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-     * @description
-     * @param encoder 
-     * @param frameStage 
+     * @description Get the GPU texture for the 2D texture.
+     * @param encoder The command encoder.
+     * @param frameStage The frame stage format.
+     * @returns The GPU texture for the 2D texture.
      */
     override getGpuTexture = (): GPUTexture => {
         if (!this.texture) {
@@ -148,7 +149,8 @@ class Texture2D extends BaseTexture {
     /**
      * @override
      * @function getGpuTextureView
-     * @returns 
+     * @description Get the GPU texture view for the 2D texture based on the selected usage.
+     * @returns The GPU texture view for the 2D texture.
      */
     override getGpuTextureView = (): GPUTextureView => {
         switch (this.selectedUsage) {
@@ -177,8 +179,10 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-    * e.g use texture as storage binding for compute shader
-    */
+     * @description Use the 2D texture as a storage binding.
+     * e.g use texture as storage binding for compute shader
+     * @function useAsStorageBinding
+     */
     override useAsStorageBinding = () => {
         if (!this.isUsageIncludeStorageBinding()) {
             throw Error(`[E][Texture][useAsStorageBinding] ${typeof (this)} has no usage include 'GPUTextureUsage.STORAGE_BINDING', please check.`);
@@ -233,6 +237,7 @@ class Texture2D extends BaseTexture {
     }
 
     /**
+     * @description Use the 2D texture as a texture binding.
      * @function useAsTextureBinding
      */
     override useAsTextureBinding = () => {
@@ -286,7 +291,8 @@ class Texture2D extends BaseTexture {
     }
 
     /**
-     * 
+     * @description Use the 2D texture as a render attachment.
+     * @function useAsRenderAttachment
      */
     override useAsRenderAttachment = () => {
         if (!this.isUsageIncludeTextureBinding()) {

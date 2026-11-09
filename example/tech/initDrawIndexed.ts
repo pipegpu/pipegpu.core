@@ -14,8 +14,10 @@ const initDrawIndexed = (compiler: Compiler, colorAttachments: ColorAttachment[]
     let dispatch: RenderProperty;
     {
         const indexData = new Uint32Array([0, 1, 2, 0, 2, 3]);
-        const indexBuffer = compiler.createIndexBuffer({
-            rawData: indexData
+        const indexBuffer = compiler.createIndexedBuffer({
+            debugLabel: `[DEMO] indexed buffer.`,
+            totalByteLength: indexData.byteLength,
+            rawDataArray: [indexData]
         });
         dispatch = new RenderProperty(indexBuffer);
     }

@@ -3,6 +3,7 @@ import type { Context } from "../Context"
 import type { FrameStageFormat, PropertyFormat } from "../Format";
 
 /**
+ * @description Enum representing the current texture usage.
  * TEXTURE USAGE
  */
 type CURRENT_TEXTURE_USAGE = 'NONE' | 'STORAGE_BINDING' | 'RENDER_ATTACHMENT' | 'TEXTURE_BINDING';
@@ -129,7 +130,7 @@ const getTextureViewDimension = (propertyFormat: PropertyFormat): GPUTextureView
             console.warn(`[W][getTextureViewDimension] unspported texture property format: ${propertyFormat}`);
             return '2d';
     }
-}
+};
 
 /**
  * @param propertyFormat 
@@ -155,7 +156,7 @@ const getTextureDimension = (propertyFormat: PropertyFormat): GPUTextureDimensio
             console.warn(`[W][getTextureDimension] unspported texture property format: ${propertyFormat}`);
             return '2d';
     }
-}
+};
 
 /**
  * @param width 
@@ -300,7 +301,7 @@ const getTexelCopyBufferLayout = (width: number, height: number, textureFormat: 
             }
     }
     return layout;
-}
+};
 
 /**
  * @class BaseTexture

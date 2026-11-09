@@ -3,11 +3,11 @@ import type { FrameStageFormat } from "../Format";
 import { BaseTexture } from "./BaseTexture";
 
 /**
- * @description
+ * @description Class representing a 2D surface texture.
  */
 class SurfaceTexture2D extends BaseTexture {
     /**
-     * @param opts 
+     * @param opts The options for creating the surface texture.
      */
     constructor(
         opts: {
@@ -28,7 +28,7 @@ class SurfaceTexture2D extends BaseTexture {
     }
 
     /**
-     * 
+     * @description Create the GPU texture for the surface texture.
      */
     protected override createGpuTexture(): void {
         this.texture = this.context.getFrameTexture();
@@ -46,10 +46,9 @@ class SurfaceTexture2D extends BaseTexture {
     }
 
     /**
-     * 
-     * @param [GPUCommandEncoder] encoder 
-     * @param [FrameStageFormat] frameStage
-     * 
+     * @description Get the GPU texture for the surface texture.
+     * @param [GPUCommandEncoder] encoder The command encoder.
+     * @param [FrameStageFormat] frameStage The frame stage format.
      */
     override getGpuTexture = (): GPUTexture => {
         this.createGpuTexture();
@@ -58,6 +57,7 @@ class SurfaceTexture2D extends BaseTexture {
     }
 
     /**
+     * @description Use the surface texture as a storage binding.
      * @function useAsStorageBinding
      */
     override useAsStorageBinding(): void {
@@ -65,6 +65,7 @@ class SurfaceTexture2D extends BaseTexture {
     }
 
     /**
+     * @description Use the surface texture as a texture binding.
      * @function useAsTextureBinding
      */
     override useAsTextureBinding(): void {
@@ -72,6 +73,7 @@ class SurfaceTexture2D extends BaseTexture {
     }
 
     /**
+     * @description Use the surface texture as a render attachment.
      * @function useAsRenderAttachment
      */
     override useAsRenderAttachment(): void {

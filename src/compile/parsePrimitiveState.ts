@@ -1,5 +1,5 @@
-import type { RenderProperty } from "../property/dispatch/RenderProperty"
-import type { CullFormat } from "../res/Format"
+import type { RenderProperty } from "../property/dispatch/RenderProperty";
+import type { CullFormat } from "../res/Format";
 
 /**
  * @interface PrimitiveDesc
@@ -78,7 +78,7 @@ const parsePrimitiveState = (
             }
     }
     return primitiveState;
-}
+};
 
 export {
     type PrimitiveDesc,

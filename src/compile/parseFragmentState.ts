@@ -19,7 +19,7 @@ const parseFragmentState = (
         entryPoint: opts.fragmentShader.getEntryPoint(),
     };
     return fragmentState;
-}
+};
 
 export {
     parseFragmentState

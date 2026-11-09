@@ -1,5 +1,5 @@
-import type { DepthStencilAttachment } from "../res/attachment/DepthStencilAttachment"
-import type { PipelineState } from "../state/PipelineState"
+import type { DepthStencilAttachment } from "../res/attachment/DepthStencilAttachment";
+import type { PipelineState } from "../state/PipelineState";
 
 /**
  * @param opts 
@@ -31,8 +31,7 @@ const emitRenderPipeline = (
     }
 
     return opts.pipelineState.createRenderPipeline(renderPipelineDescriptor);
-
-}
+};
 
 export {
     emitRenderPipeline

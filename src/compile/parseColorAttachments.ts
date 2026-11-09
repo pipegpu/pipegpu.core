@@ -1,4 +1,4 @@
-import { ColorAttachment } from "../res/attachment/ColorAttachment"
+import { ColorAttachment } from "../res/attachment/ColorAttachment";
 
 /**
  * 

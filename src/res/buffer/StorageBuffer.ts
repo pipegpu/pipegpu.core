@@ -34,7 +34,7 @@ class StorageBuffer extends Buffer2D {
             label: opts.label,
             context: opts.context,
             totalByteLength: opts.totalByteLength,
-            bufferUsageFlags: opts.bufferUsageFlags || GPUBufferUsage.STORAGE | GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+            bufferUsageFlags: opts.bufferUsageFlags || GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
             rawData: opts.rawDataArray,
             handler: opts.handler
         });

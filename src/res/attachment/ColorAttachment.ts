@@ -1,7 +1,7 @@
-import type { Context } from "../Context"
-import type { BlendFormat, ColorLoadStoreFormat } from "../Format"
-import type { BaseTexture } from "../texture/BaseTexture"
-import { BaseAttachment } from "./BaseAttachment"
+import type { Context } from "../Context";
+import type { BlendFormat, ColorLoadStoreFormat } from "../Format";
+import type { BaseTexture } from "../texture/BaseTexture";
+import { BaseAttachment } from "./BaseAttachment";
 
 /**
  * @description Color attachment for rendering.
@@ -19,7 +19,7 @@ class ColorAttachment extends BaseAttachment {
         r: 0,
         g: 0,
         b: 0,
-        a: 1.0
+        a: 1.0,
     };
 
     /**
@@ -52,7 +52,7 @@ class ColorAttachment extends BaseAttachment {
             context: Context,
             texture: BaseTexture,
             blendFormat?: BlendFormat,
-            colorLoadStoreFormat?: ColorLoadStoreFormat
+            colorLoadStoreFormat?: ColorLoadStoreFormat,
             clearColor?: number[]
         }
     ) {
@@ -153,7 +153,8 @@ class ColorAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @description
+     *  get the GPU color attachment for this color attachment.
      */
     getGpuColorAttachment = (): GPURenderPassColorAttachment => {
         // surface texture view need refresh in each frame
@@ -163,9 +164,9 @@ class ColorAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @description
+     *  get the GPU blend state for this color attachment.
      * @returns 
-     * 
      */
     getGpuBlendState = (): GPUBlendState | undefined => {
         this.updateState();
@@ -173,7 +174,8 @@ class ColorAttachment extends BaseAttachment {
     }
 
     /**
-     * 
+     * @description
+     *  get the GPU texture format for this color attachment.
      * @returns 
      */
     getTextureFormat = (): GPUTextureFormat => {

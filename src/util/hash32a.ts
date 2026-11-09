@@ -1,5 +1,5 @@
 /**
- * 
+ * @description Computes a 32-bit hash of the input string using the FNV-1a algorithm.
  * @param str input raw string
  * @returns 
  */

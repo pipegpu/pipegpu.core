@@ -3,12 +3,13 @@ import type { FrameStageFormat } from "../Format";
 import { BaseSampler } from "./BaseSampler";
 
 /**
+ * @description Comparison sampler class.   
  * @class ComparisonSampler
  */
 class ComparisonSampler extends BaseSampler {
     /**
-     * 
-     * @param opts 
+     * @description Create a new comparison sampler.
+     * @param opts The options for creating the comparison sampler.
      */
     constructor(
         opts: {
@@ -31,10 +32,10 @@ class ComparisonSampler extends BaseSampler {
     }
 
     /**
-     * 
-     * @param _encoder 
-     * @param _frameStage 
-     * @returns 
+     * @description Get the GPU sampler for the given command encoder and frame stage.
+     * @param _encoder The command encoder.
+     * @param _frameStage The frame stage.
+     * @returns {GPUSampler} The GPU sampler.
      */
     public override getGpuSampler = (_encoder?: GPUCommandEncoder, _frameStage?: FrameStageFormat): GPUSampler => {
         if (!this.sampler) {
@@ -42,7 +43,6 @@ class ComparisonSampler extends BaseSampler {
         }
         return this.sampler as GPUSampler;
     }
-
 }
 
 export {

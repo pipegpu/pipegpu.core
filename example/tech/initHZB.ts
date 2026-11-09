@@ -116,8 +116,10 @@ const initHZB = async (context: Context, compiler: Compiler, colorAttachments: C
             totalByteLength: dragonData.normals.byteLength,
             rawData: dragonData.normals
         });
-        const indexBuffer = compiler.createIndexBuffer({
-            rawData: dragonData.triangles
+        const indexBuffer = compiler.createIndexedBuffer({
+            debugLabel: `deferred indexed buffer.`,
+            totalByteLength: dragonData.triangles.byteLength,
+            rawDataArray: [dragonData.triangles]
         });
 
         const WGSLCode = `

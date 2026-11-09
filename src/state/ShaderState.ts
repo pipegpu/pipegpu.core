@@ -5,38 +5,40 @@ import { FragmentShader } from "../res/shader/FragmentShader";
 import { VertexShader } from "../res/shader/VertexShader";
 
 /**
- * @description
+ * @description Define the state for managing shaders, including vertex, fragment, and compute shaders.
  */
 class ShaderState {
     /**
-     * @description
+     * @description The cache of shaders managed by this state.
      */
     private static CACHE: Map<number, BaseShader> = new Map();
 
     /**
-     * @description
+     * @description The WebGPU context associated with this shader state.
      */
     private context: Context;
 
     /**
-     * @description
-     * @param opts 
+     * @description Creates a new ShaderState with the given WebGPU context.
+     * @param context The WebGPU context to associate with this shader state.
      */
     constructor(context: Context) {
         this.context = context;
     }
 
     /**
-     * 
-     * @param key 
-     * @returns 
+     * @description Checks if a shader with the given key exists in the cache.
+     * @param key The key of the shader to check.
+     * @returns True if the shader exists, false otherwise.
      */
     hasKey = (key: number): boolean => {
         return ShaderState.CACHE.has(key);
     }
 
     /**
-     * @description
+     * @description Creates a vertex shader with the given options.
+     * @param opts The options for creating the vertex shader.
+     * @returns The created VertexShader instance.
      *  hash32a return uint32
      */
     createVertexShader = (
@@ -58,7 +60,9 @@ class ShaderState {
     }
 
     /**
-     * @description
+     * @description Creates a fragment shader with the given options.
+     * @param opts The options for creating the fragment shader.
+     * @returns The created FragmentShader instance.
      */
     createFragmentShader = (
         opts: {
@@ -79,7 +83,9 @@ class ShaderState {
     }
 
     /**
-     * @description
+     * @description Creates a compute shader with the given options.
+     * @param opts The options for creating the compute shader.
+     * @returns The created ComputeShader instance.
      */
     createComputeShader = (
         opts: {

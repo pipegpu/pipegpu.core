@@ -1,7 +1,9 @@
 import { FunctionInfo, InputInfo, TypeInfo, WgslReflect } from "wgsl_reflect";
 
 /**
- * @description
+ * @description Returns the corresponding WebGPU vertex format for the given type info.
+ * @param t The type info from WGSL reflection.
+ * @returns The corresponding WebGPU vertex format. e.g., 'float32x4'
  */
 interface IReflectAttributes {
     attributeCount: number,
@@ -56,7 +58,6 @@ const getVertexFormat = (t: TypeInfo): GPUVertexFormat => {
         default: {
             throw new Error(`[E][reflectShaderAttributes][getVertexFormat] unsupported vertex format. type: ${t.getTypeName()}`);
         }
-
     }
 }
 

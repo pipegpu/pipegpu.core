@@ -4,7 +4,7 @@ import type { TextureProperty } from "../property/uniform/TextureProperty";
 import type { TextureSamplerProperty } from "../property/uniform/TextureSamplerProperty";
 
 /**
- * @description
+ * @description Returns the reflection information for shader uniforms, including bind group layouts and resource bindings.
  */
 interface IReflectUniforms {
     bindGroupCount: number,
@@ -13,9 +13,9 @@ interface IReflectUniforms {
 }
 
 /**
- * @description
- * @param binding 
- * @returns 
+ * @description Returns the corresponding GPU buffer binding type for the given variable info.
+ * @param binding The variable info from WGSL reflection.
+ * @returns The corresponding GPU buffer binding type. e.g., 'uniform', 'read-only-storage', 'storage'
  */
 const getBufferBindingType = (binding: VariableInfo): GPUBufferBindingType => {
     if (binding.resourceType === ResourceType.Uniform) {
@@ -85,10 +85,9 @@ const VALID_FORMATS = new Set<GPUTextureFormat>([
 ]);
 
 /**
- * @description
- *  check and valid. mapping string to GPUTextureFormat string.
- * @param binding 
- * @returns 
+ * @description Checks if the texture format of the given binding is valid and maps it to a GPUTextureFormat string.
+ * @param binding The variable info from WGSL reflection.
+ * @returns The corresponding GPUTextureFormat string.
  */
 const getTextureFormatByTexelType = (binding: VariableInfo): GPUTextureFormat => {
     const t: GPUTextureFormat = (binding as any).type.format.name as GPUTextureFormat;
@@ -118,7 +117,10 @@ const getStorageTextureAccess = (binding: VariableInfo): GPUStorageTextureAccess
 };
 
 /**
- * ref:
+ * ref: https://www.w3.org/TR/WGSL/#storage-texture
+ * @description Returns the storage texture access type for the given variable info.
+ * @param binding The variable info from WGSL reflection.
+ * @returns The corresponding GPUStorageTextureAccess string. e.g., 'read-only', 'write-only', 'read-write'
  * https://www.w3.org/TR/webgpu/#texture-format-caps
  * @param binding 
  * @returns 
@@ -235,10 +237,11 @@ const getTextureSampleType = (textureFormat: GPUTextureFormat): GPUTextureSample
 };
 
 /**
- * reflect shader uniform info.
+ * @description Reflects the shader uniform information for the specified entry point and shader stage.
+ * This includes bind group layouts and resource bindings for the uniforms.
  * @param code 
  * @param entryPoint 
- * @param shaderStage  GPUShaderStage.
+ * @param shaderStage  The shader stage (e.g., GPUShaderStage.VERTEX, GPUShaderStage.FRAGMENT, GPUShaderStage.COMPUTE).
  * @returns 
  */
 const reflectShaderUniforms = (code: string, entryPoint: string, shaderStage: GPUFlagsConstant, uniforms?: Uniforms, debugLabel?: string): IReflectUniforms => {

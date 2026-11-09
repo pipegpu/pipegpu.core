@@ -1,4 +1,4 @@
-import type { Context } from "../res/Context"
+import type { Context } from "../res/Context";
 
 /**
  * @function parseBindGroupLayout

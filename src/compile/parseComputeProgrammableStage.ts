@@ -14,7 +14,7 @@ const parseComputeProgrammableStage = (
         entryPoint: opts.computeShader.getEntryPoint(),
     };
     return computeState;
-}
+};
 
 export {
     parseComputeProgrammableStage

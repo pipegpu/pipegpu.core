@@ -1,23 +1,23 @@
-import type { Context } from "../Context"
-import type { PropertyFormat } from "../Format"
+import type { Context } from "../Context";
+import type { PropertyFormat } from "../Format";
 
 /**
- * 
+ * @description
+ *  Base class for all pipeline objects.
  */
 class BasePipeline {
-
     /**
-     * 
+     * @description Get the ID of the pipeline.
      */
     private id: number;
 
     /**
-     * 
+     * @description Get the context associated with the pipeline.
      */
     protected context: Context;
 
     /**
-     * 
+     * @description Get the property format of the pipeline.
      */
     private propertyFormat: PropertyFormat;
 
@@ -38,23 +38,21 @@ class BasePipeline {
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the ID of the pipeline.
+     * @returns {number}
      */
     getID = () => {
         return this.id;
     }
 
     /**
-     * 
-     * @returns 
+     * @description Get the property format of the pipeline.
+     * @returns {PropertyFormat}
      */
     getPropertyFormat = () => {
         return this.propertyFormat;
     }
-
 }
-
 
 export {
     BasePipeline

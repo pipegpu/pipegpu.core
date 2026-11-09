@@ -1,7 +1,7 @@
-import type { VertexBufferProperty } from "../property/attribute/VertexBufferProperty"
-import type { BaseProperty } from "../property/BaseProperty"
-import type { Attributes } from "../property/Properties"
-import type { PropertyFormat } from "../res/Format"
+import type { VertexBufferProperty } from "../property/attribute/VertexBufferProperty";
+import type { BaseProperty } from "../property/BaseProperty";
+import type { Attributes } from "../property/Properties";
+import type { PropertyFormat } from "../res/Format";
 
 /**
  * 
@@ -63,7 +63,7 @@ const parseAttribute = (
                 }
         }
     });
-}
+};
 
 export {
     type IAttributeRecord,

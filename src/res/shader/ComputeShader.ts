@@ -4,13 +4,12 @@ import type { Context } from "../Context";
 import { BaseShader } from "./BaseShader";
 
 /**
- * 
+ * @description Class representing a compute shader.
  */
 class ComputeShader extends BaseShader {
-
     /**
-     * 
-     * @param opts 
+     * @description Create a new compute shader instance.
+     * @param opts The options for creating the compute shader.
      */
     constructor(
         opts: {
@@ -28,7 +27,9 @@ class ComputeShader extends BaseShader {
     }
 
     /**
-     * 
+     * @description Reflect the compute shader's attributes and uniforms.
+     * @param uniforms The uniforms to reflect.
+     * @param debugLabel An optional debug label for the shader.
      */
     public override reflect = (uniforms?: Uniforms, debugLabel?: string): void => {
         this.createGpuShader(`[ComputeShader] ${debugLabel} shader id: ${this.getID()}]`);

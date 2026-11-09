@@ -12,12 +12,12 @@ import { BaseTexture } from "./BaseTexture";
  */
 class Texture2DArray extends BaseTexture {
     /**
-     * @description
+     * @description The 2D texture array data.
      */
     protected textureData2DArray?: TypedArray2DFormat;
 
     /**
-     * @description
+     * @description The handler for the 2D texture array.
      */
     protected handler?: TextureArrayHandle;
 
@@ -55,7 +55,7 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * @description
+     * @description Refresh the texture data source for the 2D texture array.
      */
     protected refreshTextureDataSource() {
         if (this.textureData2DArray && this.textureData2DArray.length > 0 && !this.isDetphTexture()) {
@@ -99,7 +99,7 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * @description
+     * @description Create the GPU texture for the 2D texture array.
      */
     protected override createGpuTexture(): void {
         const desc: GPUTextureDescriptor = {
@@ -115,10 +115,10 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * @description
-     * @param _cEncoder 
-     * @param _frameStage 
-     * @returns 
+     * @description Refresh the GPU texture for the 2D texture array.
+     * @param _cEncoder The command encoder.
+     * @param _frameStage The frame stage format.
+     * @returns Whether the GPU texture was refreshed.
      */
     override refreshGpuTexture(_cEncoder: GPUCommandEncoder, _frameStage: FrameStageFormat): boolean {
         if (!this.texture) {
@@ -129,10 +129,10 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * @description
-     * @param _encoder 
-     * @param frameStage 
-     * @returns 
+     * @description Get the GPU texture for the 2D texture array.
+     * @param _encoder The command encoder.
+     * @param frameStage The frame stage format.
+     * @returns The GPU texture for the 2D texture array.
      */
     override getGpuTexture(): GPUTexture {
         if (!this.texture) {
@@ -143,8 +143,8 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * @description
-     * @returns 
+     * @description Get the GPU texture view for the 2D texture array based on the selected usage.
+     * @returns The GPU texture view for the 2D texture array.
      */
     override getGpuTextureView(): GPUTextureView {
         switch (this.selectedUsage) {
@@ -170,7 +170,8 @@ class Texture2DArray extends BaseTexture {
     }
 
     /**
-     * @description
+     * @description Use the 2D texture array as a storage binding.
+     * @function useAsStorageBinding
      * e.g use texture as storage binding for compute shader
      */
     override useAsStorageBinding = () => {

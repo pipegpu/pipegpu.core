@@ -17,7 +17,7 @@ const emitComputePipeline = (
         layout: opts.pipelineLayout
     };
     return opts.pipelineState.createComputePipeline(desc);
-}
+};
 
 export {
     emitComputePipeline

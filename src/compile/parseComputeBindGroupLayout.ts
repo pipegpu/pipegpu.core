@@ -1,5 +1,5 @@
-import type { Context } from "../res/Context"
-import type { ComputeShader } from "../res/shader/ComputeShader"
+import type { Context } from "../res/Context";
+import type { ComputeShader } from "../res/shader/ComputeShader";
 import { parseBindGroupLayout } from "./parseBindGroupLayout";
 
 /**
@@ -43,7 +43,7 @@ const parseComputeBindGroupLayout = (
         gourpIDWithBindGroupLayoutMap: opts.gourpIDWithBindGroupLayoutMap,
         gourpIDWithBindGroupLayoutDescriptorMap: opts.gourpIDWithBindGroupLayoutDescriptorMap
     });
-}
+};
 
 export {
     parseComputeBindGroupLayout

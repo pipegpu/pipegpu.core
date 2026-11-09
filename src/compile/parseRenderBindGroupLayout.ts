@@ -1,6 +1,6 @@
-import { Context } from "../res/Context"
-import type { FragmentShader } from "../res/shader/FragmentShader"
-import type { VertexShader } from "../res/shader/VertexShader"
+import { Context } from "../res/Context";
+import type { FragmentShader } from "../res/shader/FragmentShader";
+import type { VertexShader } from "../res/shader/VertexShader";
 import { parseBindGroupLayout } from "./parseBindGroupLayout";
 
 /**
@@ -76,7 +76,7 @@ const parseRenderBindGroupLayout = (
         gourpIDWithBindGroupLayoutMap: opts.gourpIDWithBindGroupLayoutMap,
         gourpIDWithBindGroupLayoutDescriptorMap: opts.gourpIDWithBindGroupLayoutDescriptorMap
     });
-}
+};
 
 export {
     parseRenderBindGroupLayout

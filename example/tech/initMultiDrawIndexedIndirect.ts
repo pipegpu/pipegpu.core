@@ -9,8 +9,7 @@ import {
     type Compiler,
     type RenderLetDesc
 } from '../..';
-import type { IndexedIndirectBuffer } from "../../src/res/buffer/IndexedIndirectBuffer";
-import type { IndexedStorageBuffer } from "../../src/res/buffer/IndexedStorageBuffer";
+import type { IndexedBuffer } from "../../src/res/buffer/IndexedBuffer";
 
 const initMultiDrawIndexedIndirect = (compiler: Compiler, colorAttachments: ColorAttachment[], depthStencilAttachment: DepthStencilAttachment): RenderLet => {
 
@@ -19,7 +18,7 @@ const initMultiDrawIndexedIndirect = (compiler: Compiler, colorAttachments: Colo
         // index storage buffer.
         const indexData2 = new Uint32Array([0, 1, 2, 2, 1, 0]);
         const indexData1 = new Uint32Array([3, 4, 5, 5, 4, 3]);
-        const indexStorageBuffer: IndexedStorageBuffer = compiler.createIndexedStorageBuffer({
+        const indexStorageBuffer: IndexedBuffer = compiler.createIndexedBuffer({
             totalByteLength: indexData1.byteLength + indexData2.byteLength,
             rawDataArray: [indexData1, indexData2],
         });
@@ -45,7 +44,7 @@ const initMultiDrawIndexedIndirect = (compiler: Compiler, colorAttachments: Colo
             }
         };
 
-        const indexedIndirectBuffer: IndexedIndirectBuffer = compiler.createIndexedIndirectBuffer({
+        const indexedIndirectBuffer = compiler.createIndirectBuffer({
             totalByteLength: indexedIndirectData1.byteLength + indexedIndirectData1.byteLength,
             // rawData: [indexedIndirectData1, indexedIndirectData2]
             handler: handler

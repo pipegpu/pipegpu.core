@@ -5,29 +5,32 @@ import { TextureSampler } from "../res/sampler/TextureSampler";
 import { uniqueID } from "../util/uniqueID";
 
 /**
+ * @description Define the state for managing texture and comparison samplers.
  * @class SamplerState
  */
 class SamplerState {
     /**
-     * 
+     * @description The set of samplers managed by this state.
      */
     private static SAMPLER_SET: Map<number, BaseSampler> = new Map();
 
     /**
-     * 
+     * @description The WebGPU context associated with this sampler state.
      */
     private context: Context;
 
     /**
-     * @param opts 
+     * @description Creates a new SamplerState with the given WebGPU context.
+     * @param context The WebGPU context to associate with this sampler state.
      */
     constructor(context: Context) {
         this.context = context;
     }
 
     /**
-     * @param id 
-     * @returns 
+     * @description Retrieves the sampler with the given ID.
+     * @param samplerID The ID of the sampler to retrieve.
+     * @returns The sampler with the specified ID, or undefined if not found.
      */
     getSampler = (samplerID: number): BaseSampler | undefined => {
         if (!SamplerState.SAMPLER_SET.has(samplerID)) {
@@ -37,8 +40,9 @@ class SamplerState {
     }
 
     /**
-     * @param opts 
-     * @returns 
+     * @description Creates a texture sampler with the given options.
+     * @param opts The options for creating the texture sampler.
+     * @returns The created TextureSampler instance.
      */
     createTextureSampler = (
         opts: {
@@ -74,8 +78,9 @@ class SamplerState {
     }
 
     /**
-     * @param opts 
-     * @returns 
+     * @description Creates a comparison sampler with the given options.
+     * @param opts The options for creating the comparison sampler.
+     * @returns The created ComparisonSampler instance.
      */
     createComparisonSampler = (
         opts: {

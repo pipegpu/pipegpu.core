@@ -4,22 +4,22 @@ import type { Texture3DHandle } from "../Handle";
 import { BaseTexture } from "./BaseTexture";
 
 /**
- * @description
+ * @description The 3D texture class.
  * @class Texture3D
  */
 class Texture3D extends BaseTexture {
     /**
-     * @description
+     * @description The 3D texture data.
      */
     protected textureData?: TypedArray2DFormat;
 
     /**
-     * @description
+     * @description Refresh the texture data source for the 3D texture.
      */
     protected handler?: Texture3DHandle;
 
     /**
-     * @description
+     * @description The handler for the 3D texture.
      * @param opts 
      * @param {GPUTextureFormat} opts.textureFormat. texture3d only support color texel format.
      */
@@ -217,6 +217,7 @@ class Texture3D extends BaseTexture {
     }
 
     /**
+     * @description Use the 3D texture as a texture binding.
      * @function useAsTextureBinding
      */
     override useAsTextureBinding = () => {
@@ -256,7 +257,7 @@ class Texture3D extends BaseTexture {
     }
 
     /**
-     * 
+     * @description Use the 3D texture as a render attachment.
      */
     override useAsRenderAttachment = () => {
         throw new Error(`[E][Texture3D][useAsRenderAttachment] texture3d cannot be used as render attachment.`);

@@ -86,11 +86,11 @@ abstract class BaseLet {
      * @description
      */
     private order_: number = -1;
-    public get Order(): number {
-        return this.order_;
-    }
-    public set Order(v: number) {
+    set Order(v: number) {
         this.order_ = v;
+    }
+    get Order(): number {
+        return this.order_;
     }
 
     /**
@@ -268,21 +268,21 @@ abstract class BaseLet {
     /**
      * @returns 
      */
-    public getID = (): number => {
+    getID = (): number => {
         return this.id;
     }
 
     /**
      * @returns 
      */
-    public getDebugLabel = (): string => {
+    getDebugLabel = (): string => {
         return this.debugLabel;
     }
 
     /**
      * @returns 
      */
-    public getPropertyFormat = (): PropertyFormat => {
+    getPropertyFormat = (): PropertyFormat => {
         return this.poropertyFormat;
     }
 
