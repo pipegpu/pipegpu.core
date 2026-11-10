@@ -109,7 +109,7 @@ class IndirectBuffer extends StorageBuffer {
             }
         }
         if (!item) {
-            throw new Error(`[E][IndirectBuffer] invalid indirect buffer.`);
+            throw new Error(`[E][IndirectBuffer] buffer: ${opts.label} invalid indirect buffer.`);
         }
 
         if (item.length === 4 && this.totalByteLength % INDIRECT.DRAW_INDIRECT === 0) {

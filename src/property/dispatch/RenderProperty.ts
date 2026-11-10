@@ -101,7 +101,12 @@ class RenderProperty extends BaseProperty {
             this.instanceCount = 1;
         }
         // indexBuffer: IndexedBuffer, instanceCount: number
-        else if (a instanceof IndexedBuffer && typeof b === 'number' && c === undefined && d === undefined) {
+        else if (
+            a instanceof IndexedBuffer &&
+            typeof b === 'number' &&
+            c === undefined &&
+            d === undefined
+        ) {
             this.propertyFormat = 'drawIndexed';
             this.indexBuffer = a;
             this.instanceCount = b;
@@ -184,7 +189,7 @@ class RenderProperty extends BaseProperty {
         // indirectBuffer: IndirectBuffer, indirectDrawCountBuffer: StorageBuffer, maxDrawCount: MaxDrawCountHandle
         else if (
             a instanceof IndirectBuffer &&
-            a.getIndirectType() === 'MULTI_DRAW_INDEXED_INDIRECT' &&
+            a.getIndirectType() === 'MULTI_DRAW_INDIRECT' &&
             b instanceof StorageBuffer &&
             typeof c === "function" &&
             c.length === 0 &&
