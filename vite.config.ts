@@ -3,9 +3,14 @@ import dts from 'unplugin-dts/vite';
 
 export default {
   base: './',
+  server: {
+    port: 3080,
+    strictPort: true,
+  },
   build: {
     outDir: './build/',
     emptyOutDir: true,
+
     lib: {
       entry: './index.ts',
       name: 'pipegpu.core',
