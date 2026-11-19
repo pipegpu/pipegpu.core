@@ -22,7 +22,7 @@ const parseRenderDispatch = (
     switch (t) {
         case 'drawCount':
             {
-                return (pEncoder: GPURenderPassEncoder, _cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, _cEncoder: GPUCommandEncoder): void => {
                     const maxDrawCount: number = opts.dispatch.getMaxDrawCount()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
                     pEncoder.draw(maxDrawCount, instanceCount);
@@ -30,7 +30,7 @@ const parseRenderDispatch = (
             }
         case 'drawIndexed':
             {
-                return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, cEncoder: GPUCommandEncoder): void => {
                     const indexBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
                     indexBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
@@ -40,7 +40,7 @@ const parseRenderDispatch = (
             }
         case 'drawIndexedStorage':
             {
-                return (pEncoder: GPURenderPassEncoder, _cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, _cEncoder: GPUCommandEncoder): void => {
                     const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const instanceCount: number = opts.dispatch.getInstanceCount()!;
                     pEncoder.setIndexBuffer(indexedBuffer.getGpuBuffer(), indexedBuffer.getIndexedFormat());
@@ -49,7 +49,7 @@ const parseRenderDispatch = (
             };
         case 'drawIndirect':
             {
-                return (pEncoder: GPURenderPassEncoder, _cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, _cEncoder: GPUCommandEncoder): void => {
                     const indirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
                     pEncoder.drawIndirect(indirectBuffer.getGpuBuffer(), 0);
                 };
@@ -60,7 +60,7 @@ const parseRenderDispatch = (
                  * needs:
                  * chromium-experimental-multi-draw-indirect
                  */
-                return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, cEncoder: GPUCommandEncoder): void => {
                     const indirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
                     const indirectCountBuffer: StorageBuffer = opts.dispatch.getIndirectCountBuffer()!;
                     const maxDrawCount: number = Math.min(opts.dispatch.getMaxDrawCount()!, 65535 * 64);
@@ -78,7 +78,7 @@ const parseRenderDispatch = (
             }
         case 'drawIndexedIndirect':
             {
-                return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, cEncoder: GPUCommandEncoder): void => {
                     const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const indexedIndirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
                     indexedBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
@@ -89,7 +89,7 @@ const parseRenderDispatch = (
             }
         case 'multiDrawIndexedIndirect':
             {
-                return (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder): void => {
+                return (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, cEncoder: GPUCommandEncoder): void => {
                     const indexedBuffer: IndexedBuffer = opts.dispatch.getIndexBuffer()!;
                     const indirectBuffer: IndirectBuffer = opts.dispatch.getIndirectBuffer()!;
                     const indirectCountBuffer: StorageBuffer = opts.dispatch.getIndirectCountBuffer()!;

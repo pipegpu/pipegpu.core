@@ -11,6 +11,49 @@ import type { SamplerState } from "../state/SamplerState";
 import type { TextureState } from "../state/TextureState";
 
 /**
+ * @description
+ * Base graph for managing compute and render lets with timestamp queries.
+ * @type LetStat
+ */
+type LetStat = {
+    /**
+     * @description
+     *  the unique ID of the let.
+     */
+    id: number,
+
+    /**
+     * @description
+     *  the name of the let.
+     */
+    name: string,
+
+    /**
+     * @description
+     *  the GPUQuerySet used for timestamp queries.
+     */
+    timeStampQuerySet: GPUQuerySet,
+
+    /**
+     * @description
+     *  the duration of the let in nanoseconds.
+     */
+    duration: number,
+
+    /**
+     * @description
+     *  the start index of the timestamp.
+     */
+    startIndex: number,
+
+    /**
+     * @description
+     *  the end index of the timestamp.
+     */
+    endIndex: number,
+};
+
+/**
  * @class BaseLet
  * for compute / render parallel dispatch
  * - render, 
@@ -289,9 +332,10 @@ abstract class BaseLet {
     /**
      * @param encoder 
      */
-    abstract build(_encoder: GPUCommandEncoder): void;
+    abstract build(_encoder: GPUCommandEncoder, _letStat: LetStat): void;
 }
 
 export {
+    type LetStat,
     BaseLet
 }

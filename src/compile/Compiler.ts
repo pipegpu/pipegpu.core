@@ -138,43 +138,51 @@ interface ComputeLetDesc {
  */
 class Compiler {
     /**
-     * 
+     * @description
+     * The GPU context associated with this compiler instance.
      */
     private context: Context;
 
     /**
-     * 
+     * @description
+     * The buffer state managed by this compiler instance.
      */
     private bufferState: BufferState;
 
     /**
-     * 
+     * @description
+     * The shader state managed by this compiler instance.
      */
     private shaderState: ShaderState;
 
     /**
-     * 
+     * @description
+     * The texture state managed by this compiler instance.
      */
     private textureState: TextureState;
 
     /**
-     * 
+     * @description
+     * The sampler state managed by this compiler instance.
      */
     private samplerState: SamplerState;
 
     /**
-     * 
+     * @description
+     * The pipeline state managed by this compiler instance.
      */
     private pipelineState: PipelineState;
 
     /**
-     * 
+     * @description
+     * The attachment state managed by this compiler instance.
      */
     private attachmentState: AttachmentState;
 
     /**
-     * 
-     * @param opts 
+     * @description
+     * Constructs a new Compiler instance with the specified GPU context.
+     * @param context The GPU context to be associated with this compiler instance.
      */
     constructor(context: Context) {
         this.context = context;
@@ -188,7 +196,8 @@ class Compiler {
 
     /**
      * @description
-     * @param desc 
+     * Compiles a render let based on the provided description and returns the resulting RenderLet instance.
+     * @param desc The description of the render let to be compiled.
      * @returns 
      */
     compileRenderLet = (desc: RenderLetDesc): RenderLet => {
@@ -241,7 +250,7 @@ class Compiler {
         const renderHandler: RenderHandle = parseRenderDispatch({
             debugLabel: debugLabel,
             dispatch: desc.dispatch,
-            supportsMultiDrawIndirect: this.context.getSupportedFeatures()?.has('chromium-experimental-multi-draw-indirect') || false
+            supportsMultiDrawIndirect: this.context.isSupportMultiDrawIndirect(),
         });
 
         // parse multi sample state

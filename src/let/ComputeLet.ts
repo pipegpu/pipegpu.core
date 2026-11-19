@@ -1,4 +1,4 @@
-import { BaseLet } from "./BaseLet";
+import { BaseLet, type LetStat } from "./BaseLet";
 
 import type { IUniformRecord } from "../compile/parseUniform";
 import type { Context } from "../res/Context";
@@ -76,14 +76,19 @@ class ComputeLet extends BaseLet {
     /**
      * @param cEncoder 
      */
-    override build(cEncoder: GPUCommandEncoder): void {
+    override build(cEncoder: GPUCommandEncoder, letStat: LetStat): void {
         // uniform update support:
         // - uniform buffer update
         // - texture update
         const bDirty = this.uniformHandler('recordingCommandStart', cEncoder, this.bufferState, this.textureState);
 
         const pEncoder = cEncoder.beginComputePass({
-            label: `compute let.`
+            label: `compute let.`,
+            timestampWrites: {
+                querySet: letStat.timeStampQuerySet,
+                beginningOfPassWriteIndex: letStat.startIndex,
+                endOfPassWriteIndex: letStat.endIndex
+            }
         });
         pEncoder.setPipeline(this.computePipeline.getGpuComputePipeline());
 

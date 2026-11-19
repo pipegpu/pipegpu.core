@@ -79,26 +79,33 @@ class Context {
     }
 
     /**
-     * @description need use 'await' for adapter request, e.g:
-     * const adapter = await context.init();
+     * @description need use 'await' for adapter request, 
+     * 
+     * e.g:
+     * const context = new Context(opts);
+     * await context.init();
      */
     async init() {
         this.adapter = await navigator.gpu.requestAdapter();
         if (!this.adapter) {
             throw new Error(`[E][Context][init] get adapter failed.`);
         }
+
+        const compatibleFeatures: FeatureNameFormat[] = [];
         this.supportedFeatures = this.adapter!.features;
-        // check features 
         (this.requestFeatures || []).forEach(featureName => {
             if (!this.supportedFeatures.has(featureName)) {
-                throw new Error(`[E][Context][init] init context failed. unsupported feature: ${featureName}`);
+                console.warn(`[E][Context][init] init context failed. unsupported feature: ${featureName}`);
+            }
+            else {
+                compatibleFeatures.push(featureName);
             }
         });
         // issue 1
         // https://github.com/KIWI-ST/pipegpu/issues/1
         // https://www.w3.org/TR/webgpu/#limits
         this.device = await this.adapter?.requestDevice({
-            requiredFeatures: this.requestFeatures || [] as any,
+            requiredFeatures: (compatibleFeatures || []) as any,
             requiredLimits: {
                 'maxTextureArrayLayers': this.adapter?.limits.maxTextureArrayLayers,
                 'maxBindGroups': this.adapter?.limits.maxBindGroups,
@@ -246,6 +253,14 @@ class Context {
         return 'depth24plus';
     }
 
+    /**
+     * @description Check if multi-draw indirect is supported by the GPU context.
+     * @returns True if multi-draw indirect is supported, false otherwise.
+     */
+    isSupportMultiDrawIndirect = (): boolean => {
+        const bSupport = this.supportedFeatures.has('chromium-experimental-multi-draw-indirect');
+        return bSupport;
+    };
 }
 
 export {

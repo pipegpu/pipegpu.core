@@ -10,7 +10,7 @@ type UniformHandle = (frameStage: FrameStageFormat, encoder: GPUCommandEncoder, 
 /**
  * @description Define a handle for recording render pass commands.
  */
-type RenderHandle = (pEncoder: GPURenderPassEncoder, cEncoder: GPUCommandEncoder) => void;
+type RenderHandle = (pEncoder: GPURenderPassEncoder | GPURenderBundleEncoder, cEncoder: GPUCommandEncoder) => void;
 
 /**
  * @description Define a handle for recording compute pass commands.

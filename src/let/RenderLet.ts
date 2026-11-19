@@ -1,4 +1,4 @@
-import { BaseLet } from "./BaseLet";
+import { BaseLet, type LetStat } from "./BaseLet";
 
 import type { IUniformRecord } from "../compile/parseUniform";
 import type { ColorAttachment } from "../res/attachment/ColorAttachment";
@@ -22,43 +22,63 @@ class RenderLet extends BaseLet {
     private renderPipeline: RenderPipeline;
 
     /**
-     * 
+     * @description
+     * The GPU render bundle encoder used to record rendering commands.
+     */
+    private bundleEncoder?: GPURenderBundleEncoder;
+
+    /**
+     * @description
+     * The GPU render bundle created from the render bundle encoder.
+     */
+    private renderBundle?: GPURenderBundle;
+
+    /**
+     * @description
+     * The GPU render handle used to issue rendering commands.  
      */
     private renderHandler: RenderHandle;
 
     /**
-     * 
+     * @description
+     * The GPU uniform handle used to update uniform values.
      */
     private uniformHandler: UniformHandle;
 
     /**
-     * 
+     * @description
+     * The mapping between slot indices and attribute buffer IDs.
      */
     private slotAttributeBufferIDMap: Map<number, number>;
 
     /**
-     * 
+     * @description
+     * The list of color attachments for the render pass.
      */
     private colorAttachments: ColorAttachment[];
 
     /**
-     * 
+     * @description
+     * The depth-stencil attachment for the render pass.
      */
     private depthStencilAttachment?: DepthStencilAttachment;
 
     /**
-     * 
+     * @description
+     * The vertex shader used in the render pipeline.
      */
     private vs: VertexShader;
 
     /**
-     * 
+     * @description
+     * The fragment shader used in the render pipeline.
      */
     private fs: FragmentShader;
 
     /**
-     * 
-     * @param opts 
+     * @description
+     *  Constructs a new RenderLet instance.
+     * @param opts The options used to initialize the RenderLet instance.
      */
     constructor(
         opts: {
@@ -107,7 +127,7 @@ class RenderLet extends BaseLet {
     /**
      * @param cEncoder 
      */
-    override build = (cEncoder: GPUCommandEncoder): void => {
+    override build = (cEncoder: GPUCommandEncoder, letStat: LetStat): void => {
         // support:
         // uniform update
         // texture update
@@ -118,42 +138,81 @@ class RenderLet extends BaseLet {
             return;
         }
 
+        if (bDirty) {
+            this.refreshSlotBindGroupMap({ vs: this.vs, fs: this.fs })
+        }
+
+        const bSupportMultiDrawIndirect: boolean = this.context.isSupportMultiDrawIndirect();
+
+        if (!bSupportMultiDrawIndirect && (bDirty || !this.bundleEncoder || !this.renderBundle)) {
+            const colorFormats: GPUTextureFormat[] = [];
+            this.colorAttachments.forEach(element => {
+                colorFormats.push(element.getTextureFormat());
+            });
+
+            let depthStencilFormat: GPUTextureFormat | undefined = undefined;
+            if (this.depthStencilAttachment) {
+                depthStencilFormat = this.depthStencilAttachment.getTexture().getTextureFormat();
+            }
+
+            const bundleEncoder: GPURenderBundleEncoder = this.bundleEncoder = this.context.getGpuDevice().createRenderBundleEncoder({
+                colorFormats: colorFormats,
+                depthStencilFormat: depthStencilFormat
+            });
+
+            bundleEncoder.setPipeline(this.renderPipeline.getGpuRenderPipeline());
+
+            this.slotAttributeBufferIDMap.forEach((bufferID, slotID) => {
+                const vertexBuffer = this.bufferState.getBuffer(bufferID);
+                vertexBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
+                bundleEncoder.setVertexBuffer(slotID, vertexBuffer.getGpuBuffer());
+            });
+            
+            this.slotBindGroupMap.forEach((bindGroup, slotID) => {
+                bundleEncoder.setBindGroup(slotID, bindGroup);
+            });
+
+            this.renderHandler(bundleEncoder, cEncoder);
+
+            this.renderBundle = bundleEncoder.finish();
+        }
+
         const colorAttachments: GPURenderPassColorAttachment[] = [];
         this.colorAttachments.forEach(element => {
             colorAttachments.push(element.getGpuColorAttachment());
         });
 
-        const desc: GPURenderPassDescriptor = {
-            colorAttachments: colorAttachments
+        const renderPassDesc: GPURenderPassDescriptor = {
+            colorAttachments: colorAttachments,
+            depthStencilAttachment: this.depthStencilAttachment?.getGpuRenderPassDepthStencilAttachment(),
+            timestampWrites: {
+                querySet: letStat.timeStampQuerySet,
+                beginningOfPassWriteIndex: letStat.startIndex,
+                endOfPassWriteIndex: letStat.endIndex
+            }
         };
 
-        if (this.depthStencilAttachment) {
-            desc.depthStencilAttachment = this.depthStencilAttachment.getGpuRenderPassDepthStencilAttachment();
+        const pEncoder = cEncoder.beginRenderPass(renderPassDesc);
+
+        if (bSupportMultiDrawIndirect) {
+            pEncoder.setPipeline(this.renderPipeline.getGpuRenderPipeline());
+
+            this.slotAttributeBufferIDMap.forEach((bufferID, slotID) => {
+                const vertexBuffer = this.bufferState.getBuffer(bufferID);
+                vertexBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
+                pEncoder.setVertexBuffer(slotID, vertexBuffer.getGpuBuffer());
+            });
+
+            this.slotBindGroupMap.forEach((bindGroup, slotID) => {
+                pEncoder.setBindGroup(slotID, bindGroup);
+            });
+
+            this.renderHandler(pEncoder, cEncoder);
+        }
+        else {
+            pEncoder.executeBundles([this.renderBundle!]);
         }
 
-        const pEncoder: GPURenderPassEncoder = cEncoder.beginRenderPass(desc);
-        pEncoder.setPipeline(this.renderPipeline.getGpuRenderPipeline());
-
-        // assign vertex by slot index
-        this.slotAttributeBufferIDMap.forEach((bufferID, slotID) => {
-            const vertexBuffer = this.bufferState.getBuffer(bufferID);
-            vertexBuffer.refreshGpuBuffer(cEncoder, 'recordingCommandStart');
-            pEncoder.setVertexBuffer(slotID, vertexBuffer.getGpuBuffer());
-        });
-
-        //
-        bDirty ? this.refreshSlotBindGroupMap({ vs: this.vs, fs: this.fs }) : null;
-
-        // uniform slot
-        // in bind group, texture view settings in compile stage
-        this.slotBindGroupMap.forEach((bindGroup, slotID) => {
-            pEncoder.setBindGroup(slotID, bindGroup);
-        });
-
-        // dispatch
-        this.renderHandler(pEncoder, cEncoder);
-
-        // record pass end.
         pEncoder.end();
 
         // update handler
