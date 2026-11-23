@@ -76,6 +76,17 @@ class Buffer2D extends BaseBuffer {
         }
     }
 
+    updateData = (rawDataArr: TypedArray2DFormat | Array<ArrayBuffer>, offset: number = 0, byteLength: number = 0) => {
+        if (!byteLength) {
+            byteLength = rawDataArr.reduce((sum, arr) => sum + arr.byteLength, 0);
+        }
+        let sumOffset = offset;
+        rawDataArr.forEach(rawData => {
+            this.updateGpuBuffer(sumOffset, rawData.byteLength, rawData);
+            sumOffset += rawData.byteLength;
+        });
+    }
+
     /**
      * @description
      * create gpu buffer
@@ -98,7 +109,7 @@ class Buffer2D extends BaseBuffer {
                 this.updateGpuBuffer(offset, typedArray.byteLength, typedArray);
                 offset += typedArray.byteLength;
             });
-        } 
+        }
         else if (this.handler) {
             const handData = this.handler();
             if (handData.rewrite) {

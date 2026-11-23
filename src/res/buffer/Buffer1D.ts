@@ -78,6 +78,13 @@ class Buffer1D extends BaseBuffer {
         }
     }
 
+    updateData = (rawData: TypedArray1DFormat | ArrayBuffer, offset: number = 0, byteLength: number = 0) => {
+        if (!byteLength) {
+            byteLength = rawData.byteLength;
+        }
+        this.updateGpuBuffer(offset, byteLength, rawData);
+    }
+
     /**
      * @description
      */

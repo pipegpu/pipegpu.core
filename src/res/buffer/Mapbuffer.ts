@@ -134,7 +134,7 @@ class MapBuffer extends StorageBuffer {
      * @description
      * @param _byteLength 
      */
-    override expand(_byteLength: number): never {
+    override resize(_byteLength: number): never {
         throw new Error(`[E][MapBuffer] mapbuffer not support 'expand' function.`);
     }
 

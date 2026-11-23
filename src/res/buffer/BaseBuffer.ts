@@ -81,7 +81,7 @@ abstract class BaseBuffer {
      * @description
      *  expand buffer to new size.
      */
-    expand(byteLength: number): void {
+    resize(byteLength: number): void {
         if (byteLength < this.totalByteLength) {
             return;
         }
