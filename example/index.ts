@@ -4,7 +4,8 @@ import {
     Compiler,
     BaseLet,
     DepthStencilAttachment,
-    RenderLet
+    RenderLet,
+    type LetStat
 } from '../index';
 
 import { type ControlTYPE, InitControlPannel } from './ui.ts';
@@ -202,9 +203,24 @@ type Controls = {
         // WARNING:: refresh resource need all cpu side resorce update finished.
         context.refreshFrameResource();
 
+        const querySetDesc: GPUQuerySetDescriptor = {
+            type: 'timestamp',
+            count: 1
+        };
+        const timeStampQuerySet = context.getGpuDevice().createQuerySet(querySetDesc);
+
+        const letStats: LetStat = {
+            id: 0,
+            name: '',
+            timeStampQuerySet: timeStampQuerySet,
+            duration: 0,
+            startIndex: 0,
+            endIndex: 0
+        };
+
         const encoder = context.getCommandEncoder();
         passes.forEach(element => {
-            element.build(encoder);
+            element.build(encoder, letStats);
         });
 
         context.submitFrameResource();
